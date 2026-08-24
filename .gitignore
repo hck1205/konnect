@@ -1,44 +1,94 @@
-# 의존성
-node_modules/
-.pnp
-.pnp.js
-vendor/
+# =============================================================
+#  이 저장소는 배포 대상인 FE/ · BE/ 앱 코드만 git으로 추적한다.
+#  그 외 루트의 폴더/파일(로컬 도구, 문서 작업본 등)은 로컬 전용(비추적).
+# =============================================================
 
-# 빌드 산출물
-dist/
-build/
-out/
-.next/
-target/
-*.egg-info/
-__pycache__/
-*.py[cod]
+# 1) 루트의 모든 항목을 기본 무시
+/*
 
-# 환경 변수 / 시크릿
-.env
-.env.*
-!.env.example
-*.pem
-*.key
+# 2) 추적할 것만 화이트리스트
+!.gitignore
+!README.md
+!docs/
+!FE/
+!BE/
 
-# 로그
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# =============================================================
+#  3) FE/ · BE/ 내부에서도 배포/커밋 금지 항목은 다시 무시
+# =============================================================
 
-# 테스트 / 캐시
-coverage/
-.nyc_output/
-.cache/
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+# ---- 시크릿 / 환경변수 (최우선) ----
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.sample
+!**/.env.template
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/*.keystore
+**/*.jks
+**/credentials.json
+**/serviceAccount*.json
+**/.npmrc
+**/.pypirc
+**/.netrc
 
-# 에디터 / OS
-.vscode/
-.idea/
-*.swp
-.DS_Store
-Thumbs.db
+# ---- 의존성 ----
+**/node_modules/
+**/.pnp
+**/.yarn/*
+**/bower_components/
+**/jspm_packages/
+**/vendor/
+
+# ---- 빌드 / 배포 산출물 ----
+**/dist/
+**/build/
+**/out/
+**/.output/
+**/.next/
+**/.turbo/
+**/.vercel/
+**/*.tsbuildinfo
+
+# ---- 캐시 ----
+**/.cache/
+**/.eslintcache
+**/.stylelintcache
+**/.vite/
+
+# ---- 테스트 / 커버리지 ----
+**/coverage/
+**/.nyc_output/
+**/*.lcov
+**/playwright-report/
+**/test-results/
+
+# ---- 로그 / 런타임 ----
+**/logs/
+**/*.log
+**/*.pid
+**/*.seed
+
+# ---- 로컬 DB / 데이터 ----
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+**/dump.rdb
+
+# ---- 임시 / 백업 ----
+**/tmp/
+**/temp/
+**/*.tmp
+**/*.bak
+**/*.orig
+**/*~
+
+# ---- 에디터 / OS ----
+**/.idea/
+**/*.swp
+**/.DS_Store
+**/Thumbs.db
+**/Desktop.ini

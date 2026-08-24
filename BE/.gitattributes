@@ -1,0 +1,3 @@
+# 셸 스크립트는 항상 LF — Windows autocrlf(=true)로 CRLF가 되면
+# bash 실행 시 $'\r' 에러가 나므로 강제한다.
+*.sh text eol=lf

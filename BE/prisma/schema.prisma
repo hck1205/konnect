@@ -1,0 +1,12 @@
+// konnect 데이터 스키마.
+// 모델은 도메인이 정해질 때 추가한다 — 지금은 커넥션 설정만 잡아 둔 골격이다.
+// 변경 후: `npm run db:migrate` (로컬) / `npm run db:deploy` (운영)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}

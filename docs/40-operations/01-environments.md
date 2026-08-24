@@ -1,0 +1,35 @@
+# 환경 분리
+
+## 환경
+
+| 환경 | NODE_ENV | DB | 용도 |
+| --- | --- | --- | --- |
+| 로컬 (DB 없음) | development | `DB_DRIVER=memory` | 빠른 개발·테스트 |
+| 로컬 (DB 있음) | development | `DB_DRIVER=prisma` | 실제 쿼리 검증 |
+| 테스트 | test | 인메모리 (강제) | CI — **DB 없이 그린이어야 한다** |
+| 운영 | production | Postgres | |
+
+## 환경변수 로딩 순서 (BE)
+
+먼저 채워진 값이 이긴다:
+
+1. 이미 설정된 `process.env` (OS/배포 플랫폼) — 항상 최우선
+2. `.env.${NODE_ENV}`
+3. `.env`
+
+`.env*`는 gitignore 대상이고, **`.env.example`만 커밋**한다.
+
+## 시크릿 원칙
+
+- 시크릿은 **저장소에 절대 넣지 않는다.** 루트 `.gitignore`가 `**/.env`, `*.pem`, `*.key`,
+  `credentials.json` 등을 구조적으로 막고 있다
+- 운영 시크릿은 배포 플랫폼의 환경변수로 주입한다
+- `.env.example`에는 **키와 설명만**, 값은 더미로 둔다
+
+## 변수 목록
+
+- BE: [`BE/.env.example`](../../BE/.env.example)
+- FE: [`FE/.env.example`](../../FE/.env.example)
+
+`API_PROXY_TARGET`은 **빌드 시점** 값이다 (Next의 rewrites가 빌드에 고정된다).
+런타임에 주입해도 반영되지 않으므로 배포 파이프라인에서 설정해야 한다.
