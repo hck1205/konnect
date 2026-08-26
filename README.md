@@ -21,7 +21,7 @@ konnect/
 | --- | --- |
 | [`docs/`](./docs/) | [문서 인덱스](./docs/README.md) — 여기서 시작 |
 | [`BE/`](./BE/) | [BE README](./BE/README.md) |
-| [`FE/`](./FE/) | [FE README](./FE/README.md) · [아키텍처](./FE/ARCHITECTURE.md) |
+| [`FE/`](./FE/) | [FE README](./FE/README.md) · [아키텍처](./FE/ARCHITECTURE.md) · [디자인 시스템](./docs/25-design/) |
 
 ## 빠른 시작
 
@@ -48,7 +48,7 @@ FE의 `/api/*`가 BE로 프록시되므로 CORS 설정 없이 붙는다.
 
 | | |
 | --- | --- |
-| FE | Next.js 16 (App Router) · TypeScript · Tailwind v4 · jotai · TanStack Query · axios · vitest |
+| FE | Next.js 16 (App Router) · TypeScript · Tailwind v4 · jotai · TanStack Query · axios · vitest · Ladle |
 | BE | NestJS 11 · TypeScript · Prisma · PostgreSQL · jest |
 
 ## 문서 먼저 읽기
@@ -56,7 +56,8 @@ FE의 `/api/*`가 BE로 프록시되므로 CORS 설정 없이 붙는다.
 1. [제품 비전](./docs/00-overview/01-product-vision.md) — 한 줄 정의
 2. [문제 정의](./docs/00-overview/02-problem-statement.md) — 무엇이 문제인가
 3. [MVP 범위](./docs/20-product/04-mvp-scope.md) — 처음 무엇을 만드는가
-4. [시스템 개요](./docs/30-architecture/01-system-overview.md) — 어떻게 만드는가
+4. [디자인 토큰](./docs/25-design/02-tokens.md) — 화면을 무엇으로 만드는가
+5. [시스템 개요](./docs/30-architecture/01-system-overview.md) — 어떻게 만드는가
 
 ## 커밋 전 체크
 

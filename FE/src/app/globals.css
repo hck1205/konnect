@@ -332,3 +332,19 @@ h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
     translate: -50% -50%;
   }
 }
+
+/* 팝오버 위치 — CSS 앵커 위치 지정을 쓰되, 미지원 브라우저에도 화면이 성립해야 한다.
+   점진적 향상 정책: docs/25-design/10-foundations/08-native-platform.md */
+@utility popover-anchored {
+  margin: 0;
+  position: absolute;
+  position-area: bottom span-inline-start;
+  margin-block-start: 0.25rem;
+
+  /* 앵커 위치 지정 미지원 — 화면 상단 중앙에 띄운다(가려지지 않는 안전한 위치) */
+  @supports not (position-area: bottom) {
+    position: fixed;
+    inset: 4rem auto auto 50%;
+    translate: -50% 0;
+  }
+}

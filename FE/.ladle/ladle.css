@@ -1,0 +1,6 @@
+/* Ladle 미리보기 프레임이 앱과 같은 배경을 쓰도록 맞춘다.
+   (globals.css 의 body 규칙은 iframe 안에서만 적용되므로 여기서 한 번 더 지정) */
+body {
+  background-color: var(--surface);
+  color: var(--fg);
+}

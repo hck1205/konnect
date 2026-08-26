@@ -10,8 +10,8 @@ konnect의 시각 언어. **토큰이 단일 출처**이고, 이 문서들은 �
 | --- | --- |
 | [01-principles.md](./01-principles.md) | 디자인 원칙 — 이 서비스가 다른 커뮤니티와 다르게 판단하는 지점 |
 | [02-tokens.md](./02-tokens.md) | **토큰 아키텍처** — 3계층 구조와 사용 규칙 |
-| [10-foundations/](./10-foundations/) | 색·타이포·간격·라운드·모션·아이콘·접근성 |
-| [20-components/](./20-components/) | 컴포넌트 (다음 단계) |
+| [10-foundations/](./10-foundations/) | 색·타이포·간격·라운드·모션·아이콘·접근성·네이티브 플랫폼 |
+| [20-components/](./20-components/) | **컴포넌트 목록**과 카테고리 기준 |
 
 ## 구현 위치
 
@@ -19,6 +19,8 @@ konnect의 시각 언어. **토큰이 단일 출처**이고, 이 문서들은 �
 
 ```
 FE/src/app/globals.css     ← 토큰의 단일 출처
+FE/src/components/         ← 컴포넌트 (카테고리별)
+FE/.ladle/                 ← 스토리 설정
 ```
 
 컴포넌트 폴더 규약은 [FE/ARCHITECTURE.md](../../FE/ARCHITECTURE.md) 참고.
@@ -27,5 +29,5 @@ FE/src/app/globals.css     ← 토큰의 단일 출처
 
 - ✅ **Foundation** — 토큰 3계층, 색/타이포/간격/라운드/그림자/모션, 접근성 기본값,
   네이티브 플랫폼 기능 채택 정책
-- ⬜ 컴포넌트 — 미착수
-- ⬜ 아이콘 세트 확정 — `lucide-react` 설치만 되어 있음
+- ✅ **컴포넌트 20종** — [목록](./20-components/), Ladle 스토리 포함 (`cd FE && npm run ladle`)
+- ⬜ 헤더·네비게이션, Toast, 테마 토글 — [남은 것](./20-components/#아직-없는-것)

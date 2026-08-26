@@ -25,8 +25,12 @@ src/
     globals.css            #   Tailwind + 디자인 토큰(@theme)
   views/                   # 페이지 컴포넌트 (app은 이걸 렌더만; src/pages는 Next 충돌로 금지)
     HomePage/
-  components/              # UI 컴포넌트 (관심사별 폴더)
-    common/                #   공통 재사용 컴포넌트
+  components/              # UI 컴포넌트 (관심사 카테고리별)
+    primitives/            #   최소 단위, 도메인 무관 (Button, Avatar …)
+    forms/                 #   입력 (Field, Input, TagInput …)
+    feedback/              #   상태 전달 (Banner, EmptyState)
+    overlays/              #   띄우는 것 (Modal, Popover, Menu)
+    data-display/          #   보여주는 것 (Card, Tag, Accordion …)
   atoms/                   # jotai 전역 상태 (관심사별)
   query/                   # 서버 통신 (axios + react-query, 관심사별)
     client.ts              #   공용 axios 인스턴스 + 봉투 unwrap/orNull + Bearer 인터셉터
@@ -37,26 +41,77 @@ src/
 
 ## 컴포넌트 규약 (핵심)
 
-컴포넌트는 **폴더 단위**로, 아래 파일 구성을 따른다:
+### 카테고리
+
+컴포넌트는 **관심사 카테고리** 아래에 폴더 단위로 둔다.
+
+| 카테고리 | 기준 | 예 |
+| --- | --- | --- |
+| `primitives/` | 최소 단위, 도메인 지식 없음 | Button, IconButton, Avatar, Badge, Spinner, Skeleton |
+| `forms/` | 값을 입력받는 것 | Field, Input, Textarea, Select, Checkbox, TagInput |
+| `feedback/` | 상태를 알리는 것 | Banner, EmptyState |
+| `overlays/` | 흐름 위에 띄우는 것 | Modal, Popover, Menu |
+| `data-display/` | 값을 보여주는 것 | Card, Tag, Accordion, DescriptionList |
+
+카테고리를 고를 때는 **"무엇으로 만들었나"가 아니라 "무슨 일을 하나"** 를 본다.
+TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
+
+### 폴더 깊이 — 최대 3
+
+```
+src/components/<카테고리>/<Component>/    ← 여기까지가 폴더의 끝
+```
+
+컴포넌트 폴더 **안에 또 폴더를 만들지 않는다**(예외: `hooks/`).
+하위 컴포넌트가 필요하면 같은 폴더의 **파일**로 두거나, 재사용되면 같은 카테고리로
+**승격**한다. 깊이가 깊어지면 import 경로가 길어지고 무엇이 어디 있는지 감이 사라진다.
+
+### 파일 구성
 
 ```
 {Name}/
-  hooks/                 # 이 컴포넌트에서 쓰는 훅 모음
-    use{Name}.ts
-    index.ts
-  {Name}.types.ts        # 이 컴포넌트의 타입 (공통화되면 상위 공통 타입으로 승격)
-  {Name}.utils.ts        # 이 컴포넌트의 유틸 (공통화되면 @/utils 로 승격)
-  {Name}.view.tsx        # UI만 담당 (프레젠테이셔널, 상태 없음)
-  {Name}.tsx             # business logic 담당 (훅 소비 → view에 위임)
-  index.ts               # index 패턴 export (컴포넌트 + 필요한 타입만)
+  {Name}.tsx             # 진입점. 로직이 있으면 business 레이어
+  {Name}.view.tsx        # UI만 (상태 없음) — business/view 분리가 필요할 때만
+  {Name}.types.ts        # 이 컴포넌트의 타입 — 타입이 여러 개일 때만
+  {Name}.utils.ts        # 순수 함수 — 테스트할 로직이 있을 때만
+  {Name}.utils.test.ts   # 그 유닛 테스트
+  {Name}.stories.tsx     # Ladle 스토리 (필수)
+  hooks/use{Name}.ts     # 상태 로직이 클 때만
+  index.ts               # 공개 API — 컴포넌트 + 필요한 타입만
 ```
 
+**모든 파일을 다 만들지 않는다.** 로직이 없는 순수 표현 컴포넌트(Card, Skeleton)는
+`{Name}.tsx` + `{Name}.stories.tsx` + `index.ts` 세 개면 충분하다.
+없어도 되는 파일을 만드는 것은 구조가 아니라 소음이다.
+
+business/view 를 나누는 기준은 **테스트 가능한 로직이 있는가**다.
+`Avatar`(이니셜·색 계산), `TagInput`(입력 규칙)은 나누고, `Badge` 는 나누지 않는다.
+
 ### 규칙
-- **UI상 컴포넌트 안에 하위 컴포넌트가 생기면** → 그 폴더 하위에 **폴더로 중첩**한다.
-- **하위 컴포넌트가 공통으로 쓰이게 되면** → `components/common/` 밑으로 **승격**한다.
-- `{name}.tsx`(business)와 `{name}.view.tsx`(UI)를 **분리**해 View는 순수하게 유지 → 테스트/재사용 용이.
+
+- 색은 **semantic 토큰만** 쓴다. `bg-teal-700` 같은 primitive 직접 사용 금지
+  → [디자인 토큰](../docs/25-design/02-tokens.md)
+- 브라우저가 이미 하는 일을 다시 만들지 않는다 (`<dialog>`, Popover API, `<details>`)
+  → [네이티브 플랫폼 우선](../docs/25-design/10-foundations/08-native-platform.md)
 - 컴포넌트를 **최대한 작은 단위로** 쪼갠다. 하나의 파일은 하나의 책임만.
-- 훅/상태(이벤트 핸들러 포함)를 쓰는 business 컴포넌트 진입점에는 `'use client'`를 둔다.
+- 훅/상태(이벤트 핸들러 포함)를 쓰는 진입점에는 `'use client'`를 둔다.
+- import 는 **카테고리 배럴**에서 한다: `import { Button } from '@/components/primitives'`
+
+## 스토리 (Ladle)
+
+모든 컴포넌트는 스토리를 가진다. 스토리는 데모가 아니라 **명세**다 —
+그 컴포넌트가 어떤 상태를 가지며 무엇을 하면 안 되는지가 여기 남는다.
+
+```sh
+npm run ladle          # 개발 서버
+npm run ladle:build    # 정적 빌드 (스토리가 깨지지 않는지 확인)
+```
+
+- `title` 은 `'카테고리 / 컴포넌트'` 형식
+- 상태를 **빠짐없이** 보여준다: default / disabled / loading / invalid
+- 접근성 애드온(a11y)이 켜져 있다. 새 스토리를 추가하면 한 번 확인한다
+- 테마 토글이 `.dark` 클래스와 동기화되어 있어 **다크 모드를 그대로 검증**할 수 있다
+
 
 ## utils 규약
 
@@ -107,9 +162,11 @@ user/
 ## 스크립트
 
 ```sh
-npm run dev         # 개발 서버
-npm run build       # 프로덕션 빌드
-npm run typecheck   # tsc --noEmit
-npm run test        # vitest 단위 테스트
-npm run lint        # eslint
+npm run dev              # 개발 서버
+npm run build            # 프로덕션 빌드
+npm run ladle            # 컴포넌트 스토리
+npm run typecheck        # tsc --noEmit
+npm run test             # vitest 단위 테스트
+npm run check:contrast   # 디자인 토큰 대비 검증
+npm run lint             # eslint
 ```

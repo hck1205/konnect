@@ -26,6 +26,8 @@ cd ../BE && npm run start:dev
 | `npm run dev` | 개발 서버 |
 | `npm run build` | 프로덕션 빌드 |
 | `npm run start` | 빌드 결과 서빙 |
+| `npm run ladle` | 컴포넌트 스토리 (Ladle) |
+| `npm run ladle:build` | 스토리 정적 빌드 |
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | eslint |
 | `npm run test` | vitest 단위 테스트 |
