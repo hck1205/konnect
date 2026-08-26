@@ -1,4 +1,4 @@
-import { REACTION_KINDS, type ReactionCounts, type ReactionKind } from './ReactionBar.types';
+import { REACTION_KINDS, type ReactionCounts, type ReactionKind } from '@/types';
 
 /** 전체 리액션 수 */
 export function totalReactions(counts: ReactionCounts): number {

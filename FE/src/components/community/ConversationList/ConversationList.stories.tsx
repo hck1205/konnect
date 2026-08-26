@@ -1,7 +1,7 @@
 import type { Story } from '@ladle/react';
 import { useState } from 'react';
 import { ConversationList } from './ConversationList';
-import type { Conversation } from '@/components/community/MessageThread';
+import type { Conversation } from '@/types';
 
 export default { title: 'Community / ConversationList' };
 

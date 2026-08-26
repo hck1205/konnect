@@ -9,12 +9,7 @@ import { TagInput } from '@/components/forms/TagInput';
 import { Button } from '@/components/primitives/Button';
 import { PostBodyField } from './PostBodyField';
 import { SimilarQuestions, type SimilarQuestion } from './SimilarQuestions';
-
-export interface PostDraft {
-  title: string;
-  body: string;
-  tags: string[];
-}
+import type { PostDraft } from '@/types';
 
 export interface PostEditorProps {
   value: PostDraft;

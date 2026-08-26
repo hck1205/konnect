@@ -1,7 +1,12 @@
 import { cva } from 'class-variance-authority';
 
 /**
- * 입력 요소 공용 클래스. Input·Textarea·Select 가 공유한다.
+ * 폼 컨트롤 공용 스타일.
+ *
+ * Input·Textarea·Select·NumberInput·DateInput·Combobox 여섯이 공유한다.
+ * 예전에는 `Input/Input.utils.ts` 가 갖고 있었는데, 그러면 **Input 이 나머지 다섯의
+ * 스타일 소유자**가 된다 — Input 을 고치려던 사람이 Select 를 깨뜨릴 수 있고,
+ * 의존 그래프가 "Select → Input" 이라고 거짓말한다.
  *
  * 테두리에 `border-interactive` 를 쓰는 이유: 입력의 경계는 장식이 아니라
  * **어디를 눌러야 하는지 알려주는 정보**라 WCAG 비텍스트 대비 3:1 대상이다.

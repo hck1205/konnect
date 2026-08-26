@@ -1,7 +1,7 @@
 import { cn } from '@/lib/cn';
 import type { InputHTMLAttributes } from 'react';
 import type { Size } from '@/types/ui';
-import { controlVariants } from '@/components/forms/Input';
+import { controlVariants } from '@/lib/forms';
 
 export interface NumberInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'type'> {

@@ -42,11 +42,16 @@ src/
   atoms/                   # jotai 전역 상태 (관심사별)
   query/                   # 서버 통신 (axios + react-query, 관심사별)
     client.ts              #   공용 axios 인스턴스 + 봉투 unwrap/orNull + Bearer 인터셉터
-  types/                   # 공유 도메인 모델
+  types/                   # 공유 도메인 모델 — 컴포넌트가 아니라 **여기가 소유**한다
+                           #   (query/ 가 컴포넌트를 import 하면 의존 방향이 뒤집힌다)
   utils/                   # 순수 함수 (string/array/number/boolean)
   lib/                     # 앱 인프라 (query-client, cn, routes, apiBase, auth-token)
     i18n/                  #   번역·포맷 (Intl 기반) + 로케일 라우팅
     theme/                 #   테마 외부 스토어
+    text/                  #   slug 정규화 (BE 와 같은 규칙 — 계약)
+    tone/…tone.ts          #   tone → 클래스·아이콘 매핑
+    forms/                 #   폼 컨트롤 공용 스타일
+    css/                   #   CSS 앵커 이름 등
 ```
 
 ## 컴포넌트 규약 (핵심)
@@ -129,6 +134,11 @@ business/view 를 나누는 기준은 **테스트 가능한 로직이 있는가*
 - 컴포넌트를 **최대한 작은 단위로** 쪼갠다. 하나의 파일은 하나의 책임만.
 - 훅/상태(이벤트 핸들러 포함)를 쓰는 진입점에는 `'use client'`를 둔다.
 - import 는 **카테고리 배럴**에서 한다: `import { Button } from '@/components/primitives'`
+- **도메인 타입은 `types/` 가 소유한다.** 컴포넌트 안에 두면 `query/` 가 UI 를
+  import 하게 되어 의존 방향이 뒤집힌다. 컴포넌트의 `*.types.ts` 는 그 재수출이거나
+  **그 컴포넌트에만 있는 표현**(이모지·라벨 매핑 등)이다
+- 여러 컴포넌트가 공유하는 **스타일·훅은 `lib/`·`hooks/`** 로 올린다.
+  한 컴포넌트가 다른 다섯의 스타일 소유자가 되면 의존 그래프가 거짓말한다
 
 ## 스토리 (Ladle)
 

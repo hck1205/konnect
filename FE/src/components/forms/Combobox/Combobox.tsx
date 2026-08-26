@@ -2,7 +2,7 @@
 
 import { useId, useState } from 'react';
 import { cn } from '@/lib/cn';
-import { controlVariants } from '@/components/forms/Input';
+import { controlVariants } from '@/lib/forms';
 import { filterOptions, type ComboboxOption } from './Combobox.utils';
 import type { Size } from '@/types/ui';
 

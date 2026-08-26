@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAsyncSubmit } from '@/hooks';
+import type { UserSummary } from '@/types';
 import { cn } from '@/lib/cn';
 import { useI18n } from '@/lib/i18n';
 import { Avatar } from '@/components/primitives/Avatar';
@@ -10,7 +11,7 @@ import { Textarea } from '@/components/forms/Textarea';
 
 export interface CommentComposerProps {
   /** 로그인 사용자. 없으면 로그인 안내로 대체된다. */
-  currentUser?: { nickname: string; avatarUrl?: string | null } | null;
+  currentUser?: Pick<UserSummary, 'nickname' | 'avatarUrl'> | null;
   /** 답글 대상. 주면 "{name}님에게 답글" 로 표시된다. */
   replyingTo?: string;
   onSubmit: (body: string) => void | Promise<void>;

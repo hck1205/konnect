@@ -1,22 +1,9 @@
-export interface MessageParticipant {
-  id: string;
-  nickname: string;
-  avatarUrl?: string | null;
-}
-
-export interface DirectMessage {
-  id: string;
-  senderId: string;
-  body: string;
-  createdAt: string;
-  /** 상대가 읽은 시각. null 이면 안 읽음. */
-  readAt?: string | null;
-}
-
-export interface Conversation {
-  id: string;
-  /** 나를 제외한 상대 — 1:1 이므로 한 명이다 */
-  participant: MessageParticipant;
-  lastMessage?: DirectMessage;
-  unreadCount: number;
-}
+/**
+ * 쪽지 도메인 타입은 `types/message` 가 소유한다.
+ * `ConversationList` 가 `MessageThread` 에서 타입을 가져오던 의존 역전을 없앤다.
+ */
+export type {
+  DirectMessage,
+  Conversation,
+  UserSummary as MessageParticipant,
+} from '@/types';

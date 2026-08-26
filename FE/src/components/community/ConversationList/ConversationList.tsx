@@ -7,7 +7,7 @@ import { Badge } from '@/components/primitives/Badge';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { RelativeTime } from '@/components/data-display/RelativeTime';
 import { TruncatedText } from '@/components/data-display/TruncatedText';
-import type { Conversation } from '@/components/community/MessageThread';
+import type { Conversation } from '@/types';
 
 export interface ConversationListProps {
   conversations: readonly Conversation[];

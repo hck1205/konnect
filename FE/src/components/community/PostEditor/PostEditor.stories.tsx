@@ -1,6 +1,7 @@
 import type { Story } from '@ladle/react';
 import { useState } from 'react';
-import { PostEditor, type PostDraft } from './PostEditor';
+import { PostEditor } from './PostEditor';
+import type { PostDraft } from '@/types';
 
 export default { title: 'Community / PostEditor' };
 

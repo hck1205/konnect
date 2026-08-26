@@ -1,25 +1,5 @@
-import type { ReactionCounts, ReactionKind } from '@/components/community/ReactionBar';
-
-export interface CommentAuthor {
-  id: string;
-  nickname: string;
-  avatarUrl?: string | null;
-}
-
-export interface Comment {
-  id: string;
-  author: CommentAuthor;
-  body: string;
-  createdAt: string;
-  editedAt?: string | null;
-  /** 삭제된 댓글. 답글이 달려 있으면 **지우지 않고 자리를 남긴다**(맥락이 사라진다). */
-  deleted?: boolean;
-  /** 부모 댓글 id. 최상위면 null. **한 단계만** 허용한다. */
-  parentId: string | null;
-  reactions: ReactionCounts;
-  myReaction: ReactionKind | null;
-}
-
-export interface CommentNode extends Comment {
-  replies: Comment[];
-}
+/**
+ * 댓글 도메인 타입은 `types/comment` 가 소유한다 — 서버 통신 계층도 같은 타입을 본다.
+ * 이 파일은 컴포넌트 안에서 짧게 import 하기 위한 재수출이다.
+ */
+export type { Comment, CommentNode, UserSummary as CommentAuthor } from '@/types';

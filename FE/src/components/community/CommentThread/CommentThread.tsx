@@ -9,11 +9,12 @@ import { CommentItem } from './CommentItem';
 import { useReplyTarget } from './hooks';
 import { buildCommentTree, countComments } from './CommentThread.utils';
 import type { Comment } from './CommentThread.types';
+import type { UserSummary } from '@/types';
 import type { ReactionKind } from '@/components/community/ReactionBar';
 
 export interface CommentThreadProps {
   comments: readonly Comment[];
-  currentUser?: { id: string; nickname: string; avatarUrl?: string | null } | null;
+  currentUser?: UserSummary | null;
   onSubmit: (body: string, parentId: string | null) => void | Promise<void>;
   onReact?: (comment: Comment, kind: ReactionKind) => void;
   onDelete?: (comment: Comment) => void;
