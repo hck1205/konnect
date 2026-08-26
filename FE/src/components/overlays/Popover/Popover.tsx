@@ -1,7 +1,8 @@
 'use client';
 
-import { useId, type CSSProperties, type ReactElement, type ReactNode } from 'react';
+import type { CSSProperties, ReactElement, ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { useAnchorName } from '@/lib/css';
 
 export interface PopoverTriggerProps {
   /** 네이티브 popover 연결 속성 — 트리거 `<button>` 에 그대로 펼친다 */
@@ -19,9 +20,6 @@ export interface PopoverProps {
   className?: string;
 }
 
-/** CSS 커스텀 프로퍼티 이름으로 쓸 수 있게 useId 의 특수문자를 제거한다 */
-const toAnchorName = (id: string) => `--anchor-${id.replace(/[^a-zA-Z0-9]/g, '')}`;
-
 /**
  * 팝오버 — **네이티브 Popover API**.
  *
@@ -36,20 +34,15 @@ const toAnchorName = (id: string) => `--anchor-${id.replace(/[^a-zA-Z0-9]/g, '')
  * (`popover-anchored` 유틸리티의 `@supports` 폴백).
  */
 export function Popover({ trigger, children, className }: PopoverProps) {
-  const id = useId();
-  const anchorName = toAnchorName(id);
+  const { id, anchorStyle, targetStyle } = useAnchorName('popover');
 
   return (
     <>
-      {trigger({
-        popoverTarget: id,
-        // anchorName 은 아직 CSSProperties 타입에 없다
-        style: { anchorName } as CSSProperties,
-      })}
+      {trigger({ popoverTarget: id, style: anchorStyle })}
       <div
         id={id}
         popover="auto"
-        style={{ positionAnchor: anchorName } as CSSProperties}
+        style={targetStyle}
         className={cn(
           'popover-anchored w-56 rounded-lg border border-border bg-surface-overlay p-1 text-fg shadow-e3',
           className,

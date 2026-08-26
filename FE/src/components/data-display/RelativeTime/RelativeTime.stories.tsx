@@ -1,6 +1,6 @@
 import type { Story } from '@ladle/react';
 import { RelativeTime } from './RelativeTime';
-import { formatRelativeTime } from './RelativeTime.utils';
+import { LocaleProvider, LOCALES, LOCALE_LABELS, formatRelative } from '@/lib/i18n';
 
 export default { title: 'Data display / RelativeTime' };
 
@@ -8,15 +8,28 @@ const NOW = new Date('2026-08-24T12:00:00Z');
 const DAY = 24 * 60 * 60 * 1000;
 const ago = (ms: number) => new Date(NOW.getTime() - ms).toISOString();
 
-// 렌더 중에 Date.now() 를 부르지 않는다 — 렌더는 순수해야 한다.
-// 모듈 로드 시 한 번만 계산한다(스토리에서는 그걸로 충분하다).
+// 렌더 중 Date.now() 를 부르지 않는다 — 렌더는 순수해야 한다.
 const LOADED_AT = Date.now();
 const liveAgo = (ms: number) => new Date(LOADED_AT - ms).toISOString();
 
 /**
- * `Intl.RelativeTimeFormat` 을 쓴다 — "3 days ago" 를 직접 조립하지 않는다.
- * 로케일마다 복수형·어순이 다르고, 다국어로 확장할 예정이기 때문이다.
+ * 포맷은 **앱 로케일을 따른다.** 컴포넌트가 자체 포맷터를 갖지 않고
+ * `useI18n().formatRelative` 에 위임한다 — 예전에는 기본값이 영어라
+ * 한국어 화면에서도 "3 days ago" 가 나왔다.
  */
+export const FollowsAppLocale: Story = () => (
+  <div className="flex flex-col gap-3 text-sm text-fg">
+    {LOCALES.map((l) => (
+      <LocaleProvider key={l} locale={l}>
+        <p className="flex items-baseline gap-3">
+          <span className="w-24 text-fg-subtle">{LOCALE_LABELS[l]}</span>
+          <RelativeTime value={liveAgo(3 * DAY)} />
+        </p>
+      </LocaleProvider>
+    ))}
+  </div>
+);
+
 export const Live: Story = () => (
   <div className="flex flex-col gap-2 text-sm text-fg">
     <p>
@@ -36,7 +49,6 @@ export const FixedReference: Story = () => (
   <table className="text-sm">
     <tbody>
       {[
-        ['5초 전', ago(5000)],
         ['2시간 전', ago(2 * 60 * 60 * 1000)],
         ['어제', ago(DAY)],
         ['3일 전', ago(3 * DAY)],
@@ -45,8 +57,8 @@ export const FixedReference: Story = () => (
       ].map(([label, iso]) => (
         <tr key={label}>
           <td className="pr-6 py-1 text-fg-subtle">{label}</td>
-          <td className="py-1 text-fg">{formatRelativeTime(iso, NOW)}</td>
-          <td className="pl-6 py-1 text-fg-muted">{formatRelativeTime(iso, NOW, 'ko')}</td>
+          <td className="py-1 text-fg">{formatRelative(iso, NOW, 'en')}</td>
+          <td className="pl-6 py-1 text-fg-muted">{formatRelative(iso, NOW, 'ko')}</td>
         </tr>
       ))}
     </tbody>

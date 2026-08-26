@@ -1,9 +1,8 @@
 'use client';
 
 import { useId, type MouseEvent, type ReactNode } from 'react';
-import { X } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { IconButton } from '@/components/primitives/IconButton';
+import { CloseButton } from '@/components/primitives/CloseButton';
 import { useDialogElement } from '@/components/overlays/Modal';
 
 export interface DrawerProps {
@@ -61,13 +60,7 @@ export function Drawer({
         <h2 id={titleId} className="text-base font-semibold text-fg">
           {title}
         </h2>
-        <IconButton
-          icon={<X className="size-4" />}
-          label="Close"
-          size="sm"
-          onClick={onClose}
-          className="-mr-1"
-        />
+        <CloseButton onClick={onClose} className="-mr-1" />
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 text-sm">{children}</div>

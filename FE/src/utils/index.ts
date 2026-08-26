@@ -7,3 +7,4 @@ export * as string from './string';
 export * as array from './array';
 export * as number from './number';
 export * as boolean from './boolean';
+export * as time from './time';

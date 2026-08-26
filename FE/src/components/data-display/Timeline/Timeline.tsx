@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { TONE_FILL } from '@/lib/tone';
 import type { StatusTone } from '@/types/ui';
 
 export interface TimelineItem {
@@ -20,13 +21,6 @@ export interface TimelineProps {
   items: readonly TimelineItem[];
   className?: string;
 }
-
-const DOT_TONE: Record<StatusTone, string> = {
-  success: 'bg-success',
-  warning: 'bg-warning',
-  danger: 'bg-danger',
-  info: 'bg-info',
-};
 
 /**
  * 순서가 있는 단계 표시.
@@ -58,7 +52,7 @@ export function Timeline({ label, items, className }: TimelineProps) {
               className={cn(
                 'relative mt-1.5 size-2.5 shrink-0 rounded-full ring-4 ring-surface',
                 item.tone
-                  ? DOT_TONE[item.tone]
+                  ? TONE_FILL[item.tone]
                   : item.complete
                     ? 'bg-brand-solid'
                     : 'bg-border-strong',

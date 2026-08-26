@@ -1,9 +1,8 @@
 'use client';
 
 import { useId, type MouseEvent } from 'react';
-import { X } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import { IconButton } from '@/components/primitives/IconButton';
+import { CloseButton } from '@/components/primitives/CloseButton';
 import { useDialogElement } from './hooks';
 import type { ModalProps } from './Modal.types';
 
@@ -62,13 +61,7 @@ export function Modal({
             </p>
           ) : null}
         </div>
-        <IconButton
-          icon={<X className="size-4" />}
-          label="Close"
-          size="sm"
-          onClick={onClose}
-          className="-mt-1 -mr-1"
-        />
+        <CloseButton onClick={onClose} className="-mt-1 -mr-1" />
       </div>
 
       {children ? <div className="px-5 py-4 text-sm">{children}</div> : null}

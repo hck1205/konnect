@@ -14,13 +14,10 @@ export const normalizeWhitespace = (value: string): string =>
   value.trim().replace(/\s+/g, ' ');
 
 /**
- * 제목 → URL slug. 유니코드 글자/숫자는 보존한다.
- * BE utils/string.slugify와 동일 규칙 — slug 계약의 단일 출처.
+ * 제목 → URL slug.
+ *
+ * 구현은 `lib/text/slug` 하나뿐이다 — 태그 정규화·앵커 id 도 같은 규칙을 쓴다.
+ * 규칙이 갈라지면 본문 앵커와 목차 링크가 어긋나고, 같은 태그가 두 표기로 갈라진다.
+ * BE `utils/string.slugify` 와도 같은 규칙이어야 한다(slug 계약).
  */
-export const slugify = (value: string): string =>
-  value
-    .toLowerCase()
-    .replace(/[\s_]+/g, '-')
-    .replace(/[^\p{L}\p{N}-]+/gu, '')
-    .replace(/-{2,}/g, '-')
-    .replace(/^-+|-+$/g, '');
+export { slugify } from '@/lib/text';

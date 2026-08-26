@@ -1,14 +1,6 @@
 import { cn } from '@/lib/cn';
+import { TONE_FILL } from '@/lib/tone';
 import type { Tone } from '@/types/ui';
-
-const TONE: Record<Tone, string> = {
-  neutral: 'bg-fg-subtle',
-  brand: 'bg-brand',
-  success: 'bg-success',
-  warning: 'bg-warning',
-  danger: 'bg-danger',
-  info: 'bg-info',
-};
 
 export interface StatusDotProps {
   tone?: Tone;
@@ -37,7 +29,7 @@ export function StatusDot({ tone = 'neutral', label, decorative, className }: St
       aria-label={decorative ? undefined : label}
       aria-hidden={decorative ? true : undefined}
       title={label}
-      className={cn('inline-block size-2 shrink-0 rounded-full', TONE[tone], className)}
+      className={cn('inline-block size-2 shrink-0 rounded-full', TONE_FILL[tone], className)}
     />
   );
 }

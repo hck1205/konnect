@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useSyncExternalStore } from 'react';
-import { X } from 'lucide-react';
 import { cn } from '@/lib/cn';
-import type { StatusTone } from '@/types/ui';
+import { TONE_SUBTLE } from '@/lib/tone';
+import { CloseButton } from '@/components/primitives/CloseButton';
 import {
   dismissToast,
   getServerToasts,
@@ -11,13 +11,6 @@ import {
   subscribeToasts,
   type Toast,
 } from './toast.store';
-
-const TONE: Record<StatusTone, string> = {
-  success: 'bg-success-subtle text-success-on-subtle',
-  warning: 'bg-warning-subtle text-warning-on-subtle',
-  danger: 'bg-danger-subtle text-danger-on-subtle',
-  info: 'bg-info-subtle text-info-on-subtle',
-};
 
 function ToastRow({ toast }: { toast: Toast }) {
   useEffect(() => {
@@ -30,18 +23,15 @@ function ToastRow({ toast }: { toast: Toast }) {
     <li
       className={cn(
         'pointer-events-auto flex items-start gap-3 rounded-lg px-4 py-3 text-sm shadow-e3',
-        TONE[toast.tone],
+        TONE_SUBTLE[toast.tone],
       )}
     >
       <span className="flex-1">{toast.message}</span>
-      <button
-        type="button"
+      <CloseButton
+        label="Dismiss notification"
         onClick={() => dismissToast(toast.id)}
-        aria-label="Dismiss notification"
-        className="-mr-1 shrink-0 cursor-pointer rounded-sm p-0.5 opacity-70 hover:opacity-100"
-      >
-        <X className="size-4" aria-hidden="true" />
-      </button>
+        className="-mr-1 shrink-0"
+      />
     </li>
   );
 }

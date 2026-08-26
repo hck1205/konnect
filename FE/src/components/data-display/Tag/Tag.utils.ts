@@ -1,3 +1,4 @@
+import { slugify } from '@/lib/text';
 import { TAG_NAMESPACES, type ParsedTag, type TagNamespace } from './Tag.types';
 
 const isNamespace = (v: string): v is TagNamespace =>
@@ -5,17 +6,12 @@ const isNamespace = (v: string): v is TagNamespace =>
 
 /**
  * 태그 문자열 정규화.
- * 소문자 + 공백/언더스코어를 하이픈으로. 네임스페이스 구분자(`:`)는 보존한다.
- * 유니코드 글자는 남긴다 — 한글 자유 태그가 통째로 사라지면 안 된다.
+ *
+ * 공용 `slugify` 에 네임스페이스 구분자(`:`)만 보존하도록 위임한다 —
+ * 제목 slug·앵커 id 와 **같은 규칙**이어야 표기가 갈라지지 않는다.
  */
 export function normalizeTag(raw: string): string {
-  return raw
-    .trim()
-    .toLowerCase()
-    .replace(/[\s_]+/g, '-')
-    .replace(/[^\p{L}\p{N}:-]+/gu, '')
-    .replace(/-{2,}/g, '-')
-    .replace(/^-+|-+$/g, '');
+  return slugify(raw, { keep: ':' });
 }
 
 /**

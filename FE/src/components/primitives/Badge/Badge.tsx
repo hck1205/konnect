@@ -1,19 +1,14 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '@/lib/cn';
+import { TONE_SUBTLE } from '@/lib/tone';
 import type { Tone } from '@/types/ui';
 
 const badgeVariants = cva(
   'inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-xs font-medium',
   {
     variants: {
-      tone: {
-        neutral: 'bg-surface-sunken text-fg-muted',
-        brand: 'bg-brand-subtle text-brand-on-subtle',
-        success: 'bg-success-subtle text-success-on-subtle',
-        warning: 'bg-warning-subtle text-warning-on-subtle',
-        danger: 'bg-danger-subtle text-danger-on-subtle',
-        info: 'bg-info-subtle text-info-on-subtle',
-      } satisfies Record<Tone, string>,
+      // 색 매핑은 lib/tone 이 단일 출처다 — 화면마다 조금씩 다르면 안 된다
+      tone: TONE_SUBTLE,
     },
     defaultVariants: { tone: 'neutral' },
   },
