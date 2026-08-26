@@ -33,6 +33,12 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | `Skeleton` | `aria-hidden`. 로딩 안내는 감싸는 영역이 `aria-busy` 로 한다 |
 | `Divider` | 라벨 없으면 `<hr>` — "주제 전환"의 시맨틱 |
 | `Kbd` / `Code` | `<kbd>`, `<code>`. Code 는 `translate="no"` 가 기본 |
+| `Heading` | **레벨과 크기를 분리**한다. 작게 보이려고 h2 를 h4 로 낮추는 것이 가장 흔한 접근성 사고다 |
+| `CloseButton` | Banner·Modal·Drawer·Toast 가 공유. 여럿이면 "무엇을 닫는지" 넣는다 |
+| `StatusDot` | 점은 색뿐이라 접근 가능한 이름이 **필수** |
+| `Meter` | `<meter>` — 진행률(`progress`)이 아니라 **범위 안의 측정값** |
+| `AspectRatio` | 네이티브 `aspect-ratio`. padding-top 해킹을 쓰지 않는다 |
+| `BrandMark` | ⚠️ 임시 심볼. 로고가 정해지면 이 파일만 교체하면 된다 |
 | `VisuallyHidden` | `display:none` 은 접근성 트리에서도 사라져 이 목적에 못 쓴다 |
 
 ### `forms/` — 값을 입력받는 것
@@ -44,6 +50,14 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | `Input` / `Textarea` / `Select` / `Checkbox` / `RadioGroup` | 전부 **네이티브 요소**. `accent-color` 토큰이 강조색을 맞춘다 |
 | `SearchInput` | `<form role="search">` + `<input type="search">` — 랜드마크 + 모바일 검색 키 |
 | `TagInput` | Enter·쉼표·붙여넣기·Backspace 를 전부 받는다. 정규화 후 중복을 판정한다 |
+| `Form` | `pending` 중 **`<fieldset disabled>`** 로 안쪽을 통째로 잠근다(이중 제출 방지) |
+| `FormActions` | 파괴적 행동을 **반대편 끝**에 둔다 — 제출 옆의 삭제는 언젠가 잘못 눌린다 |
+| `NumberInput` | 세는 값에만. 전화번호 같은 **식별자**는 앞자리 0 이 사라져 쓰면 안 된다 |
+| `DateInput` | 네이티브 피커라 **사용자 로케일 형식**을 따른다. `03/04` 해석이 나라마다 다르다 |
+| `Combobox` | 네이티브 `<datalist>`. **한국어 키워드로도 검색**된다 |
+| `SegmentedControl` | 겉모습만 다른 **라디오**. Tabs 는 내비게이션, 이건 입력이다 |
+| `Slider` | 네이티브 `<input type="range">`. 현재 값을 **텍스트로도** 보여준다 |
+| `FileInput` | 드래그앤드롭은 **보조 수단**. 드롭만 되면 키보드·터치 사용자에게 없는 기능이다 |
 
 ### `feedback/` — 상태를 알리는 것
 
@@ -52,6 +66,8 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | `Banner` | konnect 의 주 용도는 **R1 고지**. `riskToTone`/`freshnessToTone` 이 도메인 등급을 tone 에 매핑. R3 는 배너를 띄우지 않는다 |
 | `EmptyState` | "결과 없음"만 띄우지 않는다. 다음 행동을 준다 |
 | `Toast` | **모듈 스토어**라 React 밖(react-query `onError`)에서도 띄운다. `ToastHost` 는 앱 루트에 한 번만. 최대 3개 |
+| `LoadingState` | **영역이** 로딩을 알린다(스피너가 아니라). 가능하면 스켈레톤을 넘긴다 |
+| `ErrorState` | 사용자에게 기술적 메시지를 보여주지 않는다. `detail` 은 개발 환경 전용 |
 
 ### `overlays/` — 흐름 위에 띄우는 것
 
@@ -62,6 +78,7 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | `Popover` | **Popover API**. 열림 상태를 위한 JS 가 **아예 없다** |
 | `Menu` | `Popover` 위에 얹음. `role="menu"` 를 **쓰지 않는다**(아래 참고) |
 | `Tooltip` | Popover 기반이라 hover 뿐 아니라 클릭·키보드로도 열린다. **필수 정보를 두지 않는다** |
+| `ConfirmDialog` | `window.confirm` 대체. **Promise 를 돌려준다**: `await confirm({…})`. Esc = 취소 |
 
 ### `data-display/` — 값을 보여주는 것
 
@@ -77,6 +94,11 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | `FreshnessIndicator` | `Banner.freshnessToTone` 재사용 — 배너와 배지가 같은 기준을 쓴다 |
 | `Timeline` | 체류 생애주기(T0~T7) 표시 |
 | `Checklist` | 시점별 할 일. 진행 상태는 **로컬 저장 전제** |
+| `Quote` | `<figure>`+`<blockquote>`. **개인 경험과 규정을 시각적으로 구분**한다(R1 규칙) |
+| `Stat` | `<dl>`. **증가가 항상 좋은 것은 아니다** — 응답 시간은 줄어야 좋다 |
+| `AvatarGroup` | `<ul>`. 접힌 인원수는 텍스트로 남긴다 |
+| `CopyButton` | 한국어 행정 용어를 **그대로 복사**해 서류·검색창에 붙여넣게 한다 |
+| `TruncatedText` | `line-clamp` 는 시각적으로만 자른다 — 전체 텍스트가 DOM 에 남아 Ctrl+F 로 찾힌다 |
 
 ### `navigation/` — 위치를 옮기는 것
 
@@ -86,6 +108,9 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | `Breadcrumb` | `<nav>` + `<ol>`. 마지막 항목은 링크가 아니다 |
 | `Tabs` | `role="tablist"` 를 쓰므로 **화살표·Home/End 로빙 포커스를 실제로 구현**한다 |
 | `Pagination` | 키셋 커서 방식이라 **페이지 번호가 없다**. 커서 스택은 순수 함수로 관리 |
+| `Steps` | 진행 중인 절차의 위치. Timeline 은 기록, Steps 는 현재 |
+| `TableOfContents` | 긴 가이드용. 앵커 id 는 `slugify` 와 **같은 규칙**(갈라지면 링크가 죽는다) |
+| `BackLink` | `history.back()` 을 쓰지 않는다 — 검색 유입자에게 "뒤"는 검색 결과이거나 없다 |
 
 ### `layout/` — 화면 뼈대
 
@@ -95,6 +120,9 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | `Section` | 제목이 있으면 `<section aria-labelledby>`, 없으면 `<div>` |
 | `PageHeader` | `sticky` + `--header-h` 토큰 세팅(앵커 이동 시 제목 가림 방지). 모바일 네비는 Popover 로 접힌다 |
 | `SkipLink` | 포커스를 받으면 나타난다. `display:none` 이면 목적이 사라진다 |
+| `PageTitle` | 제목은 항상 `<h1>`. 크기는 `Heading size` 로 줄이지 레벨을 낮추지 않는다 |
+| `Footer` | 그룹마다 `<nav aria-label>`. **전역 고지**(법률 자문 아님)를 둔다 |
+| `AppShell` | SkipLink + `id="main-content"` + `tabIndex={-1}` 을 한 곳에 고정 — **셋이 함께 있어야** 동작한다 |
 
 ### `theme/` — 테마 적용
 
@@ -102,6 +130,13 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | --- | --- |
 | `ThemeScript` | FOUC 방지 **동기 인라인 스크립트**. `next/script` 나 `useEffect` 로는 늦다 |
 | `ThemeToggle` | light → dark → system 순환. 아이콘은 **적용 결과가 아니라 현재 선택**을 보여준다 |
+
+### `utility/` — 렌더 자체를 다루는 것
+
+| 컴포넌트 | 메모 |
+| --- | --- |
+| `ErrorBoundary` | 이 저장소에서 클래스 컴포넌트를 쓰는 **유일한 곳**(대응 훅이 없다). 경계는 화면이 아니라 **영역 단위**로 둔다 |
+| `ClientOnly` | 하이드레이션 경고를 없애려고 아무 데나 두르지 않는다 — 서버 렌더에서 빠지면 **검색엔진이 못 읽는다** |
 
 > 테마 상태는 `FE/src/lib/theme/` 의 `useSyncExternalStore` 기반 스토어가 들고 있다.
 > Provider 를 두지 않는 이유: 테마는 거의 바뀌지 않는데 Context 로 감싸면
@@ -136,6 +171,10 @@ UI 없이 검증 가능하고, 실제로 틀리기 쉬운 부분이 거기 모�
 | `RelativeTime.utils` | `Intl` 포맷, 과거/미래, 잘못된 값 |
 | `Checklist.utils` | 진행 계산(사라진 항목 id 무시) |
 | `toast.store` | 최대 개수, danger 자동 소멸 안 함, 구독 |
+| `confirm.store` | Promise resolve, 새 요청이 앞선 것을 취소로 닫음 |
+| `Combobox.utils` | 영문·한국어 양쪽 검색, 접두 일치 우선 |
+| `Steps.utils` | 단계 상태 경계, 범위 밖 current |
+| `TableOfContents.utils` | 앵커 id 규칙, 중복 제목 번호 |
 | `lib/theme/theme.utils` | system 해석, 손상된 저장값, 순환 |
 
 ## 브라우저 검증
@@ -143,8 +182,22 @@ UI 없이 검증 가능하고, 실제로 틀리기 쉬운 부분이 거기 모�
 `npm run check:stories` — 모든 스토리를 실제 브라우저에서 열어 렌더와 런타임 에러를 본다.
 **빌드된다고 실행되는 것은 아니다**: `next/link` 가 Ladle 에서 죽는 것을 이 검사만 잡았다.
 
-## 아직 없는 것
+## 의도적으로 만들지 않은 것
+
+빠진 게 아니라 **안 만들기로 한 것**이다.
+
+| 컴포넌트 | 이유 |
+| --- | --- |
+| Carousel | [모션 원칙](../10-foundations/05-motion.md) — 자동 재생 캐러셀 금지. 필요해지면 CSS Carousel 이 안정된 뒤 |
+| ScrollArea (커스텀 스크롤바) | 스크롤바를 숨기면 **스크롤 가능하다는 유일한 단서**가 사라진다 |
+| DatePicker (커스텀 캘린더) | 네이티브 `DateInput` 이 로케일·키보드·모바일을 이미 처리한다 |
+| Rating | 제품에 별점이 없다 — 학원/부동산 평점은 분쟁 리스크로 [보류](../../10-domain/20-language/01-topik-and-learning.md) |
+| DataGrid | MVP 에 표 편집이 없다. `Table` 로 충분하다 |
+| RichTextEditor | 본문 작성 방식(마크다운 vs WYSIWYG)이 아직 안 정해졌다 |
+
+## 아직 없는 것 (필요하지만 전제가 빠짐)
 
 - Pagination 을 실제 목록에 연결 — [키셋 커서](../../30-architecture/03-api-conventions.md) API 가 생긴 뒤
-- 브랜드 로고·파비콘
-- 폼 상태 관리(제출·검증 흐름) — 라이브러리 선택 필요
+- 브랜드 로고·파비콘 — `BrandMark` 가 임시 심볼로 자리만 잡아 뒀다
+- 폼 검증 흐름 — `Form`/`Field` 가 배선은 갖췄고, 스키마 라이브러리 선택이 남았다
+- i18n 문구 추출 — 지금은 영어 하드코딩, [전략](../../30-architecture/06-i18n-strategy.md)은 정해져 있다

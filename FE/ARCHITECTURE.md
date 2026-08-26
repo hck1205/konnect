@@ -26,11 +26,15 @@ src/
   views/                   # 페이지 컴포넌트 (app은 이걸 렌더만; src/pages는 Next 충돌로 금지)
     HomePage/
   components/              # UI 컴포넌트 (관심사 카테고리별)
-    primitives/            #   최소 단위, 도메인 무관 (Button, Avatar …)
-    forms/                 #   입력 (Field, Input, TagInput …)
-    feedback/              #   상태 전달 (Banner, EmptyState)
-    overlays/              #   띄우는 것 (Modal, Popover, Menu)
-    data-display/          #   보여주는 것 (Card, Tag, Accordion …)
+    primitives/            #   최소 단위, 도메인 무관 (Button, Heading, Avatar …)
+    forms/                 #   입력 (Form, Field, Combobox, TagInput …)
+    feedback/              #   상태 전달 (Banner, Toast, LoadingState, ErrorState)
+    overlays/              #   띄우는 것 (Modal, Drawer, ConfirmDialog, Popover …)
+    data-display/          #   보여주는 것 (Card, Table, Stat, Quote …)
+    navigation/            #   위치 이동 (Tabs, Steps, Pagination …)
+    layout/                #   화면 뼈대 (AppShell, PageHeader, Footer …)
+    theme/                 #   테마 적용 (ThemeScript, ThemeToggle)
+    utility/               #   렌더 자체 (ErrorBoundary, ClientOnly)
   atoms/                   # jotai 전역 상태 (관심사별)
   query/                   # 서버 통신 (axios + react-query, 관심사별)
     client.ts              #   공용 axios 인스턴스 + 봉투 unwrap/orNull + Bearer 인터셉터
@@ -47,14 +51,15 @@ src/
 
 | 카테고리 | 기준 | 예 |
 | --- | --- | --- |
-| `primitives/` | 최소 단위, 도메인 지식 없음 | Button, IconButton, Link, Avatar, Badge, Spinner, Skeleton, Switch, Progress, Divider, Kbd, Code, VisuallyHidden |
-| `forms/` | 값을 입력받는 것 | Field, Fieldset, Input, Textarea, Select, Checkbox, RadioGroup, SearchInput, TagInput |
-| `feedback/` | 상태를 알리는 것 | Banner, EmptyState, Toast |
-| `overlays/` | 흐름 위에 띄우는 것 | Modal, Drawer, Popover, Menu, Tooltip |
-| `data-display/` | 값을 보여주는 것 | Card, Tag, Table, Prose, Accordion, DescriptionList, RelativeTime, FreshnessIndicator, Timeline, Checklist |
-| `navigation/` | 위치를 옮기는 것 | NavLink, Breadcrumb, Tabs, Pagination |
-| `layout/` | 화면 뼈대 | Container, Section, PageHeader, SkipLink |
+| `primitives/` | 최소 단위, 도메인 지식 없음 | Button, IconButton, CloseButton, Link, Heading, Avatar, Badge, StatusDot, Spinner, Skeleton, Switch, Progress, Meter, Divider, Kbd, Code, AspectRatio, BrandMark, VisuallyHidden |
+| `forms/` | 값을 입력받는 것 | Form, FormActions, Field, Fieldset, Input, Textarea, NumberInput, DateInput, Select, Combobox, Checkbox, RadioGroup, SegmentedControl, Switch·Slider, FileInput, SearchInput, TagInput |
+| `feedback/` | 상태를 알리는 것 | Banner, Toast, EmptyState, LoadingState, ErrorState |
+| `overlays/` | 흐름 위에 띄우는 것 | Modal, Drawer, ConfirmDialog, Popover, Menu, Tooltip |
+| `data-display/` | 값을 보여주는 것 | Card, Table, Prose, Quote, Tag, Stat, AvatarGroup, Accordion, DescriptionList, RelativeTime, FreshnessIndicator, Timeline, Checklist, CopyButton, TruncatedText |
+| `navigation/` | 위치를 옮기는 것 | NavLink, BackLink, Breadcrumb, Tabs, Steps, Pagination, TableOfContents |
+| `layout/` | 화면 뼈대 | AppShell, Container, Section, PageHeader, PageTitle, Footer, SkipLink |
 | `theme/` | 테마 적용 | ThemeScript, ThemeToggle |
+| `utility/` | 렌더 자체를 다루는 것 | ErrorBoundary, ClientOnly |
 
 카테고리를 고를 때는 **"무엇으로 만들었나"가 아니라 "무슨 일을 하나"** 를 본다.
 TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
