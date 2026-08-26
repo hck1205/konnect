@@ -2,7 +2,8 @@
 
 konnect 프론트엔드 — Next.js(App Router) · TypeScript · Tailwind · jotai · TanStack Query.
 
-아키텍처와 폴더/컴포넌트 컨벤션은 [ARCHITECTURE.md](./ARCHITECTURE.md) 참고.
+아키텍처와 폴더/컴포넌트 컨벤션은 [ARCHITECTURE.md](./ARCHITECTURE.md),
+디자인 토큰은 [docs/25-design](../docs/25-design/) 참고.
 
 ## 시작하기
 
@@ -28,6 +29,7 @@ cd ../BE && npm run start:dev
 | `npm run typecheck` | `tsc --noEmit` |
 | `npm run lint` | eslint |
 | `npm run test` | vitest 단위 테스트 |
+| `npm run check:contrast` | 디자인 토큰 WCAG 대비 검증 ([문서](../docs/25-design/10-foundations/01-color.md)) |
 | `npm run test:integration` | 라이브 BE 대상 통합 테스트(BE 먼저 기동) |
 
 ## 환경변수

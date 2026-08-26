@@ -62,5 +62,5 @@ FE의 `/api/*`가 BE로 프록시되므로 CORS 설정 없이 붙는다.
 
 ```bash
 cd BE && npm run lint && npm run build && npm test && npm run test:e2e
-cd FE && npm run lint && npm run typecheck && npm test && npm run build
+cd FE && npm run lint && npm run typecheck && npm test && npm run check:contrast && npm run build
 ```

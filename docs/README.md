@@ -13,6 +13,7 @@
 | 00 | [`00-overview/`](./00-overview/) | 왜 만드는가 — 비전·문제·타깃·범위·용어 |
 | 10 | [`10-domain/`](./10-domain/) | 사용자가 겪는 **실제 이슈 영역**(비자·어학·학교·주거·취업·교류) |
 | 20 | [`20-product/`](./20-product/) | 그 이슈를 **제품으로 어떻게 푸는가** — IA·기능·여정·MVP·지표 |
+| 25 | [`25-design/`](./25-design/) | 디자인 시스템 — 원칙·토큰·foundation |
 | 30 | [`30-architecture/`](./30-architecture/) | 기술 구조 — 시스템·API·데이터 모델·인증·다국어 |
 | 40 | [`40-operations/`](./40-operations/) | 환경·로컬 개발·배포 |
 | 50 | [`50-decisions/`](./50-decisions/) | ADR — 되돌리기 어려운 결정과 그 이유 |
@@ -34,4 +35,5 @@
 1. [`00-overview/01-product-vision.md`](./00-overview/01-product-vision.md) — 한 줄 정의
 2. [`00-overview/02-problem-statement.md`](./00-overview/02-problem-statement.md) — 무엇이 문제인가
 3. [`20-product/04-mvp-scope.md`](./20-product/04-mvp-scope.md) — 처음 무엇을 만드는가
-4. [`30-architecture/01-system-overview.md`](./30-architecture/01-system-overview.md) — 어떻게 만드는가
+4. [`25-design/02-tokens.md`](./25-design/02-tokens.md) — 화면을 어떤 토큰으로 만드는가
+5. [`30-architecture/01-system-overview.md`](./30-architecture/01-system-overview.md) — 어떻게 만드는가

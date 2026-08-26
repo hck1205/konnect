@@ -1,28 +1,334 @@
 @import "tailwindcss";
 
-/* 다크 모드를 media 기본값 대신 class/selector 전략으로 전환한다.
-   .dark 가 붙은 요소(또는 그 하위)에서만 dark:* 유틸리티가 적용되어, 사용자
-   수동 토글(라이트/다크/시스템)이 동작한다. */
+/* ═══════════════════════════════════════════════════════════════════════
+   konnect 디자인 토큰
+   문서: docs/60-design/  ·  값의 근거와 대비 검증 결과는 거기에 있다.
+
+   3계층 구조 — 이 순서를 지킨다.
+     1) primitive : 원시 팔레트·스케일. 의미가 없다. 컴포넌트가 직접 쓰지 않는다.
+     2) semantic  : 역할 이름(surface / fg / border …). 테마마다 값이 달라진다.
+     3) utility   : semantic 을 Tailwind 유틸리티로 노출(bg-surface, text-fg-muted …).
+
+   컴포넌트는 **2계층(semantic)만** 쓴다. `bg-teal-700` 같은 primitive 직접 사용 금지 —
+   다크 모드에서 뒤집히지 않고, 브랜드 색을 바꿀 때 전부 찾아 고쳐야 한다.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* 다크 모드는 media 기본값이 아니라 class/selector 전략을 쓴다.
+   .dark 가 붙은 요소(또는 그 하위)에서만 dark:* 유틸리티가 적용되어
+   사용자 수동 토글(라이트/다크/시스템)이 가능하다. */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ─────────────────────────────────────────────────────────────────────
+   1) PRIMITIVE — 원시 팔레트
+   ───────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Brand — teal. 차분하고 신뢰감 있는 계열을 골랐다.
+     비자·주거처럼 불안한 상황에서 읽는 서비스라 채도 높은 색을 피한다. */
+  --color-brand-50:  #f0fdfa;
+  --color-brand-100: #ccfbf1;
+  --color-brand-200: #99f6e4;
+  --color-brand-300: #5eead4;
+  --color-brand-400: #2dd4bf;
+  --color-brand-500: #14b8a6;
+  --color-brand-600: #0d9488;
+  --color-brand-700: #0f766e;
+  --color-brand-800: #115e59;
+  --color-brand-900: #134e4a;
+  --color-brand-950: #042f2e;
+
+  /* Neutral — 약간 차가운 회색(브랜드 teal 과 어울린다) */
+  --color-neutral-0:   #ffffff;
+  --color-neutral-50:  #fafafa;
+  --color-neutral-100: #f4f4f5;
+  --color-neutral-200: #e4e4e7;
+  --color-neutral-300: #d4d4d8;
+  --color-neutral-400: #a1a1aa;
+  --color-neutral-450: #8b8b94; /* 입력 테두리 전용 — 3:1 을 넘기려 끼워 넣은 단계 */
+  --color-neutral-500: #71717a;
+  --color-neutral-550: #6b6b73; /* 라이트 fg-subtle 전용 — 4.5:1 을 넘기려 끼워 넣은 단계 */
+  --color-neutral-600: #52525b;
+  --color-neutral-700: #3f3f46;
+  --color-neutral-750: #85858e; /* 다크 fg-subtle 전용 (밝기순 아님 — 역할 이름이다) */
+  --color-neutral-800: #27272a;
+  --color-neutral-900: #18181b;
+  --color-neutral-950: #09090b;
+
+  /* Status — 의미가 고정된 색. 브랜드가 바뀌어도 이건 바뀌지 않는다. */
+  --color-success-50:  #ecfdf5;
+  --color-success-300: #6ee7b7;
+  --color-success-400: #34d399;
+  --color-success-700: #047857;
+  --color-success-800: #065f46;
+  --color-success-950: #022c22;
+
+  --color-warning-50:  #fffbeb;
+  --color-warning-300: #fcd34d;
+  --color-warning-400: #fbbf24;
+  --color-warning-700: #b45309;
+  --color-warning-800: #92400e;
+  --color-warning-950: #451a03;
+
+  --color-danger-50:   #fef2f2;
+  --color-danger-300:  #fca5a5;
+  --color-danger-400:  #f87171;
+  --color-danger-700:  #b91c1c;
+  --color-danger-800:  #991b1b;
+  --color-danger-950:  #450a0a;
+
+  --color-info-50:     #eff6ff;
+  --color-info-300:    #93c5fd;
+  --color-info-400:    #60a5fa;
+  --color-info-700:    #1d4ed8;
+  --color-info-800:    #1e40af;
+  --color-info-950:    #172554;
+
+  /* ── 타이포그래피 ──────────────────────────────────────────────
+     Geist 에는 한글 글리프가 없다. 한글은 폴백 스택에서 글리프 단위로
+     대체되므로, 한국어 원문 병기(외국인등록증 등)가 깨지지 않게
+     한글 폴백을 명시한다. → docs/60-design/10-foundations/02-typography.md */
+  --font-sans: var(--font-geist-sans), "Apple SD Gothic Neo", "Malgun Gothic",
+               "Noto Sans KR", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  /* 본문 line-height 를 넉넉히 잡는다 — 제2언어로 읽는 사용자가 다수다 */
+  --text-xs:   0.75rem;   --text-xs--line-height:   1.125rem;
+  --text-sm:   0.875rem;  --text-sm--line-height:   1.375rem;
+  --text-base: 1rem;      --text-base--line-height: 1.625rem;
+  --text-lg:   1.125rem;  --text-lg--line-height:   1.75rem;
+  --text-xl:   1.25rem;   --text-xl--line-height:   1.75rem;
+  --text-2xl:  1.5rem;    --text-2xl--line-height:  2rem;
+  --text-3xl:  1.875rem;  --text-3xl--line-height:  2.25rem;
+  --text-4xl:  2.25rem;   --text-4xl--line-height:  2.5rem;
+
+  /* ── 라운드 ─────────────────────────────────────────────────── */
+  --radius-sm:  0.25rem;
+  --radius-md:  0.375rem;
+  --radius-lg:  0.5rem;
+  --radius-xl:  0.75rem;
+  --radius-2xl: 1rem;
+
+  /* ── 모션 — 짧고 절제되게. 정보를 읽으러 온 서비스다 ────────── */
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   2) SEMANTIC — 역할 토큰
+
+   light-dark() 로 두 테마 값을 **한 줄에** 선언한다.
+   블록을 나누면 한쪽만 정의한 토큰이 생기는데, 그건 다크에서 조용히 깨진다.
+   한 줄에 두면 그 실수가 구조적으로 불가능해진다.
+
+   light-dark() 는 그 요소의 color-scheme 을 보고 고른다 → :root(light) / .dark(dark)
+   가 각각 color-scheme 을 선언하므로, 수동 토글이 그대로 동작한다.
+
+   대비는 전부 WCAG AA 로 검증했다 → docs/25-design/10-foundations/01-color.md
+   ───────────────────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+
+  /* 표면 — 라이트는 raised 가 더 어둡고, 다크는 더 밝다(층 = 밝기 차) */
+  --surface:         light-dark(var(--color-neutral-0),   var(--color-neutral-950));
+  --surface-raised:  light-dark(var(--color-neutral-50),  var(--color-neutral-900));
+  --surface-sunken:  light-dark(var(--color-neutral-100), #000000);
+  --surface-overlay: light-dark(var(--color-neutral-0),   var(--color-neutral-900));
+
+  /* 텍스트 */
+  --fg:          light-dark(var(--color-neutral-900), var(--color-neutral-100));
+  --fg-muted:    light-dark(var(--color-neutral-600), var(--color-neutral-400));
+  --fg-subtle:   light-dark(var(--color-neutral-550), var(--color-neutral-750)); /* AA 최소선 */
+  --fg-on-solid: light-dark(var(--color-neutral-0),   var(--color-neutral-950));
+
+  /* 보더 — 두 종류를 구분한다.
+     border             : 장식용 구분선. 비텍스트 대비 3:1 대상이 아니다.
+     border-interactive : 입력 필드 등 '경계 자체가 의미'인 것. 3:1 필수. */
+  --border:             light-dark(var(--color-neutral-200), var(--color-neutral-800));
+  --border-strong:      light-dark(var(--color-neutral-300), var(--color-neutral-700));
+  --border-interactive: light-dark(var(--color-neutral-450), var(--color-neutral-500));
+
+  /* 브랜드 — 다크에서 링크는 밝게, 버튼 채움은 밝은 색 + 어두운 글자로 뒤집는다 */
+  --brand:             light-dark(var(--color-brand-700), var(--color-brand-300));
+  --brand-solid:       light-dark(var(--color-brand-700), var(--color-brand-400));
+  --brand-solid-hover: light-dark(var(--color-brand-800), var(--color-brand-300));
+  --brand-subtle:      light-dark(var(--color-brand-50),  var(--color-brand-950));
+  --brand-on-subtle:   light-dark(var(--color-brand-800), var(--color-brand-300));
+
+  /* 상태 */
+  --success:            light-dark(var(--color-success-700), var(--color-success-400));
+  --success-subtle:     light-dark(var(--color-success-50),  var(--color-success-950));
+  --success-on-subtle:  light-dark(var(--color-success-800), var(--color-success-300));
+  --warning:            light-dark(var(--color-warning-700), var(--color-warning-400));
+  --warning-subtle:     light-dark(var(--color-warning-50),  var(--color-warning-950));
+  --warning-on-subtle:  light-dark(var(--color-warning-800), var(--color-warning-300));
+  --danger:             light-dark(var(--color-danger-700),  var(--color-danger-400));
+  --danger-subtle:      light-dark(var(--color-danger-50),   var(--color-danger-950));
+  --danger-on-subtle:   light-dark(var(--color-danger-800),  var(--color-danger-300));
+  --info:               light-dark(var(--color-info-700),    var(--color-info-400));
+  --info-subtle:        light-dark(var(--color-info-50),     var(--color-info-950));
+  --info-on-subtle:     light-dark(var(--color-info-800),    var(--color-info-300));
+
+  /* 포커스링 — 접근성 필수. 절대 outline:none 으로 지우지 않는다. */
+  --focus-ring: light-dark(var(--color-brand-700), var(--color-brand-400));
+
+  /* 모달 뒷배경 — color-mix() 로 토큰에서 파생한다(별도 rgba 리터럴을 두지 않는다) */
+  --scrim: color-mix(in srgb, var(--color-neutral-950) 60%, transparent);
+
+  /* 그림자 — 라이트에서만 층을 만든다. 다크는 표면 밝기가 그 역할을 한다. */
+  --shadow-1: light-dark(0 1px 2px 0 rgb(0 0 0 / 0.05), 0 1px 2px 0 rgb(0 0 0 / 0.40));
+  --shadow-2: light-dark(0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 3px 0 rgb(0 0 0 / 0.50));
+  --shadow-3: light-dark(0 4px 12px -2px rgb(0 0 0 / 0.10), 0 4px 12px -2px rgb(0 0 0 / 0.60));
+  --shadow-4: light-dark(0 12px 32px -8px rgb(0 0 0 / 0.16), 0 12px 32px -8px rgb(0 0 0 / 0.70));
+
+  /* 고정 헤더 높이 — 앵커 이동 시 제목이 가려지지 않게 하는 데 쓴다.
+     헤더 컴포넌트가 생기면 이 값을 갱신한다. */
+  --header-h: 0px;
+
+  /* 네이티브 폼 컨트롤(체크박스·라디오·range·progress)의 강조색.
+     이 한 줄이면 컨트롤을 직접 재구현할 필요가 없다. */
+  accent-color: var(--brand-solid);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* 수동 토글용. color-scheme 만 뒤집으면 위 light-dark() 가 전부 따라온다. */
 .dark {
-  --background: #09090b; /* zinc-950 */
-  --foreground: #f4f4f5; /* zinc-100 */
+  color-scheme: dark;
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   3) UTILITY — semantic 을 Tailwind 유틸리티로 노출
+   bg-surface / text-fg-muted / border-border-interactive / ring-focus …
+   ───────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-surface:         var(--surface);
+  --color-surface-raised:  var(--surface-raised);
+  --color-surface-sunken:  var(--surface-sunken);
+  --color-surface-overlay: var(--surface-overlay);
+
+  --color-fg:          var(--fg);
+  --color-fg-muted:    var(--fg-muted);
+  --color-fg-subtle:   var(--fg-subtle);
+  --color-fg-on-solid: var(--fg-on-solid);
+
+  --color-border:             var(--border);
+  --color-border-strong:      var(--border-strong);
+  --color-border-interactive: var(--border-interactive);
+
+  --color-brand:             var(--brand);
+  --color-brand-solid:       var(--brand-solid);
+  --color-brand-solid-hover: var(--brand-solid-hover);
+  --color-brand-subtle:      var(--brand-subtle);
+  --color-brand-on-subtle:   var(--brand-on-subtle);
+
+  --color-success: var(--success); --color-success-subtle: var(--success-subtle); --color-success-on-subtle: var(--success-on-subtle);
+  --color-warning: var(--warning); --color-warning-subtle: var(--warning-subtle); --color-warning-on-subtle: var(--warning-on-subtle);
+  --color-danger:  var(--danger);  --color-danger-subtle:  var(--danger-subtle);  --color-danger-on-subtle:  var(--danger-on-subtle);
+  --color-info:    var(--info);    --color-info-subtle:    var(--info-subtle);    --color-info-on-subtle:    var(--info-on-subtle);
+
+  --color-focus-ring: var(--focus-ring);
+
+  --shadow-e1: var(--shadow-1);
+  --shadow-e2: var(--shadow-2);
+  --shadow-e3: var(--shadow-3);
+  --shadow-e4: var(--shadow-4);
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   4) 기본 스타일 — 브라우저 네이티브 기능을 우선 활용한다
+   근거와 정책: docs/25-design/10-foundations/08-native-platform.md
+   ───────────────────────────────────────────────────────────────────── */
+
+/* --scrim 을 유틸리티로도 노출 (모달 뒷배경) */
+@theme inline {
+  --color-scrim: var(--scrim);
+}
+
+html {
+  /* 해시 링크 이동을 부드럽게. reduced-motion 사용자는 아래에서 auto 로 되돌린다. */
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: var(--surface);
+  color: var(--fg);
+  /* 본문 줄바꿈을 브라우저에 맡긴다 — 고아 단어(마지막 줄 한 단어)를 줄인다.
+     제2언어로 한 줄씩 읽는 사용자에게 실제로 도움이 된다. */
+  text-wrap: pretty;
+}
+
+/* 제목은 줄 길이를 고르게 — 짧은 텍스트에 최적화된 알고리듬 */
+h1, h2, h3, h4, h5, h6 {
+  text-wrap: balance;
+}
+
+/* 앵커로 이동했을 때 고정 헤더에 제목이 가리지 않게.
+   각 스크롤 호출부를 고치는 대신 대상 요소에 한 번만 선언한다. */
+:target,
+h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+  scroll-margin-block-start: calc(var(--header-h) + 1rem);
+}
+
+/* 포커스 표시는 전역 기본값으로 보장한다.
+   개별 컴포넌트가 outline 을 지우고 대체 표시를 잊는 사고를 막는다. */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* 선택 영역도 브랜드에 맞추되, 선택 여부가 확실히 보이는 대비를 유지한다
+   (brand-on-subtle on brand-subtle = 7.27:1) */
+::selection {
+  background-color: var(--brand-subtle);
+  color: var(--brand-on-subtle);
+}
+
+/* 목록 마커는 semantic 구조(ul/ol)를 유지한 채 색만 맞춘다 */
+::marker {
+  color: var(--fg-subtle);
+}
+
+/* 진짜 포인터가 있는 장치가 아니면 터치 타깃을 44px 로 넓힌다.
+   User-Agent 로 기기를 추측하지 않고 **실제 입력 장치 성능**을 묻는다.
+   (터치스크린 노트북처럼 fine/coarse 를 동시에 가진 장치도 올바르게 처리된다) */
+@media (any-pointer: coarse) {
+  button,
+  [role="button"],
+  a[href],
+  label,
+  input,
+  select,
+  summary {
+    min-block-size: 44px;
+  }
+}
+
+/* 모션 민감 사용자 존중 — 접근성 필수 항목.
+   주의: 이 규칙은 CSS 애니메이션만 막는다. JS 애니메이션은 컴포넌트가
+   matchMedia('(prefers-reduced-motion: reduce)') 로 직접 확인해야 한다. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   5) 유틸리티
+   ───────────────────────────────────────────────────────────────────── */
+
+/* 시각적으로 작은 액션에 44px 히트 영역을 확보한다.
+   아이콘 버튼처럼 보이는 크기와 만질 수 있는 크기가 달라야 할 때 쓴다. */
+@utility touch-target {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 50% 50% 50% 50%;
+    min-inline-size: 44px;
+    min-block-size: 44px;
+    translate: -50% -50%;
+  }
 }
