@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAsyncSubmit } from '@/hooks';
 import { cn } from '@/lib/cn';
 import { useI18n } from '@/lib/i18n';
 import { Avatar } from '@/components/primitives/Avatar';
@@ -39,7 +40,7 @@ export function CommentComposer({
 }: CommentComposerProps) {
   const { t } = useI18n();
   const [body, setBody] = useState('');
-  const [pending, setPending] = useState(false);
+  const { pending, submit } = useAsyncSubmit(onSubmit);
 
   if (!currentUser) {
     return (
@@ -57,24 +58,12 @@ export function CommentComposer({
     );
   }
 
-  const submit = async () => {
-    const trimmed = body.trim();
-    if (!trimmed || pending) return;
-    setPending(true);
-    try {
-      await onSubmit(trimmed);
-      setBody('');
-    } finally {
-      setPending(false);
-    }
-  };
-
   return (
     <form
       className={cn('flex gap-3', className)}
       onSubmit={(e) => {
         e.preventDefault();
-        void submit();
+        void submit(body, () => setBody(''));
       }}
     >
       <Avatar name={currentUser.nickname} src={currentUser.avatarUrl} size="sm" />

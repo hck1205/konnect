@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAsyncSubmit } from '@/hooks';
 import { useI18n } from '@/lib/i18n';
 import { Modal } from '@/components/overlays/Modal';
 import { Button } from '@/components/primitives/Button';
@@ -33,20 +34,12 @@ export function ReportDialog({ open, onClose, onSubmit, targetLabel }: ReportDia
   const { t } = useI18n();
   const [reason, setReason] = useState<ReportReason>('scam');
   const [detail, setDetail] = useState('');
-  const [pending, setPending] = useState(false);
-
   const track = trackFor(reason);
 
-  const submit = async () => {
-    setPending(true);
-    try {
-      await onSubmit({ reason, detail: detail.trim(), track });
-      setDetail('');
-      onClose();
-    } finally {
-      setPending(false);
-    }
-  };
+  // 사유는 항상 있으므로 빈 값 가드에 걸리지 않게 reason 을 넘긴다
+  const { pending, submit } = useAsyncSubmit(() =>
+    onSubmit({ reason, detail: detail.trim(), track }),
+  );
 
   return (
     <Modal
@@ -60,7 +53,12 @@ export function ReportDialog({ open, onClose, onSubmit, targetLabel }: ReportDia
           <Button variant="ghost" tone="neutral" onClick={onClose}>
             {t('common.cancel')}
           </Button>
-          <Button tone="danger" loading={pending} onClick={() => void submit()}>
+          <Button tone="danger" loading={pending} onClick={() =>
+              void submit(reason, () => {
+                setDetail('');
+                onClose();
+              })
+            }>
             {t('report.submit')}
           </Button>
         </>
