@@ -1,6 +1,7 @@
 import {
   capitalize,
   isBlank,
+  normalizeQuery,
   normalizeWhitespace,
   slugify,
   truncate,
@@ -24,6 +25,14 @@ describe('string util', () => {
 
   it('normalizeWhitespace — 연속 공백을 하나로', () => {
     expect(normalizeWhitespace('  a   b  ')).toBe('a b');
+  });
+
+  it('normalizeQuery — 빈/공백 검색어는 필터 없음으로 수렴한다', () => {
+    expect(normalizeQuery('  d-2  ')).toBe('d-2');
+    expect(normalizeQuery('   ')).toBeNull();
+    expect(normalizeQuery('')).toBeNull();
+    expect(normalizeQuery(undefined)).toBeNull();
+    expect(normalizeQuery(null)).toBeNull();
   });
 
   /**

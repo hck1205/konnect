@@ -28,8 +28,12 @@ src/
   config/                # 환경변수 로더 + APP_CONFIG DI 토큰
   common/                # 공통 filters / interceptors / decorators / id
   prisma/                # PrismaService(전역) + DB_DRIVER 저장소 스위치
-  modules/               # 도메인 모듈 (health/ 가 최소 예시)
-    health/
+  modules/               # 도메인 모듈
+    health/              #   헬스체크
+    auth/                #   ⚠️ 임시 로그인 + 전역 JWT 가드 (OAuth 미구현)
+    tags/                #   태그 고정 어휘·정규화 (FE 와 같은 규칙)
+    questions/           #   질문 CRUD + 키셋 목록
+    answers/             #   답변 + 채택
   utils/                 # 순수 함수 (string/array/number/boolean)
 test/                    # e2e (*.e2e-spec.ts)
 ```
@@ -50,6 +54,53 @@ posts/
     posts.prisma.repository.ts
   index.ts                   # 모듈/공개 타입만 export
 ```
+
+## API
+
+전부 `{ data, timestamp }` 봉투로 감싸진다.
+
+| 메서드 | 경로 | 인증 |
+| --- | --- | --- |
+| POST | `/auth/login` | 공개 — ⚠️ **테스트 전용, 운영에서는 404** |
+| GET | `/auth/me` | 필요 |
+| GET | `/questions` | 공개 — `cursor` `limit` `topic` `tags` `q` `answered` |
+| GET | `/questions/:id` | 공개 (숨김 글은 작성자에게만) |
+| POST | `/questions` | 필요 |
+| PATCH | `/questions/:id` | 작성자 |
+| DELETE | `/questions/:id` | 작성자 — **숨김**이지 물리 삭제가 아니다 |
+| GET | `/questions/:id/answers` | 공개 |
+| POST | `/questions/:id/answers` | 필요 |
+| POST | `/questions/:id/answers/:answerId/accept` | **질문** 작성자 |
+| DELETE | `/questions/:id/answers/accepted` | 질문 작성자 |
+| PATCH | `/answers/:id` | 작성자 |
+| DELETE | `/answers/:id` | 작성자 — 숨김 |
+
+### 접근 정책
+
+**Read 는 공개, Write 는 인증 + 작성자 본인.** 검색으로 들어온 사용자가 로그인
+벽에 막히면 안 된다 — 유입이 주 채널이다.
+
+전역 가드라 **기본이 "인증 필요"**이고 공개 라우트에 `@Public()` 을 붙인다.
+반대로 하면 새 엔드포인트가 의도치 않게 공개된다.
+
+### 페이지네이션
+
+키셋(커서) 방식이다. id 가 UUIDv7(시간정렬)이라 **커서 = id 하나**로 성립한다.
+offset 을 쓰지 않는 이유: 새 글이 계속 들어오므로 페이지 사이에 중복·누락이 생긴다.
+
+```
+GET /questions?limit=20&cursor=<lastId>
+→ { data: { items: [...], nextCursor: "..." | null }, timestamp }
+```
+
+## 아직 안 된 것
+
+| 항목 | 상태 |
+| --- | --- |
+| **소셜 OAuth** | 미구현. `/auth/login` 은 임시 통로이고 운영에서는 404 다 |
+| **사용자 저장소** | 없다 — 같은 닉네임으로 다시 로그인하면 **다른 사람**이 된다 |
+| **Prisma 저장소** | 스키마에 모델이 없어 즉시 던진다. `DB_DRIVER=memory` 로 쓴다 |
+| 댓글·리액션·신고 | 별도 모듈 |
 
 ## 응답 계약
 

@@ -11,6 +11,10 @@ export interface AppConfig {
   port: number;
   corsOrigin: string;
   nodeEnv: 'development' | 'production' | 'test';
+  /** JWT 서명 비밀키 — 운영에서는 반드시 환경변수로 주입한다 */
+  jwtSecret: string;
+  /** 액세스 토큰 만료 (예: '1d', '12h') */
+  jwtExpiresIn: string;
   /** Postgres 연결 문자열 — DB_DRIVER='prisma'일 때만 사용 (Prisma가 env로 읽음) */
   databaseUrl: string;
   /**
@@ -24,6 +28,9 @@ export const loadAppConfig = (): AppConfig => ({
   port: Number(process.env.PORT ?? 4000),
   corsOrigin: process.env.CORS_ORIGIN ?? 'http://localhost:3000',
   nodeEnv: (process.env.NODE_ENV as AppConfig['nodeEnv']) ?? 'development',
+  // 기본값은 **로컬 전용**이다. 운영에서 이 값이 쓰이면 토큰을 누구나 위조할 수 있다.
+  jwtSecret: process.env.JWT_SECRET ?? 'konnect-dev-secret-do-not-use-in-prod',
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? '1d',
   databaseUrl: process.env.DATABASE_URL ?? '',
   dbDriver: (process.env.DB_DRIVER as DbDriver) ?? 'memory',
 });

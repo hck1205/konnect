@@ -8,8 +8,11 @@ type PrismaCtor<T> = new (prisma: PrismaService) => T;
 /**
  * DB_DRIVER 값에 따라 인메모리/Prisma 저장소를 선택하는 팩토리 provider를 만든다.
  *
- * 도메인 모듈은 이렇게 쓴다:
- *   providers: [repositoryProvider(USERS_REPOSITORY, InMemoryUsersRepository, PrismaUsersRepository)]
+ * 도메인 모듈은 이렇게 쓴다 — **제네릭에 인터페이스를 명시한다**:
+ *   repositoryProvider<UsersRepository>(USERS_REPOSITORY, InMemoryUsersRepository, PrismaUsersRepository)
+ *
+ * 생략하면 T 가 인메모리 **구현 클래스**에서 추론되어, Prisma 구현이 그 클래스의
+ * private 필드까지 가져야 한다는 잘못된 제약이 걸린다.
  *
  * 설정은 **APP_CONFIG 토큰으로 주입받는다**(loadAppConfig 를 직접 부르지 않는다).
  * PrismaService 는 이미 그렇게 하고 있었는데 여기만 직접 호출하고 있었다 —
