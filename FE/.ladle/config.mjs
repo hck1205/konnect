@@ -1,6 +1,8 @@
 /** @type {import('@ladle/react').UserConfig} */
 export default {
   stories: 'src/**/*.stories.{ts,tsx}',
+  // next/link 를 스텁으로 바꾼다 — 스토리에는 Next 런타임이 없다
+  viteConfig: './.ladle/vite.config.ts',
   defaultStory: 'primitives-button--variants',
   addons: {
     a11y: { enabled: true },

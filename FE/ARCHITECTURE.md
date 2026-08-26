@@ -47,11 +47,14 @@ src/
 
 | 카테고리 | 기준 | 예 |
 | --- | --- | --- |
-| `primitives/` | 최소 단위, 도메인 지식 없음 | Button, IconButton, Avatar, Badge, Spinner, Skeleton |
-| `forms/` | 값을 입력받는 것 | Field, Input, Textarea, Select, Checkbox, TagInput |
-| `feedback/` | 상태를 알리는 것 | Banner, EmptyState |
-| `overlays/` | 흐름 위에 띄우는 것 | Modal, Popover, Menu |
-| `data-display/` | 값을 보여주는 것 | Card, Tag, Accordion, DescriptionList |
+| `primitives/` | 최소 단위, 도메인 지식 없음 | Button, IconButton, Link, Avatar, Badge, Spinner, Skeleton, Switch, Progress, Divider, Kbd, Code, VisuallyHidden |
+| `forms/` | 값을 입력받는 것 | Field, Fieldset, Input, Textarea, Select, Checkbox, RadioGroup, SearchInput, TagInput |
+| `feedback/` | 상태를 알리는 것 | Banner, EmptyState, Toast |
+| `overlays/` | 흐름 위에 띄우는 것 | Modal, Drawer, Popover, Menu, Tooltip |
+| `data-display/` | 값을 보여주는 것 | Card, Tag, Table, Prose, Accordion, DescriptionList, RelativeTime, FreshnessIndicator, Timeline, Checklist |
+| `navigation/` | 위치를 옮기는 것 | NavLink, Breadcrumb, Tabs, Pagination |
+| `layout/` | 화면 뼈대 | Container, Section, PageHeader, SkipLink |
+| `theme/` | 테마 적용 | ThemeScript, ThemeToggle |
 
 카테고리를 고를 때는 **"무엇으로 만들었나"가 아니라 "무슨 일을 하나"** 를 본다.
 TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
@@ -104,13 +107,29 @@ business/view 를 나누는 기준은 **테스트 가능한 로직이 있는가*
 
 ```sh
 npm run ladle          # 개발 서버
-npm run ladle:build    # 정적 빌드 (스토리가 깨지지 않는지 확인)
+npm run ladle:build    # 정적 빌드
+npm run check:stories  # 모든 스토리를 브라우저에서 열어 런타임 에러 확인
 ```
 
 - `title` 은 `'카테고리 / 컴포넌트'` 형식
 - 상태를 **빠짐없이** 보여준다: default / disabled / loading / invalid
 - 접근성 애드온(a11y)이 켜져 있다. 새 스토리를 추가하면 한 번 확인한다
 - 테마 토글이 `.dark` 클래스와 동기화되어 있어 **다크 모드를 그대로 검증**할 수 있다
+
+### `check:stories` 가 왜 따로 필요한가
+
+**빌드된다고 실행되는 것은 아니다.** typecheck·lint·`ladle build` 를 전부 통과하는데
+브라우저에서 죽는 경우가 있다. 실제로 `next/link` 가 Ladle(Vite)에서
+`ReferenceError: process is not defined` 로 죽었고, 이 검사만 그걸 잡았다.
+
+```sh
+npm run ladle -- --port 61000        # 한 터미널
+LADLE_URL=http://localhost:61000 npm run check:stories
+```
+
+`next/link` 는 `.ladle/vite.config.ts` 에서 스텁으로 alias 된다 —
+스토리에는 Next 런타임이 없기 때문이다. 컴포넌트에서 다른 `next/*` 를 쓰게 되면
+거기에 alias 를 추가해야 한다.
 
 
 ## utils 규약
