@@ -1,7 +1,8 @@
 # 데이터 모델 (초안)
 
-> **초안이다.** MVP 범위([04-mvp-scope](../20-product/04-mvp-scope.md))에 맞춘 최소 형태이며,
-> 실제 `schema.prisma`는 구현 시점에 이 문서를 근거로 작성한다.
+> **User · AuthIdentity · Question · Answer · Tag 는 구현됐다** —
+> 실제 스키마는 [`BE/prisma/schema.prisma`](../../BE/prisma/schema.prisma)가 진실이고,
+> 이 문서는 의도를 설명한다. 나머지(Reaction·Conversation·Guide)는 여전히 초안이다.
 
 ## 엔티티
 

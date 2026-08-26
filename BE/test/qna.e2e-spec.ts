@@ -5,6 +5,7 @@ import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { applyGlobalHarness } from '../src/app.setup';
 import type { ApiResponse } from '../src/common';
+import { resetDatabase } from './e2e.utils';
 
 /**
  * Q&A e2e — **권한 규칙이 서버에서 강제되는지**가 핵심이다.
@@ -61,6 +62,9 @@ describe('Q&A (e2e)', () => {
     app = applyGlobalHarness(moduleFixture.createNestApplication());
     await app.init();
     http = app.getHttpServer();
+
+    // 인메모리는 앱마다 새로 비지만 DB 는 남는다 — 두 드라이버의 전제를 맞춘다
+    await resetDatabase(app);
   });
 
   afterEach(async () => {

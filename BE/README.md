@@ -20,7 +20,8 @@ npm run dev        # = db:migrate && start:dev
 
 ```
 prisma/
-  schema.prisma          # 데이터 스키마 (모델은 도메인이 정해질 때 추가)
+  schema.prisma          # 데이터 스키마 — User·AuthIdentity·Question·Answer·Tag
+  migrations/            # 마이그레이션 이력
 src/
   main.ts                # 부트스트랩 — loadEnv() 를 가장 먼저 호출한다
   app.setup.ts           # 전역 파이프/필터/인터셉터 (main 과 e2e 가 공유)
@@ -31,6 +32,7 @@ src/
   modules/               # 도메인 모듈
     health/              #   헬스체크
     auth/                #   ⚠️ 임시 로그인 + 전역 JWT 가드 (OAuth 미구현)
+    users/               #   사용자 (작성자 FK 를 만족시키는 최소 형태)
     tags/                #   태그 고정 어휘·정규화 (FE 와 같은 규칙)
     questions/           #   질문 CRUD + 키셋 목록
     answers/             #   답변 + 채택
@@ -98,9 +100,34 @@ GET /questions?limit=20&cursor=<lastId>
 | 항목 | 상태 |
 | --- | --- |
 | **소셜 OAuth** | 미구현. `/auth/login` 은 임시 통로이고 운영에서는 404 다 |
-| **사용자 저장소** | 없다 — 같은 닉네임으로 다시 로그인하면 **다른 사람**이 된다 |
-| **Prisma 저장소** | 스키마에 모델이 없어 즉시 던진다. `DB_DRIVER=memory` 로 쓴다 |
+| **동일인 식별** | 제공자 id 로 찾을 경로가 없어 **로그인할 때마다 새 계정**이 된다. OAuth 도입 시 해결된다 |
 | 댓글·리액션·신고 | 별도 모듈 |
+
+## 스키마
+
+`prisma/schema.prisma`. 결정 몇 가지:
+
+- **비밀번호 컬럼이 없다.** 로그인은 OAuth 전용이다 — 보관하지 않으면 유출·재사용·
+  재설정 흐름이 통째로 사라진다. `AuthIdentity(provider, providerId)` 가 유일한 식별 경로다
+- **id 는 애플리케이션이 만드는 UUIDv7**(DB 기본값이 아니다). 시간정렬이라
+  **커서 = id 하나**로 키셋 페이지네이션이 성립한다
+- **시각은 `timestamptz`** — 사용자가 여러 시간대에 흩어져 있다
+- **물리 삭제가 없다.** `status` 로 숨긴다
+- 복합 인덱스는 **필터 먼저, 정렬 나중**(`[status, id desc]`) — 그래야 인덱스를 탄다
+- `QuestionTag.position` — 태그 **입력 순서**를 저장한다. 조인 결과의 순서는
+  보장되지 않는데, 먼저 적은 태그가 더 중요할 가능성이 높다
+
+### 두 드라이버가 같은 테스트를 통과해야 한다
+
+인메모리 구현이 계약의 정의이고 Prisma 는 그 의미를 SQL 로 옮긴 것이다.
+**같은 e2e 를 두 번 돌린다.**
+
+```bash
+npm run test:e2e                                    # 인메모리
+DB_DRIVER=prisma DATABASE_URL=... npm run test:e2e  # Postgres
+```
+
+한쪽만 통과하면 계약이 갈라진 것이다 — 실제로 태그 순서가 그렇게 어긋나 있었다.
 
 ## 응답 계약
 
