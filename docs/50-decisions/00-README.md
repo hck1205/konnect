@@ -7,7 +7,9 @@
 | --- | --- | --- |
 | [0001](./0001-record-architecture-decisions.md) | ADR을 기록한다 | 수락됨 |
 | [0002](./0002-monorepo-be-fe-split.md) | 한 저장소에 BE/ · FE/ 분리 | 수락됨 |
-| [0003](./0003-english-first-multilingual.md) | 영어 우선, 다국어 확장 | 수락됨 |
+| [0003](./0003-english-first-multilingual.md) | 영어 우선, 다국어 확장 | 수락됨 (일부 [0005](./0005-multilingual-from-day-one.md)로 대체) |
+| [0004](./0004-direct-messages-with-safety-gates.md) | 1:1 쪽지 도입 — 안전 장치 전제 | 수락됨 |
+| [0005](./0005-multilingual-from-day-one.md) | 다국어를 출시 시점부터 | 수락됨 |
 
 ## 규칙
 

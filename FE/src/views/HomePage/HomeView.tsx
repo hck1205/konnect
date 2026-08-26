@@ -1,45 +1,60 @@
-import { BookOpen, MessageCircleQuestion, Users } from 'lucide-react';
-import { Container } from '@/components/layout/Container';
-import { PageHeader } from '@/components/layout/PageHeader';
-import { SkipLink } from '@/components/layout/SkipLink';
-import { Button } from '@/components/primitives/Button';
+'use client';
 
-const NAV = [
-  { href: '/questions', label: 'Questions', icon: <MessageCircleQuestion className="size-4" /> },
-  { href: '/guides', label: 'Guides', icon: <BookOpen className="size-4" /> },
-  { href: '/meetups', label: 'Meetups', icon: <Users className="size-4" /> },
-];
+import { BookOpen, MessageCircleQuestion, Users } from 'lucide-react';
+import { useI18n } from '@/lib/i18n';
+import { AppShell } from '@/components/layout/AppShell';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { PageTitle } from '@/components/layout/PageTitle';
+import { Footer } from '@/components/layout/Footer';
+import { Button } from '@/components/primitives/Button';
+import { LocaleSwitcher } from '@/components/i18n/LocaleSwitcher';
 
 /**
- * 홈 페이지 — 프레젠테이셔널 레이어(상태 없음).
+ * 홈 페이지 — 프레젠테이셔널 레이어.
  *
- * 색은 semantic 토큰(bg-surface / text-fg-muted …)만 쓴다.
- * primitive(bg-teal-700 등) 직접 사용 금지 — docs/25-design/02-tokens.md
+ * 색은 semantic 토큰만 쓴다. 문구는 사전에서 가져온다(하드코딩 금지) —
+ * docs/25-design/02-tokens.md · docs/30-architecture/06-i18n-strategy.md
  */
-export function HomeView() {
-  return (
-    <>
-      <SkipLink />
-      <PageHeader nav={NAV} currentPath="/" actions={<Button size="sm">Sign in</Button>} />
+export function HomeView({ pathname }: { pathname: string }) {
+  const { t, locale } = useI18n();
 
-      {/* tabIndex={-1} 이라야 SkipLink 로 포커스가 실제로 옮겨진다 */}
-      <Container as="main" id="main-content" tabIndex={-1} width="prose" className="flex-1 py-16">
-        <h1 className="text-4xl font-bold tracking-tight text-fg">konnect</h1>
-        <p className="mt-4 max-w-[70ch] text-lg text-fg-muted">
-          A community for foreigners living, studying, working, and travelling in
-          Korea.
-        </p>
-        <p className="mt-2 text-sm text-fg-subtle">
-          {/* 한국어 원문 병기 — 브라우저 번역기가 건드리면 안 된다(사용자가 실제
-              서류에서 이 글자를 찾아야 한다). lang 은 스크린리더 발음을 위해 함께 둔다.
-              → docs/25-design/10-foundations/08-native-platform.md */}
-          Alien Registration Card (
-          <span lang="ko" translate="no">
-            외국인등록증
-          </span>
-          ), visas, housing, language — ask the people who have been through it.
-        </p>
-      </Container>
-    </>
+  const nav = [
+    { href: `/${locale}/questions`, label: 'Questions', icon: <MessageCircleQuestion className="size-4" /> },
+    { href: `/${locale}/guides`, label: 'Guides', icon: <BookOpen className="size-4" /> },
+    { href: `/${locale}/meetups`, label: 'Meetups', icon: <Users className="size-4" /> },
+  ];
+
+  return (
+    <AppShell
+      width="prose"
+      header={
+        <PageHeader
+          nav={nav}
+          currentPath={pathname}
+          actions={
+            <>
+              <LocaleSwitcher pathname={pathname} />
+              <Button size="sm">{t('common.signIn')}</Button>
+            </>
+          }
+        />
+      }
+      footer={<Footer disclaimer={t('message.safety')} />}
+    >
+      <PageTitle
+        title="konnect"
+        description="A community for foreigners living, studying, working, and travelling in Korea."
+      />
+      <p className="mt-4 text-sm text-fg-subtle">
+        {/* 한국어 원문 병기 — 브라우저 번역기가 건드리면 안 된다(사용자가 실제
+            서류에서 이 글자를 찾아야 한다). lang 은 스크린리더 발음을 위해 함께 둔다.
+            → docs/25-design/10-foundations/08-native-platform.md */}
+        Alien Registration Card (
+        <span lang="ko" translate="no">
+          외국인등록증
+        </span>
+        ), visas, housing, language — ask the people who have been through it.
+      </p>
+    </AppShell>
   );
 }

@@ -12,3 +12,6 @@
 | [05-search-and-tagging.md](./05-search-and-tagging.md) | **P0** |
 | [06-notifications.md](./06-notifications.md) | P1 |
 | [07-moderation-and-reporting.md](./07-moderation-and-reporting.md) | **P0** |
+| [08-reactions.md](./08-reactions.md) | P1 |
+| [09-direct-messages.md](./09-direct-messages.md) | P2 — 안전 장치 전제 |
+| [10-post-editor.md](./10-post-editor.md) | **P0** |

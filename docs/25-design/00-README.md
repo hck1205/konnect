@@ -29,6 +29,7 @@ FE/.ladle/                 ← 스토리 설정
 
 - ✅ **Foundation** — 토큰 3계층, 색/타이포/간격/라운드/그림자/모션, 접근성 기본값,
   네이티브 플랫폼 기능 채택 정책
-- ✅ **컴포넌트 80종** — [목록](./20-components/), Ladle 스토리 135개 (`cd FE && npm run ladle`)
+- ✅ **컴포넌트 88종** — [목록](./20-components/), Ladle 스토리 151개 (`cd FE && npm run ladle`)
+- ✅ **다국어** — en/ko/zh/vi, 로케일 URL 라우팅 + `Intl` 포맷
 - ✅ **테마 전환** — FOUC 방지 스크립트 + light/dark/system 토글
 - ⬜ [남은 것](./20-components/#아직-없는-것-필요하지만-전제가-빠짐) — 로고·파비콘, 폼 검증 흐름, i18n 문구 추출

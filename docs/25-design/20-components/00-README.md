@@ -131,6 +131,27 @@ TagInput 이 Tag 를 쓰지만 `forms/` 인 이유가 그것이다.
 | `ThemeScript` | FOUC 방지 **동기 인라인 스크립트**. `next/script` 나 `useEffect` 로는 늦다 |
 | `ThemeToggle` | light → dark → system 순환. 아이콘은 **적용 결과가 아니라 현재 선택**을 보여준다 |
 
+### `community/` — 도메인 지식을 가진 조합
+
+다른 카테고리와 달리 **konnect 의 규칙을 알고 있다.** primitives 가 도메인을 모르는 것과
+정반대다 — 그래서 카테고리를 나눴다.
+
+| 컴포넌트 | 메모 |
+| --- | --- |
+| `PostEditor` | **작성 중 비슷한 질문**을 보여준다 — 태그를 강제하는 것보다 중복 방지에 효과적이다 |
+| `CommentThread` | **대대댓글이 없다.** 답글의 답글은 한 단계로 접힌다. 삭제된 댓글은 자리를 남긴다 |
+| `CommentComposer` | 비로그인에게 입력창을 보여주고 나서 로그인을 요구하지 않는다 |
+| `ReactionBar` | 고정 어휘 이모지 5종. 이모지 옆에 **번역된 이름**이 함께 읽힌다 → [문서](../../20-product/10-features/08-reactions.md) |
+| `ReportDialog` | 사유를 고르면 **긴급 트랙인지 즉시** 알려준다 |
+| `MessageThread` | 안전 고지 **닫기 불가** + 차단·신고 한 번의 조작 + 민감정보 경고 → [ADR-0004](../../50-decisions/0004-direct-messages-with-safety-gates.md) |
+| `ConversationList` | 안 읽음 개수를 숫자와 **텍스트 양쪽**으로 |
+
+### `i18n/` — 언어
+
+| 컴포넌트 | 메모 |
+| --- | --- |
+| `LocaleSwitcher` | **링크로 이동**한다(토글이 아니라). 각 언어 이름을 **그 언어로** 적는다 |
+
 ### `utility/` — 렌더 자체를 다루는 것
 
 | 컴포넌트 | 메모 |
@@ -176,6 +197,13 @@ UI 없이 검증 가능하고, 실제로 틀리기 쉬운 부분이 거기 모�
 | `Steps.utils` | 단계 상태 경계, 범위 밖 current |
 | `TableOfContents.utils` | 앵커 id 규칙, 중복 제목 번호 |
 | `lib/theme/theme.utils` | system 해석, 손상된 저장값, 순환 |
+| `lib/i18n/translate` | 보간, 복수형(언어별 카테고리), 폴백 순서 |
+| `lib/i18n/format` | `Intl` 위임 — 베트남어 천 단위, 목록 접속사, 잘못된 날짜 |
+| `lib/i18n/resolveLocale` | 경로 분리·치환, `Accept-Language` 협상(q 값 순서) |
+| `ReactionBar.utils` | 한 사람이 하나, 갈아타기, 동수 시 안정 정렬 |
+| `CommentThread.utils` | 대대댓글 접기, 고아 답글, 순환 참조 방어 |
+| `ReportDialog.utils` | 사유 → 긴급/일반 트랙 |
+| `MessageThread.utils` | 메시지 묶기(날짜 경계), 민감정보 형태 감지(오탐 억제) |
 
 ## 브라우저 검증
 

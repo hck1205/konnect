@@ -52,6 +52,32 @@ Report
   createdAt, resolvedAt?
 ```
 
+### 리액션 · 쪽지
+
+```
+Reaction
+  id, userId, targetType, targetId
+  kind                           LIKE | HELPFUL | SUPPORT | CELEBRATE | INSIGHTFUL
+  UNIQUE(userId, targetType, targetId)   ← 한 사람이 하나만
+  createdAt
+
+Conversation                     1:1 이므로 참가자는 정확히 둘
+  id, lastMessageAt
+ConversationParticipant          참가자별 상태 — 한 대화에 두 개
+  conversationId, userId
+  unreadCount, lastReadAt, blocked, archived
+  UNIQUE(conversationId, userId)
+Message
+  id, conversationId, senderId, body, createdAt, readAt?
+```
+
+**`Reaction` 의 UNIQUE 제약이 "한 사람이 하나"를 강제한다** —
+클라이언트 로직만으로는 동시 요청에서 깨진다.
+
+**`ConversationParticipant` 를 분리한 이유**: 안 읽음·차단은 **사람마다 다르다**.
+Conversation 에 넣으면 한쪽의 차단이 양쪽에 적용된다.
+→ [쪽지 기능](../20-product/10-features/09-direct-messages.md)
+
 ## M2 이후
 
 ```
