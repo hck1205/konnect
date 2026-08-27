@@ -24,12 +24,17 @@ visa:f-2         visa:f-5        visa:naturalization    visa:e-7   ...
 topic:residency  topic:work      topic:housing          topic:admin   topic:language
 region:ansan     region:seoul    region:gyeonggi        ...
 nationality:vn   nationality:cn  nationality:uz         ...
+lang:en          lang:ko         lang:vi                lang:ja   ...
 school:snu       ...
 ```
 
 `topic:` 과 `nationality:` 는 나중에 추가됐다 —
 [09-content-pillars](../20-prd/09-content-pillars.md)와
 [ADR-0008](../../50-decisions/0008-nationality-as-tag-not-space.md)이 요구했다.
+
+`lang:` 은 다른 태그와 쓰임이 다르다 — **필터가 아니라 정렬 가중치**로 쓴다
+([ADR-0010](../../50-decisions/0010-language-as-weight-not-wall.md)).
+임계질량을 넘은 언어만 기본 필터로 승격한다.
 
 **교차 필터가 이 태그 체계의 존재 이유다.** `nationality:vn` × `topic:residency`,
 `visa:f-2` × `region:ansan` 처럼 축을 곱해야 답이 나온다. BE 가 태그 AND 를 지원한다.
