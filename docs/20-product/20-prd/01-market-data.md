@@ -204,6 +204,27 @@ konnect 의 모수는 **한국에 체류하는 외국인**이다. 추측이 아�
 | [행정안전부 지방자치단체 외국인주민 현황](https://kosis.kr/visual/nsportalStats/detailContents.do?listId=A&statJipyoId=3637) | 지역 분포 | 2024-11 |
 | [공공데이터포털 — 법무부 국적·체류자격별 현황](https://www.data.go.kr/data/3045188/fileData.do) | 원자료(엑셀) | 연말 |
 
-> **갱신 규칙**: 이 문서는 **연 1회(법무부 연말 통계 공표 직후)** 갱신한다.
-> 갱신 시 기존 표를 지우지 말고 시점을 덧붙여 **추세가 보이게** 한다 —
-> 이 PRD 의 판단은 절대 수치가 아니라 **증감 방향**에 걸려 있다.
+## 갱신
+
+**연 1회(법무부 연말 통계 공표 직후)** 갱신한다.
+기존 표를 지우지 말고 시점을 덧붙여 **추세가 보이게** 한다 —
+이 PRD 의 판단은 절대 수치가 아니라 **증감 방향**에 걸려 있다.
+
+### 갱신할 때 함께 고칠 곳
+
+**이 문서가 수치의 소유자다.** 그런데 논증을 위해 같은 숫자를 다시 적은 곳이 있다.
+갱신 시 아래를 함께 본다 — 안 그러면 조용히 갈라진다.
+
+| 문서 | 무엇을 다시 적었나 |
+| --- | --- |
+| [02-segments](./02-segments-and-priority.md) | 세그먼트 모수, 유학생 국적 비율, 지역 비율 |
+| [03-interests](./03-interests-and-jobs.md) | 어려움 조사 비율(언어·외로움·차별) |
+| [05-localization](./05-localization-priority.md) | 국적별 인원, 신규 국제결혼 국적 비율 |
+| [07-monetization](./07-monetization.md) | 없음 — 비율만 인용 |
+
+**ADR([0006](../../50-decisions/0006-audience-priority-from-population-data.md)·[0007](../../50-decisions/0007-settlement-intent-as-primary-axis.md))
+은 고치지 않는다.** ADR 은 *그때 그 숫자로 그렇게 판단했다*는 기록이다 —
+숫자가 바뀌면 새 ADR 을 쓴다.
+
+[00-overview/03-target-users](../../00-overview/03-target-users.md) 는
+**의도적으로 수치를 담지 않는다** — 코드·자격·우선순위만 둔다.

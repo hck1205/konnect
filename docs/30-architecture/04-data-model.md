@@ -79,7 +79,7 @@ Message
 Conversation 에 넣으면 한쪽의 차단이 양쪽에 적용된다.
 → [쪽지 기능](../20-product/10-features/09-direct-messages.md)
 
-## M2 이후
+## Phase 2 이후
 
 ```
 Guide

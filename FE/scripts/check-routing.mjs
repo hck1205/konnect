@@ -11,7 +11,10 @@
  *
  * BASE_URL 로 대상 주소를 바꿀 수 있다.
  */
+import { createReport } from './lib/check-report.mjs';
+
 const BASE = process.env.BASE_URL ?? 'http://localhost:3000';
+const report = createReport('라우팅');
 
 /** [설명, Accept-Language, 기대 경로] */
 const CASES = [
@@ -24,20 +27,18 @@ const CASES = [
   ['헤더가 없으면 기준 언어', null, '/en/questions/1'],
 ];
 
-const failures = [];
-
 async function expectRedirect(label, acceptLanguage, expected) {
   const res = await fetch(`${BASE}/questions/1`, {
     redirect: 'manual',
     headers: acceptLanguage ? { 'accept-language': acceptLanguage } : {},
   });
   if (res.status !== 307) {
-    failures.push([label, `307 이 아니라 ${res.status} — proxy 가 안 돌고 있다`]);
+    report.fail(label, `307 이 아니라 ${res.status} — proxy 가 안 돌고 있다`);
     return;
   }
   const location = res.headers.get('location') ?? '';
   const path = new URL(location, BASE).pathname;
-  if (path !== expected) failures.push([label, `${expected} 를 기대했는데 ${path}`]);
+  if (path !== expected) report.fail(label, `${expected} 를 기대했는데 ${path}`);
 }
 
 /**
@@ -50,15 +51,14 @@ async function expectRedirect(label, acceptLanguage, expected) {
 async function expectNoRedirect(path) {
   const res = await fetch(`${BASE}${path}`, { redirect: 'manual' });
   if (res.status >= 300 && res.status < 400) {
-    failures.push([`${path} 는 그대로 서빙돼야 한다`, `${res.status} 리다이렉트가 났다`]);
+    report.fail(`${path} 는 그대로 서빙돼야 한다`, `${res.status} 리다이렉트가 났다`);
   }
 }
 
 try {
   await fetch(BASE, { redirect: 'manual' });
 } catch {
-  console.error(`✖ ${BASE} 에 연결할 수 없다. 먼저 \`npm run dev\` 를 띄운다.`);
-  process.exit(1);
+  report.abort(`${BASE} 에 연결할 수 없다. 먼저 \`npm run dev\` 를 띄운다.`);
 }
 
 for (const [label, header, expected] of CASES) {
@@ -74,9 +74,4 @@ for (const path of NO_REDIRECT) {
   await expectNoRedirect(path);
 }
 
-if (failures.length > 0) {
-  console.error(`✖ 라우팅 검사 실패 ${failures.length}건\n`);
-  for (const [label, reason] of failures) console.error(`  · ${label}\n      ${reason}`);
-  process.exit(1);
-}
-console.log(`✓ 라우팅 ${CASES.length + NO_REDIRECT.length}건 통과 (${BASE})`);
+report.done(CASES.length + NO_REDIRECT.length, BASE);

@@ -14,7 +14,7 @@ Question
   acceptedAnswerId?          ← 질문자가 고른 답
 Answer
   body, author, questionId, createdAt
-  votes                       ← M2 이후
+  votes                       ← Phase 2 이후
 Comment                       ← 질문/답변에 붙는 짧은 부연
 ```
 

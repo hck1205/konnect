@@ -57,4 +57,4 @@ FE/src/
 | — | `modules/tags` | 태그 |
 | — | `modules/users`, `modules/auth` | |
 | — | `modules/reports` | 신고 |
-| 교류 | `modules/meetups` | 이건 실제로 별도 모듈 (M4) |
+| 교류 | `modules/meetups` | 이건 실제로 별도 모듈 (Phase 3) |

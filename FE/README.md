@@ -34,6 +34,9 @@ cd ../BE && npm run start:dev
 | `npm run check:contrast` | 디자인 토큰 WCAG 대비 검증 ([문서](../docs/25-design/10-foundations/01-color.md)) |
 | `npm run check:stories` | 모든 스토리를 브라우저에서 열어 런타임 에러 확인 (Ladle 서버 필요) |
 | `npm run check:routing` | 로케일 협상·리다이렉트가 **실제로 동작하는지** 확인 (dev 서버 필요) |
+
+> 세 검사는 `scripts/lib/check-report.mjs` 로 **보고 형식과 종료코드를 공유**한다.
+> 검사가 더 늘어날 예정이라(sitemap·hreflang) 각자 다시 구현하지 않는다.
 | `npm run test:integration` | 라이브 BE 대상 통합 테스트(BE 먼저 기동) |
 
 ## 환경변수

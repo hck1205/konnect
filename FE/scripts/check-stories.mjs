@@ -15,6 +15,7 @@
  * 이미 설치된 Chromium 을 쓰려면: CHROMIUM_PATH=/path/to/chromium
  */
 import { chromium } from 'playwright';
+import { createReport } from './lib/check-report.mjs';
 
 const BASE = process.env.LADLE_URL ?? 'http://localhost:61000';
 /** 시스템에 이미 있는 Chromium 을 쓰게 해 준다(CI 이미지·컨테이너에서 유용) */
@@ -32,8 +33,7 @@ try {
 
 const ids = Object.keys(meta.stories);
 if (ids.length === 0) {
-  console.error('스토리를 찾지 못했습니다.');
-  process.exit(1);
+  report.abort('스토리를 찾지 못했습니다.');
 }
 
 let browser;
@@ -47,7 +47,7 @@ try {
   process.exit(1);
 }
 const page = await browser.newPage();
-const failures = [];
+const report = createReport('스토리');
 
 for (const id of ids) {
   const errors = [];
@@ -78,18 +78,11 @@ for (const id of ids) {
 
   // 가드: Ladle 의 "Story not found" 페이지를 통과로 세지 않는다.
   // (이 가드가 없으면 잘못된 스토리 id 가 전부 통과한다 — 실제로 그렇게 속았다)
-  if (body.includes('Story not found')) failures.push([id, 'Story not found']);
-  else if (elementCount < 2) failures.push([id, `렌더된 요소 없음 (${elementCount})`]);
-  else if (real.length) failures.push([id, real[0].slice(0, 160)]);
+  if (body.includes('Story not found')) report.fail(id, 'Story not found');
+  else if (elementCount < 2) report.fail(id, `렌더된 요소 없음 (${elementCount})`);
+  else if (real.length) report.fail(id, real[0].slice(0, 160));
 }
 
 await browser.close();
 
-console.log(`검사한 스토리: ${ids.length}`);
-if (failures.length === 0) {
-  console.log('✅ 전부 런타임 에러 없이 렌더');
-} else {
-  console.log(`❌ ${failures.length}건 실패:`);
-  for (const [id, why] of failures) console.log(`   ${id} — ${why}`);
-}
-process.exit(failures.length === 0 ? 0 : 1);
+report.done(ids.length, '런타임 에러 없이 렌더');

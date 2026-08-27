@@ -10,6 +10,7 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
+import { createReport } from './lib/check-report.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const css = readFileSync(resolve(here, '../src/app/globals.css'), 'utf8');
@@ -113,21 +114,17 @@ for (const [bn, bg] of DARK_SURFACES) {
 }
 
 /* ── 실행 ─────────────────────────────────────────────────────────── */
-let failed = 0;
+const report = createReport('대비');
+
 for (const { label, fg, bg, need } of cases) {
   const ratio = contrast(color(fg), color(bg));
-  const pass = ratio >= need;
-  if (!pass) failed += 1;
-  if (!pass || process.env.VERBOSE) {
-    console.log(
-      `${pass ? 'ok  ' : 'FAIL'}  ${ratio.toFixed(2).padStart(5)} / ${need}  ${label}  (${fg} on ${bg})`,
-    );
+  if (ratio >= need) {
+    if (process.env.VERBOSE) {
+      console.log(`ok    ${ratio.toFixed(2).padStart(5)} / ${need}  ${label}  (${fg} on ${bg})`);
+    }
+    continue;
   }
+  report.fail(`${label}  (${fg} on ${bg})`, `${ratio.toFixed(2)} / ${need} 필요`);
 }
 
-console.log(
-  failed === 0
-    ? `\n✅ 대비 검증 통과 — ${cases.length}개 조합 (VERBOSE=1 로 전체 출력)`
-    : `\n❌ ${failed}/${cases.length}개 조합 실패`,
-);
-process.exit(failed === 0 ? 0 : 1);
+report.done(cases.length, 'VERBOSE=1 로 전체 출력');
