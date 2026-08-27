@@ -6,6 +6,10 @@
 이 PRD 는 그 앞단 — **왜 그것을 그 순서로 만드는가** — 를 담당한다.
 기능 상세를 여기에 다시 쓰지 않는다. [10-features/](../10-features/) 로 링크한다.
 
+> **BD 관점**: 커뮤니티는 트래픽만으로 사업이 되지 않는다.
+> [07-monetization](./07-monetization.md) 이 수익 파이프라인을 정하고,
+> **팔 수 없는 것을 만드는 데 시간을 쓰지 않도록** 기능 우선순위를 제약한다.
+
 | 문서 | 정하는 것 |
 | --- | --- |
 | [01-market-data.md](./01-market-data.md) | **실측 수치** — 국적·체류자격·지역·조사. 모든 판단의 근거 |
@@ -14,6 +18,7 @@
 | [04-requirements.md](./04-requirements.md) | 요구사항 — Must / Should / Could |
 | [05-localization-priority.md](./05-localization-priority.md) | 지원 언어 **순서와 그 기준** |
 | [06-risks-and-open-questions.md](./06-risks-and-open-questions.md) | 리스크와 아직 모르는 것 |
+| [07-monetization.md](./07-monetization.md) | **수익 파이프라인(BD)** — 무엇을 팔 수 있는가, 규제의 선은 어디인가 |
 
 ## 이 PRD 가 뒤집은 것 (두 번)
 
