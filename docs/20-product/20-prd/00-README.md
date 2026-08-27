@@ -15,10 +15,15 @@
 | [05-localization-priority.md](./05-localization-priority.md) | 지원 언어 **순서와 그 기준** |
 | [06-risks-and-open-questions.md](./06-risks-and-open-questions.md) | 리스크와 아직 모르는 것 |
 
-## 이 PRD 가 뒤집은 것
+## 이 PRD 가 뒤집은 것 (두 번)
 
-[ADR-0006](../../50-decisions/0006-audience-priority-from-population-data.md) 을 보라.
-초기 타깃을 **"영어권 전문직"** 으로 잡았던 가정이 인구 데이터와 맞지 않았다.
+| ADR | 무엇을 뒤집었나 |
+| --- | --- |
+| [0006](../../50-decisions/0006-audience-priority-from-population-data.md) | **"영어권 전문직"** 가정이 인구 데이터와 맞지 않았다 → 베트남 유학생 |
+| [0007](../../50-decisions/0007-settlement-intent-as-primary-axis.md) | 축을 **체류 목적 → 정주 의도**로 바꿨다 → **영주·귀화 준비자** |
+
+0007 이 0006 의 **결론**을 대체한다. 0006 의 **방법**(네 축으로 계산한다)은 유효하다 —
+바뀐 것은 축의 **가중치**이고, 지금은 **잔존기간이 최우선**이다.
 
 ## 수치를 다룰 때의 규칙
 

@@ -10,7 +10,8 @@
 | [0003](./0003-english-first-multilingual.md) | 영어 우선, 다국어 확장 | 수락됨 (일부 [0005](./0005-multilingual-from-day-one.md)로 대체) |
 | [0004](./0004-direct-messages-with-safety-gates.md) | 1:1 쪽지 도입 — 안전 장치 전제 | 수락됨 |
 | [0005](./0005-multilingual-from-day-one.md) | 다국어를 출시 시점부터 | 수락됨 |
-| [0006](./0006-audience-priority-from-population-data.md) | 타깃 우선순위를 인구 데이터로 재조정 | 수락됨 |
+| [0006](./0006-audience-priority-from-population-data.md) | 타깃 우선순위를 인구 데이터로 재조정 | 수락됨 (결론은 [0007](./0007-settlement-intent-as-primary-axis.md)로 대체) |
+| [0007](./0007-settlement-intent-as-primary-axis.md) | 타깃을 **정주 의도**로 자른다 | 수락됨 |
 
 ## 규칙
 
