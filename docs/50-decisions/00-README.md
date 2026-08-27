@@ -13,6 +13,7 @@
 | [0006](./0006-audience-priority-from-population-data.md) | 타깃 우선순위를 인구 데이터로 재조정 | 수락됨 (결론은 [0007](./0007-settlement-intent-as-primary-axis.md)로 대체) |
 | [0007](./0007-settlement-intent-as-primary-axis.md) | 타깃을 **정주 의도**로 자른다 | 수락됨 |
 | [0008](./0008-nationality-as-tag-not-space.md) | 국적은 **태그**이지 공간이 아니다 | 수락됨 |
+| [0009](./0009-nationality-display-policy.md) | 국적은 **상시 표시하지 않는다** — 맥락에서만 | 수락됨 |
 
 ## 규칙
 
