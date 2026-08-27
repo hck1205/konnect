@@ -17,6 +17,10 @@
 > 모수가 쪼개지고 빈 방이 생긴다. 공간으로 승격하는 조건은
 > [ADR-0008](../50-decisions/0008-nationality-as-tag-not-space.md)이 숫자로 정한다.
 
+> **실제 라우트 목록과 색인 정책**은
+> [30-architecture/07-routes-and-indexing](../30-architecture/07-routes-and-indexing.md)이 갖는다.
+> 아래는 사용자가 보는 네비게이션이고, 그쪽은 URL 과 `noindex` 경계다.
+
 ## 네비게이션 (초안)
 
 ```

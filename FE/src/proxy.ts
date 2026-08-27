@@ -37,6 +37,10 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // 정적 파일·API·Next 내부 경로는 건드리지 않는다
-  matcher: ['/((?!api|_next|.*\\..*).*)'],
+  // 정적 파일·API·Next 내부 경로는 건드리지 않는다.
+  //
+  // `auth` 도 제외한다 — OAuth 콜백(`/auth/callback/<provider>`)은 **기계 간 요청**이고
+  // 제공자에 등록한 redirect URI 와 **정확히** 같아야 한다. 여기에 로케일이 붙으면
+  // (`/en/auth/callback/google`) 제공자가 거부해 로그인이 통째로 깨진다.
+  matcher: ['/((?!api|auth|_next|.*\\..*).*)'],
 };

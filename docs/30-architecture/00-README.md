@@ -10,6 +10,7 @@
 | [04-data-model.md](./04-data-model.md) | 데이터 모델 초안 |
 | [05-authentication.md](./05-authentication.md) | 인증 |
 | [06-i18n-strategy.md](./06-i18n-strategy.md) | 다국어 전략 |
+| [07-routes-and-indexing.md](./07-routes-and-indexing.md) | **라우트 목록과 색인 정책** — 어떤 페이지가 있고 무엇을 색인하는가 |
 
 > 코드 레벨 컨벤션은 저장소 안에 있다: [`BE/README.md`](../../BE/README.md) ·
 > [`FE/ARCHITECTURE.md`](../../FE/ARCHITECTURE.md)

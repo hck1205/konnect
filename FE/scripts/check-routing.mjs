@@ -40,7 +40,13 @@ async function expectRedirect(label, acceptLanguage, expected) {
   if (path !== expected) failures.push([label, `${expected} 를 기대했는데 ${path}`]);
 }
 
-/** 이미 로케일이 붙은 경로는 **리다이렉트하지 않는다** (무한 루프 방지) */
+/**
+ * 로케일을 **붙이면 안 되는** 경로.
+ *
+ * OAuth 콜백은 제공자에 등록한 redirect URI 와 정확히 같아야 한다 —
+ * `/en/auth/callback/google` 로 리다이렉트되면 로그인이 통째로 깨진다.
+ * 이미 로케일이 붙은 경로도 다시 리다이렉트되면 무한 루프가 된다.
+ */
 async function expectNoRedirect(path) {
   const res = await fetch(`${BASE}${path}`, { redirect: 'manual' });
   if (res.status >= 300 && res.status < 400) {
@@ -58,7 +64,13 @@ try {
 for (const [label, header, expected] of CASES) {
   await expectRedirect(label, header, expected);
 }
-for (const path of ['/en', '/ko/questions/1', '/vi']) {
+const NO_REDIRECT = [
+  '/en',
+  '/ko/questions/1',
+  '/vi',
+  '/auth/callback/google', // OAuth 콜백 — 로케일이 붙으면 제공자가 거부한다
+];
+for (const path of NO_REDIRECT) {
   await expectNoRedirect(path);
 }
 
@@ -67,4 +79,4 @@ if (failures.length > 0) {
   for (const [label, reason] of failures) console.error(`  · ${label}\n      ${reason}`);
   process.exit(1);
 }
-console.log(`✓ 라우팅 ${CASES.length + 3}건 통과 (${BASE})`);
+console.log(`✓ 라우팅 ${CASES.length + NO_REDIRECT.length}건 통과 (${BASE})`);
