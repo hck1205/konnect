@@ -14,7 +14,8 @@
     "check:stories": "node scripts/check-stories.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:integration": "vitest run --config vitest.integration.config.ts"
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "check:routing": "node scripts/check-routing.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.2",

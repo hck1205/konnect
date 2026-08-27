@@ -4,6 +4,13 @@ import { DEFAULT_LOCALE, negotiateLocale, splitLocalePath } from '@/lib/i18n';
 /**
  * 로케일 라우팅.
  *
+ * ⚠️ **파일 위치가 동작을 결정한다.** `src/` 를 쓰는 프로젝트에서 이 파일은
+ * 반드시 `src/` 안에 있어야 한다 — 저장소 루트에 두면 Next 가 **조용히 무시**하고
+ * 로케일 없는 경로가 전부 404 가 된다. 타입체크·린트·빌드는 전부 통과하므로
+ * `npm run check:routing` 이 이것을 잡는다.
+ *
+ * 이름도 마찬가지다. Next 16 에서 `middleware` 규약이 `proxy` 로 바뀌었다.
+ *
  * 로케일 세그먼트가 없는 경로로 들어오면 **Accept-Language 를 보고** 그 사용자의
  * 언어로 리다이렉트한다. 처음 방문한 사람이 영어 화면을 만나고 언어를 직접
  * 찾아야 하는 상황을 없앤다.
@@ -15,7 +22,7 @@ import { DEFAULT_LOCALE, negotiateLocale, splitLocalePath } from '@/lib/i18n';
  *
  * 307(임시)을 쓴다 — 협상 결과는 요청마다 달라질 수 있어 영구 리다이렉트가 아니다.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const { locale } = splitLocalePath(pathname);
 

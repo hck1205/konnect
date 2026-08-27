@@ -24,7 +24,9 @@ src/
       page.tsx             #     홈 → views/HomePage
     providers.tsx          #   locale + react-query + jotai + 호스트들
     globals.css            #   Tailwind + 디자인 토큰(@theme)
-  middleware.ts            # Accept-Language 협상 → 로케일 리다이렉트
+  proxy.ts                 # Accept-Language 협상 → 로케일 리다이렉트 (307)
+                           #   ⚠️ src/ 안에 있어야 한다. 루트에 두면 Next 가 조용히
+                           #   무시하고 로케일 없는 경로가 전부 404 가 된다
   views/                   # 페이지 컴포넌트 (app은 이걸 렌더만; src/pages는 Next 충돌로 금지)
     HomePage/
   components/              # UI 컴포넌트 (관심사 카테고리별)
@@ -155,6 +157,19 @@ npm run check:stories  # 모든 스토리를 브라우저에서 열어 런타임
 - 상태를 **빠짐없이** 보여준다: default / disabled / loading / invalid
 - 접근성 애드온(a11y)이 켜져 있다. 새 스토리를 추가하면 한 번 확인한다
 - 테마 토글이 `.dark` 클래스와 동기화되어 있어 **다크 모드를 그대로 검증**할 수 있다
+
+### `check:routing` 도 같은 이유다
+
+`negotiateLocale` 단위 테스트는 **순수 함수라 항상 통과한다.** 타입체크·린트·빌드도
+전부 통과한다. 그런데 `proxy.ts` 가 `src/` 밖에 있으면 Next 가 조용히 무시해서
+**로케일 없는 경로가 전부 404** 가 된다 — 실제로 그렇게 죽어 있었다.
+
+```sh
+npm run dev                 # 한 터미널
+npm run check:routing       # 다른 터미널
+```
+
+Next 16 에서 `middleware` 규약이 **`proxy`** 로 바뀌었다는 것도 이때 드러났다.
 
 ### `check:stories` 가 왜 따로 필요한가
 
