@@ -27,25 +27,10 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(record: QuestionRecord): Promise<QuestionRecord> {
-    // 태그는 없으면 만들고 있으면 잇는다(upsert) — 트랜잭션 안에서 함께 처리해야
-    // 질문만 만들어지고 태그가 빠지는 중간 상태가 남지 않는다
+    // 태그는 트랜잭션 안에서 함께 처리해야 질문만 만들어지고 태그가 빠지는
+    // 중간 상태가 남지 않는다
     const row = await this.prisma.$transaction(async (tx) => {
-      const tagIds = await Promise.all(
-        record.tags.map(async (raw, position) => {
-          const parsed = parseTag(raw);
-          const tag = await tx.tag.upsert({
-            where: { raw: parsed.raw },
-            update: {},
-            create: {
-              id: newId(),
-              namespace: parsed.namespace,
-              value: parsed.value,
-              raw: parsed.raw,
-            },
-          });
-          return { tagId: tag.id, position };
-        }),
-      );
+      const tagIds = await upsertTags(tx, record.tags);
 
       return tx.question.create({
         data: {
@@ -130,22 +115,10 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
         // 태그는 통째로 교체한다 — 부분 갱신은 어떤 태그가 빠졌는지 계산해야 하고
         // 그 계산이 틀리면 유령 태그가 남는다
         await tx.questionTag.deleteMany({ where: { questionId: id } });
-        for (const [position, raw] of patch.tags.entries()) {
-          const parsed = parseTag(raw);
-          const tag = await tx.tag.upsert({
-            where: { raw: parsed.raw },
-            update: {},
-            create: {
-              id: newId(),
-              namespace: parsed.namespace,
-              value: parsed.value,
-              raw: parsed.raw,
-            },
-          });
-          await tx.questionTag.create({
-            data: { questionId: id, tagId: tag.id, position },
-          });
-        }
+        const tagIds = await upsertTags(tx, patch.tags);
+        await tx.questionTag.createMany({
+          data: tagIds.map((t) => ({ questionId: id, ...t })),
+        });
       }
 
       return tx.question.update({
@@ -170,4 +143,35 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
 
     return toQuestionRecord(row);
   }
+}
+
+/** 트랜잭션 클라이언트 — `$transaction` 콜백이 받는 타입 */
+type TxClient = Parameters<Parameters<PrismaService['$transaction']>[0]>[0];
+
+/**
+ * 태그를 없으면 만들고 있으면 잇는다(upsert), 입력 순서와 함께.
+ *
+ * create 와 update 가 **같은 코드를 각자** 갖고 있었다 — 한쪽만 고치면
+ * 새 글과 수정한 글의 태그 처리가 갈라진다(가장 늦게 발견되는 종류다).
+ */
+async function upsertTags(
+  tx: TxClient,
+  tags: readonly string[],
+): Promise<{ tagId: string; position: number }[]> {
+  return Promise.all(
+    tags.map(async (raw, position) => {
+      const parsed = parseTag(raw);
+      const tag = await tx.tag.upsert({
+        where: { raw: parsed.raw },
+        update: {},
+        create: {
+          id: newId(),
+          namespace: parsed.namespace,
+          value: parsed.value,
+          raw: parsed.raw,
+        },
+      });
+      return { tagId: tag.id, position };
+    }),
+  );
 }

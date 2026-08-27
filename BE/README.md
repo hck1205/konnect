@@ -28,6 +28,7 @@ src/
   app.module.ts          # 루트 모듈 — 도메인 모듈을 여기에 등록
   config/                # 환경변수 로더 + APP_CONFIG DI 토큰
   common/                # 공통 filters / interceptors / decorators / id
+                         #   + 키셋 페이지네이션 · 소유권 확인 · 불변 필드 가드
   prisma/                # PrismaService(전역) + DB_DRIVER 저장소 스위치
   modules/               # 도메인 모듈
     health/              #   헬스체크
@@ -128,6 +129,20 @@ DB_DRIVER=prisma DATABASE_URL=... npm run test:e2e  # Postgres
 ```
 
 한쪽만 통과하면 계약이 갈라진 것이다 — 실제로 태그 순서가 그렇게 어긋나 있었다.
+
+**도메인 enum ↔ Prisma enum** 도 같은 종류의 계약이다. 변환이 캐스팅이라
+타입 검사가 못 잡는다 — `TOPICS` 에만 주제를 추가하면 컴파일은 통과하고
+DB 에 넣는 순간 터진다. `questions.mapper.spec.ts` 가 양쪽 목록을 대조한다.
+
+### 규칙을 한 곳에만 둔다
+
+| 규칙 | 어디에 | 갈라지면 |
+| --- | --- | --- |
+| 존재 + 소유 확인 | `common/assertOwned` | `!==` 를 `===` 로 잘못 쓴 한 곳에서 남의 글을 고칠 수 있게 된다 |
+| patch 불변 필드 | `common/patchRecord` | `authorId` 를 빠뜨리면 **patch 로 소유권이 넘어간다** |
+| 키셋 페이지네이션 | `common/paginateByCursor` | 커서 처리가 저장소마다 달라진다 |
+| 태그 정규화 | `modules/tags` (FE 와 같은 규칙) | 같은 태그가 두 표기로 저장돼 필터가 무너진다 |
+| 길이 제한 | `*.constants.ts` | "새로 쓸 땐 되는데 수정하면 400" |
 
 ## 응답 계약
 

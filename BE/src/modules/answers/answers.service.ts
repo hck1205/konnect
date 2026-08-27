@@ -1,11 +1,10 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { newId } from '../../common';
+import { assertOwned, newId } from '../../common';
 import type { RequestUser } from '../auth';
 import { QuestionsService } from '../questions/questions.service';
 import type { AnswerRecord } from './entities/answer.entity';
@@ -104,11 +103,9 @@ export class AnswersService {
 
     const question = await this.questions.findOne(record.questionId, user);
     if (question.acceptedAnswerId === id) {
-      // 질문 작성자가 아닐 수 있으므로 질문 소유자 권한으로 해제한다
-      await this.questions.acceptAnswer(record.questionId, null, {
-        id: question.authorId,
-        nickname: question.authorNickname,
-      });
+      // 시스템 경로로 푼다 — 답변을 숨긴 사람이 질문 작성자가 아닐 수 있다.
+      // 예전에는 질문 작성자 행세를 하는 객체를 만들어 사용자용 경로를 통과시켰다.
+      await this.questions.clearAcceptedAnswer(record.questionId);
     }
     return updated;
   }
@@ -135,15 +132,11 @@ export class AnswersService {
     return this.questions.acceptAnswer(questionId, null, user);
   }
 
+  /** 존재 + 소유 확인 — 규칙은 `common/assertOwned` 하나뿐이다 */
   private async requireOwned(
     id: string,
     user: RequestUser,
   ): Promise<AnswerRecord> {
-    const record = await this.repository.findById(id);
-    if (!record) throw new NotFoundException('Answer not found');
-    if (record.authorId !== user.id) {
-      throw new ForbiddenException('Only the author can modify this answer');
-    }
-    return record;
+    return assertOwned(await this.repository.findById(id), user.id, 'Answer');
   }
 }

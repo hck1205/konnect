@@ -1,5 +1,5 @@
 import type { Page } from '../../../common';
-import { paginateByCursor } from '../../../common';
+import { paginateByCursor, patchRecord } from '../../../common';
 import type { QuestionRecord } from '../entities/question.entity';
 import { matchesFilter, sortNewestFirst } from '../questions.utils';
 import type {
@@ -14,6 +14,9 @@ import type {
  * 필터·정렬 규칙은 `questions.utils` 의 순수 함수를 쓴다: Prisma 구현이
  * 같은 의미를 SQL 로 옮길 때 그 함수의 테스트가 기준이 된다.
  */
+/** patch 로 바뀌면 안 되는 필드 — authorId 가 빠지면 소유권이 넘어간다 */
+const QUESTION_IMMUTABLE = ['id', 'authorId', 'createdAt'] as const;
+
 export class InMemoryQuestionsRepository implements QuestionsRepository {
   private readonly records = new Map<string, QuestionRecord>();
 
@@ -40,13 +43,9 @@ export class InMemoryQuestionsRepository implements QuestionsRepository {
     const existing = this.records.get(id);
     if (!existing) return Promise.resolve(null);
 
-    // id·authorId·createdAt 은 patch 로 바뀌지 않게 뒤에서 덮어쓴다
+    // 불변 필드는 patchRecord 가 지킨다 — 손으로 나열하면 언젠가 하나를 빠뜨린다
     const next: QuestionRecord = {
-      ...existing,
-      ...patch,
-      id: existing.id,
-      authorId: existing.authorId,
-      createdAt: existing.createdAt,
+      ...patchRecord(existing, patch, QUESTION_IMMUTABLE),
       updatedAt: new Date().toISOString(),
     };
     this.records.set(id, next);

@@ -1,5 +1,11 @@
 import { IsArray, IsIn, IsOptional, IsString, Length } from 'class-validator';
 import { TOPICS, type Topic } from '../entities/question.entity';
+import {
+  QUESTION_BODY_MAX,
+  QUESTION_BODY_MIN,
+  QUESTION_TITLE_MAX,
+  QUESTION_TITLE_MIN,
+} from '../questions.constants';
 
 export class CreateQuestionDto {
   /**
@@ -7,11 +13,11 @@ export class CreateQuestionDto {
    * "help" 같은 제목은 검색으로 아무도 찾지 못한다.
    */
   @IsString()
-  @Length(10, 200)
+  @Length(QUESTION_TITLE_MIN, QUESTION_TITLE_MAX)
   title!: string;
 
   @IsString()
-  @Length(20, 20_000)
+  @Length(QUESTION_BODY_MIN, QUESTION_BODY_MAX)
   body!: string;
 
   @IsIn(TOPICS)

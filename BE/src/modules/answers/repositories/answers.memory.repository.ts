@@ -1,7 +1,14 @@
+import { patchRecord } from '../../../common';
 import type { AnswerRecord } from '../entities/answer.entity';
 import type { AnswersRepository } from './answers.repository';
 
 /** 인메모리 답변 저장소 — `DB_DRIVER` 미설정(테스트 포함)일 때 쓰인다 */
+/**
+ * patch 로 바뀌면 안 되는 필드.
+ * `questionId` 도 포함한다 — 답변이 다른 질문으로 옮겨가면 채택 검증이 무너진다.
+ */
+const ANSWER_IMMUTABLE = ['id', 'questionId', 'authorId', 'createdAt'] as const;
+
 export class InMemoryAnswersRepository implements AnswersRepository {
   private readonly records = new Map<string, AnswerRecord>();
 
@@ -28,12 +35,7 @@ export class InMemoryAnswersRepository implements AnswersRepository {
     if (!existing) return Promise.resolve(null);
 
     const next: AnswerRecord = {
-      ...existing,
-      ...patch,
-      id: existing.id,
-      questionId: existing.questionId,
-      authorId: existing.authorId,
-      createdAt: existing.createdAt,
+      ...patchRecord(existing, patch, ANSWER_IMMUTABLE),
       updatedAt: new Date().toISOString(),
     };
     this.records.set(id, next);

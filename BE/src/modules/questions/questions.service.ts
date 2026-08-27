@@ -1,11 +1,10 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { newId, type Page } from '../../common';
+import { assertOwned, newId, type Page } from '../../common';
 import { string as stringUtil } from '../../utils';
 import { MAX_TAGS_PER_POST, normalizeTagList } from '../tags';
 import type { RequestUser } from '../auth';
@@ -107,7 +106,7 @@ export class QuestionsService {
   }
 
   /**
-   * 답변 채택.
+   * 답변 채택 — **사용자 요청 경로**다.
    *
    * 답변 소유 검증은 호출부(AnswersService)가 하고, 여기서는 **질문 소유권**만 본다.
    * 두 모듈이 서로를 import 하면 순환 참조가 되므로 경계를 이렇게 나눈다.
@@ -129,6 +128,21 @@ export class QuestionsService {
     return updated ?? record;
   }
 
+  /**
+   * 채택 해제 — **시스템 경로**다(사용자 요청이 아니다).
+   *
+   * 채택된 답변이 숨겨지면 채택도 풀려야 하는데, 그 답변을 숨긴 사람은
+   * 질문 작성자가 아닐 수 있다. 예전에는 질문 작성자 **행세를 하는 객체를 만들어**
+   * `acceptAnswer` 를 불렀다 — 권한 검사를 통과시키려고 사용자를 위조한 셈이라,
+   * 나중에 권한 규칙이 바뀌면 이 우회로가 조용히 규칙을 벗어난다.
+   *
+   * 시스템 연산은 **사용자용 권한 경로를 재사용하지 않는다.** 권한 검사가 없는
+   * 별도 메서드로 두면 "누가 부를 수 있는가"가 이름에서 드러난다.
+   */
+  async clearAcceptedAnswer(questionId: string): Promise<void> {
+    await this.repository.update(questionId, { acceptedAnswerId: null });
+  }
+
   /** 답변 수 증감 — AnswersService 가 호출한다 */
   async adjustAnswerCount(questionId: string, delta: number): Promise<void> {
     const record = await this.repository.findById(questionId);
@@ -139,15 +153,11 @@ export class QuestionsService {
   }
 
   /** 존재 + 소유 확인. 없으면 404, 남의 것이면 403. */
+  /** 존재 + 소유 확인 — 규칙은 `common/assertOwned` 하나뿐이다 */
   private async requireOwned(
     id: string,
     user: RequestUser,
   ): Promise<QuestionRecord> {
-    const record = await this.repository.findById(id);
-    if (!record) throw new NotFoundException('Question not found');
-    if (record.authorId !== user.id) {
-      throw new ForbiddenException('Only the author can modify this question');
-    }
-    return record;
+    return assertOwned(await this.repository.findById(id), user.id, 'Question');
   }
 }
