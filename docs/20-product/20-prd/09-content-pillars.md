@@ -156,7 +156,8 @@
 
 | 요구 | 상태 |
 | --- | --- |
-| `topic:` 태그 네임스페이스 (`residency` `work` `housing` `admin` `language`) | [태그 설계](../10-features/05-search-and-tagging.md)에 `visa` `region` `school` 만 있다 — **추가 필요** |
+| `topic:` 태그 네임스페이스 (`residency` `work` `housing` `admin` `language`) | [태그 설계](../10-features/05-search-and-tagging.md)에 **추가됨** |
+| `nationality:` 태그 (공간이 아니라 태그) | [ADR-0008](../../50-decisions/0008-nationality-as-tag-not-space.md) — **추가됨** |
 | **비자 × 주제 교차 필터** | BE 가 태그 AND 를 지원한다 — **이미 된다** |
 | 리스팅 `noindex` | Phase 2 전제 |
 | 자문 경계 고지 (M11) | 미정 |
@@ -164,5 +165,7 @@
 ## 열린 질문
 
 - **구인 공고의 출입국관리법 알선 리스크** — 법률 검토를 언제 누가 하는가?
-- Phase 2·3 로 넘어가는 **판정 기준**은 무엇인가? "밀도"를 숫자로 말할 수 있어야 한다
+- ~~Phase 2·3 로 넘어가는 **판정 기준**~~ → 태그 → 공간 승격 기준으로 답했다:
+  **주간 신규 10건이 4주 연속 + 답변률 평균 이상**
+  ([ADR-0008](../../50-decisions/0008-nationality-as-tag-not-space.md))
 - 물물교환의 분쟁 처리를 **사람 없이** 설계할 수 있는가? (거래를 붙이지 않고 연결만 한다면?)

@@ -8,10 +8,14 @@
 | --- | --- | --- |
 | **성격 (type)** | Question / Post / Guide / Checklist / Meetup | 콘텐츠가 무엇인가 |
 | **주제 (topic)** | visa / language / education / housing / work / social | 어느 도메인인가 — [10-domain](../10-domain/) 대응 |
-| **맥락 (tag)** | `visa:d-2`, `region:seoul`, `school:snu` | 누구의 상황인가 |
+| **맥락 (tag)** | `visa:f-2`, `topic:residency`, `region:ansan`, `nationality:vn` | 누구의 상황인가 |
 
 한 글은 **성격 1개 + 주제 1개 + 맥락 N개**를 가진다.
 검색·필터·개인화가 전부 이 세 축의 조합으로 나온다.
+
+> **맥락은 태그이지 공간이 아니다.** 국적·학교·지역으로 **전용 방을 만들지 않는다** —
+> 모수가 쪼개지고 빈 방이 생긴다. 공간으로 승격하는 조건은
+> [ADR-0008](../50-decisions/0008-nationality-as-tag-not-space.md)이 숫자로 정한다.
 
 ## 네비게이션 (초안)
 
