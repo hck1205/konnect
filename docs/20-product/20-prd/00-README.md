@@ -6,9 +6,10 @@
 이 PRD 는 그 앞단 — **왜 그것을 그 순서로 만드는가** — 를 담당한다.
 기능 상세를 여기에 다시 쓰지 않는다. [10-features/](../10-features/) 로 링크한다.
 
-> **BD 관점**: 커뮤니티는 트래픽만으로 사업이 되지 않는다.
-> [07-monetization](./07-monetization.md) 이 수익 파이프라인을 정하고,
-> **팔 수 없는 것을 만드는 데 시간을 쓰지 않도록** 기능 우선순위를 제약한다.
+> **제약 두 개가 전체를 규정한다**: 영업 인력이 없고, 유입은 순수 SEO 다.
+> [07-monetization](./07-monetization.md) 은 그 제약이 지운 수익 라인을 지운 채로 적고,
+> [08-seo-strategy](./08-seo-strategy.md) 는 유일한 유입 채널을 다룬다.
+> 둘 다 **팔 수 없는 것·닿을 수 없는 것을 만드는 데 시간을 쓰지 않도록** 우선순위를 제약한다.
 
 | 문서 | 정하는 것 |
 | --- | --- |
@@ -19,6 +20,7 @@
 | [05-localization-priority.md](./05-localization-priority.md) | 지원 언어 **순서와 그 기준** |
 | [06-risks-and-open-questions.md](./06-risks-and-open-questions.md) | 리스크와 아직 모르는 것 |
 | [07-monetization.md](./07-monetization.md) | **수익 파이프라인(BD)** — 무엇을 팔 수 있는가, 규제의 선은 어디인가 |
+| [08-seo-strategy.md](./08-seo-strategy.md) | **유입 전략(SEO)** — 유일한 유입 채널이므로 생존 문서다 |
 
 ## 이 PRD 가 뒤집은 것 (두 번)
 
