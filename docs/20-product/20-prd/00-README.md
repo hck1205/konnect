@@ -21,6 +21,7 @@
 | [06-risks-and-open-questions.md](./06-risks-and-open-questions.md) | 리스크와 아직 모르는 것 |
 | [07-monetization.md](./07-monetization.md) | **수익 파이프라인(BD)** — 무엇을 팔 수 있는가, 규제의 선은 어디인가 |
 | [08-seo-strategy.md](./08-seo-strategy.md) | **유입 전략(SEO)** — 유일한 유입 채널이므로 생존 문서다 |
+| [09-content-pillars.md](./09-content-pillars.md) | **유입 기둥** — 어떤 주제로 시작하고 무엇을 미루는가 |
 
 ## 이 PRD 가 뒤집은 것 (두 번)
 
