@@ -60,6 +60,12 @@ describe('formatTagLabel', () => {
     );
   });
 
+  // 국적은 ISO 코드다 — 타이틀케이스로 올리면 `Vn` 이 된다
+  it('국적 코드도 전부 대문자로 표시한다', () => {
+    expect(formatTagLabel('nationality:vn')).toBe('VN');
+    expect(formatTagLabel('nationality:cn')).toBe('CN');
+  });
+
   it('자유 태그는 저장된 그대로 보여준다', () => {
     expect(formatTagLabel('interview')).toBe('interview');
     expect(formatTagLabel('비자-연장')).toBe('비자-연장');

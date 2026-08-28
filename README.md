@@ -14,7 +14,8 @@
 konnect/
 ├─ docs/    기획·도메인·아키텍처·운영 문서
 ├─ BE/      NestJS + Prisma (Postgres)
-└─ FE/      Next.js (App Router)
+├─ FE/      Next.js (App Router)
+└─ contracts/  FE·BE 가 같아야 하는 규칙 (양쪽 테스트가 대조한다)
 ```
 
 | 폴더 | 문서 |
@@ -22,6 +23,7 @@ konnect/
 | [`docs/`](./docs/) | [문서 인덱스](./docs/README.md) — 여기서 시작 |
 | [`BE/`](./BE/) | [BE README](./BE/README.md) |
 | [`FE/`](./FE/) | [FE README](./FE/README.md) · [아키텍처](./FE/ARCHITECTURE.md) · [디자인 시스템](./docs/25-design/) |
+| [`contracts/`](./contracts/) | [경계 계약](./contracts/README.md) — 갈라지면 양쪽 테스트가 깨진다 |
 
 ## 빠른 시작
 

@@ -130,6 +130,11 @@ DB_DRIVER=prisma DATABASE_URL=... npm run test:e2e  # Postgres
 
 한쪽만 통과하면 계약이 갈라진 것이다 — 실제로 태그 순서가 그렇게 어긋나 있었다.
 
+**FE 와의 경계**도 같은 종류의 계약이다. 두 프로젝트는 서로를 import 하지 않아
+`slugify` 와 태그 네임스페이스를 각자 갖는데, 지금까지 "같아야 한다"는 주석뿐이었다.
+[`contracts/`](../contracts/README.md) 의 데이터를 양쪽이 대조한다 —
+`string.contract.spec.ts` 가 이쪽을 맡는다.
+
 **도메인 enum ↔ Prisma enum** 도 같은 종류의 계약이다. 변환이 캐스팅이라
 타입 검사가 못 잡는다 — `TOPICS` 에만 주제를 추가하면 컴파일은 통과하고
 DB 에 넣는 순간 터진다. `questions.mapper.spec.ts` 가 양쪽 목록을 대조한다.
@@ -141,7 +146,8 @@ DB 에 넣는 순간 터진다. `questions.mapper.spec.ts` 가 양쪽 목록을 
 | 존재 + 소유 확인 | `common/assertOwned` | `!==` 를 `===` 로 잘못 쓴 한 곳에서 남의 글을 고칠 수 있게 된다 |
 | patch 불변 필드 | `common/patchRecord` | `authorId` 를 빠뜨리면 **patch 로 소유권이 넘어간다** |
 | 키셋 페이지네이션 | `common/paginateByCursor` | 커서 처리가 저장소마다 달라진다 |
-| 태그 정규화 | `modules/tags` (FE 와 같은 규칙) | 같은 태그가 두 표기로 저장돼 필터가 무너진다 |
+| 태그 정규화 | `utils/string.slugify` + **[`contracts/`](../contracts/README.md)** | 같은 태그가 두 표기로 저장돼 필터가 무너진다 |
+| 고정 어휘 네임스페이스 | `modules/tags` + **[`contracts/`](../contracts/README.md)** | 한쪽이 아는 네임스페이스를 다른 쪽이 자유 태그로 취급한다 |
 | 길이 제한 | `*.constants.ts` | "새로 쓸 땐 되는데 수정하면 400" |
 
 ## 응답 계약

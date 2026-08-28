@@ -58,3 +58,14 @@ FE/src/
 | — | `modules/users`, `modules/auth` | |
 | — | `modules/reports` | 신고 |
 | 교류 | `modules/meetups` | 이건 실제로 별도 모듈 (Phase 3) |
+
+## `contracts/` — 경계에 걸친 규칙
+
+BE 와 FE 는 서로를 import 하지 않는다([ADR-0002](../50-decisions/0002-monorepo-be-fe-split.md)).
+그런데 **같아야만 하는 규칙**이 있다 — slug 정규화, 고정 어휘 태그 네임스페이스.
+
+지금까지는 주석으로만 지켜 왔고 갈라져도 아무것도 알려주지 않았다.
+`contracts/` 는 그 규칙을 **데이터로** 두고, 양쪽 테스트가 각자 대조한다.
+한쪽이 갈라지면 그쪽 테스트가 깨진다 → [contracts/README.md](../../contracts/README.md)
+
+런타임 공유(워크스페이스 패키지)를 쓰지 않은 이유도 거기 있다.

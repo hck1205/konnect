@@ -54,7 +54,8 @@ const titleCase = (v: string) =>
 export function formatTagLabel(raw: string): string {
   const { namespace, value } = parseTag(raw);
   if (!value) return '';
-  if (namespace === 'visa') return upperAll(value);
+  // 비자 코드(F-2)와 국적 코드(VN)는 대문자다. 타이틀케이스로 올리면 `Vn` 이 된다.
+  if (namespace === 'visa' || namespace === 'nationality') return upperAll(value);
   if (namespace === null) return value;
   return titleCase(value);
 }
@@ -62,8 +63,9 @@ export function formatTagLabel(raw: string): string {
 /** 네임스페이스의 사람이 읽는 이름 — 배지 접두사로 쓴다 */
 export const NAMESPACE_LABEL: Record<TagNamespace, string> = {
   visa: 'Visa',
-  region: 'Region',
-  school: 'School',
   topic: 'Topic',
+  region: 'Region',
+  nationality: 'Nationality',
+  school: 'School',
   lang: 'Language',
 };

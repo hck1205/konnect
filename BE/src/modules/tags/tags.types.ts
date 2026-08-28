@@ -3,13 +3,19 @@
  *
  * 사용자가 새로 만들 수 없다. 표기가 갈라지면(D-2 / d2 / D2 visa) 필터가 무너지고,
  * 매칭 품질이 곧 이 서비스의 가치다.
- * → docs/10-domain/10-visa-immigration/01-visa-types.md
+ * 목록은 `contracts/tag-namespaces.json` 이 소유한다 — FE 와 같아야 하고,
+ * `string.contract.spec.ts` 가 그것을 강제한다.
+ *
+ * `nationality` 는 **공간이 아니라 태그**다 — 국적으로 방을 나누지 않는다
+ * (→ docs/50-decisions/0008-nationality-as-tag-not-space.md).
+ * → docs/20-product/10-features/05-search-and-tagging.md
  */
 export const TAG_NAMESPACES = [
   'visa',
-  'region',
-  'school',
   'topic',
+  'region',
+  'nationality',
+  'school',
   'lang',
 ] as const;
 export type TagNamespace = (typeof TAG_NAMESPACES)[number];
