@@ -15,3 +15,22 @@ export type { Comment, CommentNode } from './comment';
 export type { DirectMessage, Conversation } from './message';
 export type { ReportReason, ReportTrack, ReportSubmission } from './report';
 export type { PostDraft } from './post';
+
+// ── BE 와 모양을 맞춰야 하는 것 (contracts/ 가 고정 어휘를 강제한다)
+export { TOPICS } from './question';
+export type {
+  Topic,
+  QuestionStatus,
+  Question,
+  QuestionFilter,
+  CreateQuestionInput,
+  UpdateQuestionInput,
+} from './question';
+export type {
+  AnswerStatus,
+  Answer,
+  CreateAnswerInput,
+  UpdateAnswerInput,
+} from './answer';
+export type { Page, PageParams } from './page';
+export type { AuthResult, CurrentUser } from './auth';

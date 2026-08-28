@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { slugify } from './string.util';
 import { TAG_NAMESPACES } from '../../modules/tags';
+import { TOPICS } from '../../modules/questions/entities/question.entity';
 
 /**
  * FE·BE 경계 계약.
@@ -52,5 +53,13 @@ describe('태그 네임스페이스 계약 (contracts/tag-namespaces.json)', () 
     );
     expect(namespaces.length).toBeGreaterThan(3);
     expect([...TAG_NAMESPACES].sort()).toEqual([...namespaces].sort());
+  });
+});
+
+describe('주제 계약 (contracts/topics.json)', () => {
+  it('주제 목록이 계약과 정확히 같다', () => {
+    const { topics } = readJson<{ topics: string[] }>('topics.json');
+    expect(topics.length).toBeGreaterThan(3);
+    expect([...TOPICS]).toEqual(topics);
   });
 });

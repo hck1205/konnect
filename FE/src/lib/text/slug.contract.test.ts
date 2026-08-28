@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { slugify } from './slug';
 import { TAG_NAMESPACES } from '@/components/data-display/Tag';
+import { TOPICS } from '@/types';
 
 /**
  * FE·BE 경계 계약.
@@ -49,5 +50,14 @@ describe('태그 네임스페이스 계약 (contracts/tag-namespaces.json)', () 
     const { namespaces } = readJson('tag-namespaces.json') as { namespaces: string[] };
     expect(namespaces.length).toBeGreaterThan(3);
     expect([...TAG_NAMESPACES].sort()).toEqual([...namespaces].sort());
+  });
+});
+
+describe('주제 계약 (contracts/topics.json)', () => {
+  it('주제 목록이 계약과 정확히 같다', () => {
+    const { topics } = readJson('topics.json') as { topics: string[] };
+    expect(topics.length).toBeGreaterThan(3);
+    // 순서까지 같아야 한다 — 목록 필터의 표시 순서가 여기서 나온다
+    expect([...TOPICS]).toEqual(topics);
   });
 });

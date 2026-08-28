@@ -44,6 +44,8 @@ src/
   atoms/                   # jotai 전역 상태 (관심사별)
   query/                   # 서버 통신 (axios + react-query, 관심사별)
     client.ts              #   공용 axios 인스턴스 + 봉투 unwrap/orNull + Bearer 인터셉터
+    auth/ questions/ answers/
+                           #   도메인별 3파일: *.api.ts · *.keys.ts · *.hooks.ts
   types/                   # 공유 도메인 모델 — 컴포넌트가 아니라 **여기가 소유**한다
                            #   (query/ 가 컴포넌트를 import 하면 의존 방향이 뒤집힌다)
   utils/                   # 순수 함수 (string/array/number/boolean)
@@ -187,6 +189,40 @@ LADLE_URL=http://localhost:61000 npm run check:stories
 스토리에는 Next 런타임이 없기 때문이다. 컴포넌트에서 다른 `next/*` 를 쓰게 되면
 거기에 alias 를 추가해야 한다.
 
+
+## query 규약
+
+도메인마다 **세 파일**로 나눈다. 각 파일이 아는 것이 다르다.
+
+| 파일 | 아는 것 | 모르는 것 |
+| --- | --- | --- |
+| `*.api.ts` | URL · 봉투 · 상태코드 | **React** — 그래야 통합 테스트가 node 에서 직접 부른다 |
+| `*.keys.ts` | 캐시 계층 | HTTP |
+| `*.hooks.ts` | 화면이 쓸 모양 | URL·봉투 |
+
+- **`.api.ts` 가 HTTP 를 아는 유일한 곳**이다. 컴포넌트는 `httpClient` 를 모른다 —
+  BE 가 경로를 바꿔도 고칠 곳이 파일 하나다
+- **키는 계층으로 만든다** (`all → lists/details → detail(id) → answers(id)`).
+  화면마다 문자열로 흩뿌리면 오타 하나에 캐시가 안 지워지고,
+  **새 답변이 화면에 안 보이는데 새로고침하면 있는** 버그가 된다
+- **답변은 자기 키를 갖지 않는다.** `questionKeys.answers(id)` 아래에 둔다 —
+  질문 캐시를 지우면 답변도 함께 지워져야 한다
+- 훅은 **얇게** 유지한다. 로직이 생기면 `.api.ts`(순수 함수)로 내려 테스트한다
+
+### 통합 테스트가 잡는 것
+
+타입은 컴파일 타임에만 있어 **응답 모양을 검사하지 않는다.** 실제로 이번에 셋이 잡혔다:
+
+| 짐작 | 실제 |
+| --- | --- |
+| 로그인이 `{accessToken}` | **`{token, user}`** — 401 로 나타났다 |
+| 답변 목록이 `Page<Answer>` | **`Answer[]`** — 채택 답변이 다음 페이지로 밀리면 안 되기 때문 |
+| 같은 닉네임 재로그인 = 같은 사람 | **매번 새 계정** — 403 으로 나타났다 (OAuth 전까지 유효) |
+
+```sh
+cd BE && npm run start:dev      # 한 터미널
+cd FE && npm run test:integration
+```
 
 ## utils 규약
 

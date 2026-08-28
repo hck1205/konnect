@@ -1,0 +1,5 @@
+{
+  "_": "질문 주제 — BE questions/entities/question.entity.ts 와 FE types/question.ts 가 같아야 한다. 갈라지면 FE 가 보낸 topic 을 BE 가 400 으로 거부하거나, 목록 필터에서 조용히 빠진다.",
+  "_문서": "docs/10-domain/",
+  "topics": ["visa", "language", "education", "housing", "work", "social"]
+}
