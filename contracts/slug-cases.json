@@ -1,0 +1,95 @@
+{
+  "_": "slugify 계약 — FE lib/text/slug.ts 와 BE utils/string 이 같은 결과를 내야 한다. 고치면 양쪽 테스트가 함께 깨진다.",
+  "plain": [
+    {
+      "input": "Hello World",
+      "expected": "hello-world"
+    },
+    {
+      "input": "  Trim  Me  ",
+      "expected": "trim-me"
+    },
+    {
+      "input": "A__B  C",
+      "expected": "a-b-c"
+    },
+    {
+      "input": "---edge---",
+      "expected": "edge"
+    },
+    {
+      "input": "한국어 제목",
+      "expected": "한국어-제목"
+    },
+    {
+      "input": "Tiếng Việt",
+      "expected": "tiếng-việt"
+    },
+    {
+      "input": "ĐÀ NẴNG",
+      "expected": "đà-nẵng"
+    },
+    {
+      "input": "F-2-7 점수제",
+      "expected": "f-2-7-점수제"
+    },
+    {
+      "input": "日本語のタイトル",
+      "expected": "日本語のタイトル"
+    },
+    {
+      "input": "Multiple   Spaces",
+      "expected": "multiple-spaces"
+    },
+    {
+      "input": "UPPER lower",
+      "expected": "upper-lower"
+    },
+    {
+      "input": "",
+      "expected": ""
+    },
+    {
+      "input": " ",
+      "expected": ""
+    },
+    {
+      "input": "---",
+      "expected": ""
+    },
+    {
+      "input": "外国人登録証",
+      "expected": "外国人登録証"
+    }
+  ],
+  "keepColon": [
+    {
+      "input": "visa:D-2",
+      "expected": "visa:d-2"
+    },
+    {
+      "input": "TOPIC:Residency",
+      "expected": "topic:residency"
+    },
+    {
+      "input": "nationality:VN",
+      "expected": "nationality:vn"
+    },
+    {
+      "input": "a:b:c",
+      "expected": "a:b:c"
+    },
+    {
+      "input": ":::",
+      "expected": ":::"
+    },
+    {
+      "input": "lang:KO",
+      "expected": "lang:ko"
+    },
+    {
+      "input": "visa:naturalization",
+      "expected": "visa:naturalization"
+    }
+  ]
+}

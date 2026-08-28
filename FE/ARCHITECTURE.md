@@ -50,7 +50,8 @@ src/
   lib/                     # 앱 인프라 (query-client, cn, routes, apiBase, auth-token)
     i18n/                  #   번역·포맷 (Intl 기반) + 로케일 라우팅
     theme/                 #   테마 외부 스토어
-    text/                  #   slug 정규화 (BE 와 같은 규칙 — 계약)
+    text/                  #   slug 정규화 — BE 와 같은 규칙.
+                           #   contracts/ 가 강제한다 (slug.contract.test.ts)
     tone/…tone.ts          #   tone → 클래스·아이콘 매핑
     forms/                 #   폼 컨트롤 공용 스타일
     css/                   #   CSS 앵커 이름 등
