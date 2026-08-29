@@ -57,4 +57,29 @@ export const zh = {
   'locale.label': '语言',
   'locale.change': '更改语言',
   'locale.machineTranslated': '本页部分内容为机器翻译，可能不准确。',
+
+  // ── 질문 상세 ────────────────────────────────────────────
+  'question.writtenIn': '以{language}撰写',
+  'question.translate': '翻译成{language}',
+  'question.freshness': '更新于{when}。',
+  'question.freshnessWarning': '出入境规定经常变动 — 请务必在下方官方页面确认。',
+  'question.officialSource': '官方页面',
+  'question.disclaimer': '社区回答是个人经验，不是法律意见。konnect 不代办申请。',
+  'question.acceptedBy': '提问者已采纳',
+  'question.answers': { one: '{count} 个回答', other: '{count} 个回答' },
+  'question.noAnswers': '还没有回答。来做第一个帮忙的人吧。',
+  'question.follow': '关注 {tag}',
+  'question.askedBy': '{name} 提问',
+  'question.hidden': '此问题已隐藏，只有你能看到。',
+  'question.notFound': '该问题不存在，或已被隐藏。',
+  'question.backToList': '返回问题列表',
+  'question.yearsInKorea': { one: '在韩 {count} 年', other: '在韩 {count} 年' },
+  'question.koreanTerm': '韩语词条 — 复制后可用于搜索',
+
+
+  // ── 네비게이션 ───────────────────────────────────────────
+  'nav.questions': '问题',
+  'nav.guides': '指南',
+  'nav.meetups': '聚会',
+
 } satisfies Messages;

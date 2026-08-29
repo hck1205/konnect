@@ -94,4 +94,29 @@ export const en = {
   'locale.label': 'Language',
   'locale.change': 'Change language',
   'locale.machineTranslated': 'Parts of this page are machine translated and may be wrong.',
+
+  // ── 질문 상세 ────────────────────────────────────────────
+  'question.writtenIn': 'Written in {language}',
+  'question.translate': 'Translate to {language}',
+  'question.freshness': 'Updated {when}.',
+  'question.freshnessWarning': 'Immigration rules change often — always confirm on the official page.',
+  'question.officialSource': 'Official page',
+  'question.disclaimer': 'Community answers are personal experience, not legal advice. konnect does not file applications for you.',
+  'question.acceptedBy': 'Accepted by the asker',
+  'question.answers': { one: '{count} answer', other: '{count} answers' },
+  'question.noAnswers': 'No answers yet. Be the first to help.',
+  'question.follow': 'Follow {tag}',
+  'question.askedBy': 'Asked by {name}',
+  'question.hidden': 'This question is hidden. Only you can see it.',
+  'question.notFound': 'This question does not exist, or it was hidden.',
+  'question.backToList': 'Back to questions',
+  'question.yearsInKorea': { one: '{count} year in Korea', other: '{count} years in Korea' },
+  'question.koreanTerm': 'Korean term — copy this to search',
+
+
+  // ── 네비게이션 ───────────────────────────────────────────
+  'nav.questions': 'Questions',
+  'nav.guides': 'Guides',
+  'nav.meetups': 'Meetups',
+
 } satisfies Messages;

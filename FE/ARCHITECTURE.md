@@ -22,6 +22,8 @@ src/
     [locale]/              #   로케일 세그먼트 — SEO 를 위해 URL 에 둔다
       layout.tsx           #     <html lang> + Providers
       page.tsx             #     홈 → views/HomePage
+      questions/[id]/      #     slug 없는 주소 → 정규 URL 로 301
+        [slug]/page.tsx    #     상세 — SSR + canonical + hreflang
     providers.tsx          #   locale + react-query + jotai + 호스트들
     globals.css            #   Tailwind + 디자인 토큰(@theme)
   proxy.ts                 # Accept-Language 협상 → 로케일 리다이렉트 (307)
@@ -29,6 +31,7 @@ src/
                            #   무시하고 로케일 없는 경로가 전부 404 가 된다
   views/                   # 페이지 컴포넌트 (app은 이걸 렌더만; src/pages는 Next 충돌로 금지)
     HomePage/
+    QuestionPage/          #   질문 상세 — 서버가 받아 온 데이터를 initialData 로 심는다
   components/              # UI 컴포넌트 (관심사 카테고리별)
     primitives/            #   최소 단위, 도메인 무관 (Button, Heading, Avatar …)
     forms/                 #   입력 (Form, Field, Combobox, TagInput …)
@@ -160,6 +163,20 @@ npm run check:stories  # 모든 스토리를 브라우저에서 열어 런타임
 - 상태를 **빠짐없이** 보여준다: default / disabled / loading / invalid
 - 접근성 애드온(a11y)이 켜져 있다. 새 스토리를 추가하면 한 번 확인한다
 - 테마 토글이 `.dark` 클래스와 동기화되어 있어 **다크 모드를 그대로 검증**할 수 있다
+
+### `check:seo` — 색인되는지는 빌드가 말해 주지 않는다
+
+상세 페이지는 **검색 유입의 착지점**이라 본문이 HTML 에 실려야 한다. 클라이언트에서
+받아 오면 첫 HTML 이 로딩 상태이고 크롤러는 그것만 본다 — 빌드·타입체크는 전부 통과한다.
+
+```sh
+SEO_URL=http://localhost:3000/en/questions/<id>/<slug> \
+SEO_MUST_CONTAIN='본문 한 구절|답변 한 구절' npm run check:seo
+```
+
+⚠️ **`SEO_MUST_CONTAIN` 이 필수인 이유**: 처음에는 "보이는 텍스트가 N자 이상"으로만
+봤는데 네비·푸터·안전 고지만으로 그 기준을 넘어 **본문이 비어도 통과했다**(결함을
+주입해 확인했다). 총량은 페이지가 살아 있다는 증거가 못 된다.
 
 ### `check:routing` 도 같은 이유다
 

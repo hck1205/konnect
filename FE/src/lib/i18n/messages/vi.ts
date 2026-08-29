@@ -54,4 +54,29 @@ export const vi = {
   'locale.label': 'Ngôn ngữ',
   'locale.change': 'Đổi ngôn ngữ',
   'locale.machineTranslated': 'Một phần trang này được dịch máy và có thể không chính xác.',
+
+  // ── 질문 상세 ────────────────────────────────────────────
+  'question.writtenIn': 'Viết bằng {language}',
+  'question.translate': 'Dịch sang {language}',
+  'question.freshness': 'Cập nhật {when}.',
+  'question.freshnessWarning': 'Quy định xuất nhập cảnh thay đổi thường xuyên — hãy kiểm tra lại ở trang chính thức bên dưới.',
+  'question.officialSource': 'Trang chính thức',
+  'question.disclaimer': 'Câu trả lời từ cộng đồng là kinh nghiệm cá nhân, không phải tư vấn pháp lý. konnect không nộp hồ sơ thay bạn.',
+  'question.acceptedBy': 'Được người hỏi chấp nhận',
+  'question.answers': { one: '{count} câu trả lời', other: '{count} câu trả lời' },
+  'question.noAnswers': 'Chưa có câu trả lời. Hãy là người đầu tiên giúp đỡ.',
+  'question.follow': 'Theo dõi {tag}',
+  'question.askedBy': 'Câu hỏi của {name}',
+  'question.hidden': 'Câu hỏi này đang bị ẩn. Chỉ bạn nhìn thấy.',
+  'question.notFound': 'Câu hỏi không tồn tại hoặc đã bị ẩn.',
+  'question.backToList': 'Quay lại danh sách câu hỏi',
+  'question.yearsInKorea': { one: '{count} năm ở Hàn Quốc', other: '{count} năm ở Hàn Quốc' },
+  'question.koreanTerm': 'Thuật ngữ tiếng Hàn — sao chép để tìm kiếm',
+
+
+  // ── 네비게이션 ───────────────────────────────────────────
+  'nav.questions': 'Câu hỏi',
+  'nav.guides': 'Hướng dẫn',
+  'nav.meetups': 'Gặp gỡ',
+
 } satisfies Messages;

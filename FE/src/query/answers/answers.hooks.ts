@@ -1,7 +1,12 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { CreateAnswerInput, UpdateAnswerInput } from '@/types';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type UseQueryOptions,
+} from '@tanstack/react-query';
+import type { Answer, CreateAnswerInput, UpdateAnswerInput } from '@/types';
 import { questionKeys } from '../questions';
 import {
   acceptAnswer,
@@ -31,12 +36,21 @@ function invalidateAround(
   void client.invalidateQueries({ queryKey: questionKeys.lists() });
 }
 
-/** 답변 목록. 캐시 키는 **질문 아래**에 있다 — 질문을 지우면 함께 지워진다 */
-export function useAnswers(questionId: string) {
+/**
+ * 답변 목록. 캐시 키는 **질문 아래**에 있다 — 질문을 지우면 함께 지워진다.
+ *
+ * `options.initialData` 로 서버에서 받아 온 값을 심을 수 있다 — 상세 페이지는
+ * SSR 이어야 색인되는데, 그 데이터를 캐시에 넣어야 이후 변경이 화면에 반영된다.
+ */
+export function useAnswers(
+  questionId: string,
+  options?: Omit<UseQueryOptions<Answer[]>, 'queryKey' | 'queryFn'>,
+) {
   return useQuery({
     queryKey: questionKeys.answers(questionId),
     queryFn: () => fetchAnswers(questionId),
     enabled: questionId.length > 0,
+    ...options,
   });
 }
 

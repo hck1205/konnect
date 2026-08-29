@@ -1,13 +1,26 @@
 import axios, { type AxiosInstance, type AxiosResponse } from 'axios';
 import { getAuthToken } from '@/lib/auth-token';
+import { resolveApiBase, resolveServerApiBase } from '@/lib/apiBase';
 
 /**
  * 공용 HTTP 클라이언트(axios 인스턴스).
  * 모든 query/mutation 구현체는 이 인스턴스를 통해 통신한다.
  * dev에서는 next.config rewrites가 /api → BE(:4000)로 프록시한다.
  */
+/**
+ * 서버와 브라우저의 base 가 다르다.
+ *
+ * 브라우저는 `/api` 로 보내고 Next rewrites 가 BE 로 프록시한다(같은 오리진이라 CORS 없음).
+ * **서버에는 그 rewrites 가 없다** — 절대 주소가 필요하다.
+ * → `lib/apiBase.ts`
+ */
+const baseURL =
+  typeof window === 'undefined'
+    ? resolveServerApiBase()
+    : resolveApiBase(process.env.NEXT_PUBLIC_API_BASE_URL);
+
 export const httpClient: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '/api',
+  baseURL,
   timeout: 10_000,
   headers: {
     'Content-Type': 'application/json',

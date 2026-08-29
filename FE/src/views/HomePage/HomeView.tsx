@@ -19,9 +19,9 @@ export function HomeView({ pathname }: { pathname: string }) {
   const { t, locale } = useI18n();
 
   const nav = [
-    { href: `/${locale}/questions`, label: 'Questions', icon: <MessageCircleQuestion className="size-4" /> },
-    { href: `/${locale}/guides`, label: 'Guides', icon: <BookOpen className="size-4" /> },
-    { href: `/${locale}/meetups`, label: 'Meetups', icon: <Users className="size-4" /> },
+    { href: `/${locale}/questions`, label: t('nav.questions'), icon: <MessageCircleQuestion className="size-4" /> },
+    { href: `/${locale}/guides`, label: t('nav.guides'), icon: <BookOpen className="size-4" /> },
+    { href: `/${locale}/meetups`, label: t('nav.meetups'), icon: <Users className="size-4" /> },
   ];
 
   return (

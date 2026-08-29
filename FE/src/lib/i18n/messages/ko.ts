@@ -84,4 +84,29 @@ export const ko = {
   'locale.label': '언어',
   'locale.change': '언어 변경',
   'locale.machineTranslated': '이 페이지의 일부는 기계 번역이라 부정확할 수 있습니다.',
+
+  // ── 질문 상세 ────────────────────────────────────────────
+  'question.writtenIn': '{language}로 작성됨',
+  'question.translate': '{language}로 번역',
+  'question.freshness': '{when}에 갱신되었습니다.',
+  'question.freshnessWarning': '출입국 규정은 자주 바뀝니다 — 아래 공식 페이지에서 반드시 확인하세요.',
+  'question.officialSource': '공식 페이지',
+  'question.disclaimer': '커뮤니티 답변은 개인의 경험이며 법률 자문이 아닙니다. konnect는 신청을 대행하지 않습니다.',
+  'question.acceptedBy': '질문자가 채택한 답변',
+  'question.answers': { one: '답변 {count}개', other: '답변 {count}개' },
+  'question.noAnswers': '아직 답변이 없습니다. 처음으로 도와주세요.',
+  'question.follow': '{tag} 구독',
+  'question.askedBy': '{name} 님의 질문',
+  'question.hidden': '숨긴 질문입니다. 작성자에게만 보입니다.',
+  'question.notFound': '존재하지 않거나 숨겨진 질문입니다.',
+  'question.backToList': '질문 목록으로',
+  'question.yearsInKorea': { one: '한국 거주 {count}년', other: '한국 거주 {count}년' },
+  'question.koreanTerm': '한국어 용어 — 복사해서 검색하세요',
+
+
+  // ── 네비게이션 ───────────────────────────────────────────
+  'nav.questions': '질문',
+  'nav.guides': '가이드',
+  'nav.meetups': '모임',
+
 } satisfies Messages;
