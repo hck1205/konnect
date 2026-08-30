@@ -1,0 +1,125 @@
+# main 병합 시 배포 — ARM 러너에서 네이티브 빌드 → GHCR → SSH 배포.
+#
+# 왜 이 형태인가 (기각한 대안 포함) → ~/docs/fleet/konnect-deploy.md
+#   - ARM 러너 네이티브 빌드: A1 이 aarch64 다. QEMU 크로스빌드는 수 배 느리다.
+#   - 서버 빌드 금지: next build 는 2~4GB 를 쓴다. 2 OCPU 프로덕션 박스에서
+#     빌드하면 서비스가 흔들린다. 서버는 pull + 실행만 한다.
+#   - 셀프호스티드 러너 기각: 공개 저장소에서 fork PR 이 러너에 코드를 실행할 수 있다.
+
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# 배포가 겹치면 컨테이너 교체 순서가 엉킨다. 취소하지 않고 **줄을 세운다** —
+# 진행 중인 배포를 중간에 끊으면 마이그레이션만 적용된 상태로 남을 수 있다.
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+
+  build:
+    name: Build arm64 images → GHCR
+    runs-on: ubuntu-24.04-arm   # 공개 저장소는 ARM 러너 무료
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      tag: ${{ steps.meta.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute image tag
+        id: meta
+        # 커밋 SHA 로 태그한다. latest 만 쓰면 무엇이 돌고 있는지 알 수 없고
+        # 롤백할 지점도 사라진다.
+        run: echo "tag=${GITHUB_SHA::12}" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push BE
+        uses: docker/build-push-action@v6
+        with:
+          context: ./BE
+          push: true
+          platforms: linux/arm64
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/konnect-be:${{ steps.meta.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/konnect-be:latest
+          cache-from: type=gha,scope=be
+          cache-to: type=gha,mode=max,scope=be
+
+      - name: Build & push FE
+        uses: docker/build-push-action@v6
+        with:
+          context: ./FE
+          push: true
+          platforms: linux/arm64
+          # rewrites 는 빌드 시점에 고정된다 — 런타임 주입은 반영되지 않는다.
+          # compose 서비스명을 넣어 환경이 달라져도 값이 같게 한다.
+          build-args: |
+            API_PROXY_TARGET=http://konnect-be:4000
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/konnect-fe:${{ steps.meta.outputs.tag }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/konnect-fe:latest
+          cache-from: type=gha,scope=fe
+          cache-to: type=gha,mode=max,scope=fe
+
+  deploy:
+    name: Deploy to A1
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        env:
+          TAG: ${{ needs.build.outputs.tag }}
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          envs: TAG
+          # 서버 쪽 배포 스크립트가 순서(마이그레이션 → 교체 → 헬스체크 → 롤백)를
+          # 책임진다. 워크플로에 로직을 넣지 않는 이유: 서버에서 수동 실행·재시도가
+          # 가능해야 하고, 배포 키에 command= 제약을 걸 때 단일 진입점이 필요하다.
+          script: /srv/app/konnect/deploy.sh "$TAG"
+
+  smoke:
+    name: Post-deploy smoke test
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FE/package-lock.json
+
+      - run: npm ci
+        working-directory: FE
+
+      # 배포된 실물에 대고 확인한다. CI 에서는 데이터가 없어 못 하는 검사다.
+      # 인증서가 self-signed 인 동안에는 검증을 끈다(도메인 확정 전까지).
+      - name: Locale routing on live server
+        working-directory: FE
+        env:
+          BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
+          NODE_TLS_REJECT_UNAUTHORIZED: '0'
+        run: npm run check:routing
