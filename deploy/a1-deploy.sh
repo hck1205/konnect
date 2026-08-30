@@ -16,7 +16,23 @@ set -euo pipefail
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export PATH
 
-TAG="${1:?사용법: deploy.sh <이미지태그>}"
+TAG="${1:-}"
+
+# SSH 로 호출될 때는 authorized_keys 의 command= 제약 때문에 클라이언트가 보낸
+# 문자열이 통째로 인자가 된다. 보내는 쪽이 `export TAG=abc; ...` 형태로 보내면
+# 첫 단어인 `export` 가 태그로 잡혀 엉뚱한 이미지를 받으려다 실패한다(실제로 겪음).
+# 보내는 쪽(deploy.yml)은 태그만 보내도록 고쳤지만, 여기서도 한 번 더 건진다 —
+# 배포 경로는 한쪽만 믿고 두지 않는다.
+if [ "$TAG" = "export" ] || [ -z "$TAG" ]; then
+  EXTRACTED="$(printf '%s' "${SSH_ORIGINAL_COMMAND:-$*}" \
+    | grep -oE 'TAG=[A-Za-z0-9._-]+' | head -1 | cut -d= -f2)"
+  if [ -n "$EXTRACTED" ]; then
+    echo "(태그를 인자 대신 TAG= 형식에서 추출했다: $EXTRACTED)"
+    TAG="$EXTRACTED"
+  fi
+fi
+
+[ -n "$TAG" ] || { echo "사용법: deploy.sh <이미지태그>"; exit 2; }
 
 # 태그 형식을 앞단에서 검증한다.
 #

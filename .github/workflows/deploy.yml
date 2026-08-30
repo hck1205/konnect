@@ -86,17 +86,18 @@ jobs:
     steps:
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.2.0
-        env:
-          TAG: ${{ needs.build.outputs.tag }}
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_SSH_KEY }}
-          envs: TAG
-          # 서버 쪽 배포 스크립트가 순서(마이그레이션 → 교체 → 헬스체크 → 롤백)를
-          # 책임진다. 워크플로에 로직을 넣지 않는 이유: 서버에서 수동 실행·재시도가
-          # 가능해야 하고, 배포 키에 command= 제약을 걸 때 단일 진입점이 필요하다.
-          script: /srv/app/konnect/deploy.sh "$TAG"
+          # 배포 키에 authorized_keys 의 command= 제약이 걸려 있어, 여기서 무엇을
+          # 보내든 서버는 /srv/app/konnect/deploy.sh 만 실행한다. 보낸 문자열은
+          # $SSH_ORIGINAL_COMMAND 로 전달되어 **태그 인자**가 된다.
+          #
+          # 그래서 태그만 보낸다. envs: 로 넘기면 액션이 `export TAG=...;` 를
+          # 앞에 붙여 보내는데, 그러면 첫 단어인 `export` 가 태그가 되어
+          # 존재하지 않는 이미지를 받으려다 실패한다(실제로 겪음).
+          script: ${{ needs.build.outputs.tag }}
 
   smoke:
     name: Post-deploy smoke test
