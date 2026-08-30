@@ -15,3 +15,4 @@
 | [08-reactions.md](./08-reactions.md) | P1 |
 | [09-direct-messages.md](./09-direct-messages.md) | P2 — 안전 장치 전제 |
 | [10-post-editor.md](./10-post-editor.md) | **P0** |
+| [11-official-sources.md](./11-official-sources.md) | **공식 출처 감시** — 해석하지 않고 변경만 알린다 |

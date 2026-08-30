@@ -1,0 +1,78 @@
+{
+  "_": "공식 출처 레지스트리 — 비자 자격별로 감시할 정부 문서. 사람이 관리한다.",
+  "_문서": "docs/20-product/10-features/11-official-sources.md",
+  "_kind": {
+    "statute": "법률·시행령·시행규칙·고시 — 저작권법 제7조상 보호받지 못하는 저작물이라 전문 인용 가능",
+    "guide": "기관 안내문 — 저작물일 수 있다. 링크 + 최소 인용만",
+    "notice": "공지사항 목록 — 변경 감지용"
+  },
+  "sources": [
+    {
+      "id": "immigration-act-enforcement-decree",
+      "kind": "statute",
+      "title": "출입국관리법 시행령",
+      "law_name": "출입국관리법 시행령",
+      "url": "https://www.law.go.kr/법령/출입국관리법시행령",
+      "applies_to": [
+        "visa:f-2",
+        "visa:f-5",
+        "visa:e-7",
+        "visa:d-2",
+        "visa:d-10"
+      ]
+    },
+    {
+      "id": "immigration-act",
+      "kind": "statute",
+      "title": "출입국관리법",
+      "law_name": "출입국관리법",
+      "url": "https://www.law.go.kr/법령/출입국관리법",
+      "applies_to": [
+        "visa:f-2",
+        "visa:f-5",
+        "visa:e-7",
+        "visa:e-9",
+        "visa:d-2"
+      ]
+    },
+    {
+      "id": "nationality-act",
+      "kind": "statute",
+      "title": "국적법",
+      "law_name": "국적법",
+      "url": "https://www.law.go.kr/법령/국적법",
+      "applies_to": [
+        "visa:naturalization"
+      ]
+    },
+    {
+      "id": "hikorea-visa-guide",
+      "kind": "notice",
+      "title": "하이코리아 — 공지사항",
+      "url": "https://www.hikorea.go.kr/board/BoardNtcListR.pt?BBS_SEQ=1&BBS_GB_CD=BS10",
+      "applies_to": [
+        "visa:f-2",
+        "visa:f-5",
+        "visa:e-7",
+        "visa:d-2",
+        "visa:d-10"
+      ],
+      "_note": "체류자격 안내 페이지(InfoResiStayR.pt)는 404 다 — 확인함. 공지 목록으로 대체."
+    },
+    {
+      "id": "immigration-notices",
+      "kind": "notice",
+      "title": "출입국·외국인정책본부 공지사항",
+      "url": "https://www.immigration.go.kr/immigration/1516/subview.do",
+      "applies_to": [
+        "visa:f-2",
+        "visa:f-5",
+        "visa:e-7",
+        "visa:d-2",
+        "visa:d-10",
+        "visa:naturalization"
+      ]
+    }
+  ],
+  "_note": "URL 은 실제로 200 과 유효 본문을 돌려주는지 확인하고 넣는다. watch-sources 가 에러 페이지를 거부한다."
+}
