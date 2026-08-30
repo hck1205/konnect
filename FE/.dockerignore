@@ -1,0 +1,22 @@
+# 빌드 컨텍스트에서 제외 — 전송량을 줄이고, 시크릿이 이미지에 섞이는 것을 막는다.
+node_modules
+.next
+out
+build
+.git
+.gitignore
+
+# 시크릿: .env* 는 절대 이미지에 들어가면 안 된다.
+.env
+.env.*
+!.env.example
+
+# 개발 전용 산출물
+.ladle
+storybook-static
+playwright-report
+test-results
+coverage
+
+*.log
+.DS_Store
