@@ -6,16 +6,33 @@
 
 세 종류를 구분한다. 섞으면 필터가 무너진다.
 
-| 종류 | 예 | 누가 만드나 | 값 |
+**분류는 세 층이다.** 층마다 규칙이 다르다 —
+[ADR-0011](../../50-decisions/0011-taxonomy-that-scales.md).
+
+| 층 | 개수 | 누가 정하나 | 예 |
 | --- | --- | --- | --- |
-| **주제 (topic)** | `visa`, `housing` | 시스템 고정 | [10-domain](../../10-domain/) 6종 |
-| **고정 어휘 태그** | `visa:d-2`, `topic:residency`, `region:seoul`, `nationality:vn`, `school:snu` | 관리자만 | 네임스페이스:값 |
-| **자유 태그** | `interview`, `winter` | 사용자 | 소문자, 자유 |
+| **① 네임스페이스** | **적고 고정** (~8) | 코드 + [`contracts/`](../../../contracts/README.md) | `visa` `topic` `region` `company` |
+| **② 값** | **무제한·개방** | 축마다 다름 (아래) | `company:naver` `region:ansan` |
+| **③ 공간(허브 URL)** | **소수·승격제** | **데이터가 정한다** | `/companies/naver` |
+
+여기에 **자유 태그**(`interview`, `winter`)가 따로 있다 — 네임스페이스 없이 사용자가 만든다.
+필터의 축으로 쓰지 않고 보조 검색어로만 쓴다.
 
 ### 왜 고정 어휘가 필요한가
 
 `D-2`, `d2`, `D2 visa`, `디투`가 전부 다른 태그가 되면 **필터가 작동하지 않는다.**
-매칭 품질이 곧 이 서비스의 가치이므로, 매칭에 쓰이는 축은 사용자가 만들 수 없게 한다.
+매칭 품질이 곧 이 서비스의 가치다.
+
+**그런데 값을 전부 닫아둘 수는 없다.** `company:` 는 수만 개라 관리자가 미리 넣지 못한다.
+그래서 **네임스페이스는 닫고 값은 축마다 다르게** 연다:
+
+| 네임스페이스 | 값 정책 | 이유 |
+| --- | --- | --- |
+| `visa` `topic` `lang` | **닫힘** — 고정 목록 | 제도·도메인이 정한 것이다 |
+| `region` `school` `nationality` | **열림 · 사전 시드** | 공개 데이터로 채우고 나머지는 제안받는다 |
+| `company` | **열림 · 제안제** | 미리 채울 수 없다 |
+
+⚠️ **값을 열기 전에 병합 기능이 먼저다.** 없이 열면 오타 값이 영구히 남는다.
 
 ### 네임스페이스
 
@@ -24,6 +41,7 @@ visa:f-2         visa:f-5        visa:naturalization    visa:e-7   ...
 topic:residency  topic:work      topic:housing          topic:admin   topic:language
 region:ansan     region:seoul    region:gyeonggi        ...
 nationality:vn   nationality:cn  nationality:uz         ...
+company:naver    company:kakao   ...                    (제안제 — ADR-0011)
 lang:en          lang:ko         lang:vi                lang:ja   ...
 school:snu       ...
 ```
@@ -54,8 +72,11 @@ school:snu       ...
 
 > **주간 신규 글 10건 이상이 4주 연속**이고, **답변률이 전체 평균 이상**일 때만 승격.
 
-이 기준이 **"빈 방을 만들지 않는다"를 자동으로 보장한다.**
-`nationality:` · `school:` · `region:` 전부 같은 규칙을 따른다.
+이 기준이 **"빈 방을 만들지 않는다"를 자동으로 보장한다.** 모든 축이 같은 규칙을 따른다.
+
+**카테고리는 기하급수로 늘어날 예정이다.** 그래서 허브 증가를 사람이 판단하지 않는다 —
+값이 자라면 URL 이 생기고 말라붙으면 색인에서 빠진다
+([ADR-0011](../../50-decisions/0011-taxonomy-that-scales.md)).
 (숫자 10 은 근거 없는 초기값이다. 운영하며 조정한다.)
 
 ### 정규화 규칙

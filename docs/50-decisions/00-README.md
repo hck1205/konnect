@@ -15,6 +15,7 @@
 | [0008](./0008-nationality-as-tag-not-space.md) | 국적은 **태그**이지 공간이 아니다 | 수락됨 |
 | [0009](./0009-nationality-display-policy.md) | 국적은 **상시 표시하지 않는다** — 맥락에서만 | 수락됨 |
 | [0010](./0010-language-as-weight-not-wall.md) | 언어는 **벽이 아니라 가중치** — 번역으로 잇는다 | 수락됨 |
+| [0011](./0011-taxonomy-that-scales.md) | 분류 세 층 — 네임스페이스 고정 · 값 개방 · 공간 승격제 | 수락됨 |
 
 ## 규칙
 
