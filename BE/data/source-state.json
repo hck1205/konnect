@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-08-30T23:54:57.389Z",
+  "sources": {
+    "immigration-act-enforcement-decree": {
+      "skipped": "LAW_API_KEY 없음"
+    },
+    "immigration-act": {
+      "skipped": "LAW_API_KEY 없음"
+    },
+    "nationality-act": {
+      "skipped": "LAW_API_KEY 없음"
+    },
+    "hikorea-visa-guide": {
+      "hash": "dadba7ad8a21d83a",
+      "length": 1706,
+      "revisedAt": null,
+      "etag": null,
+      "lastModified": null,
+      "checkedAt": "2026-08-30T23:54:57.389Z",
+      "history": []
+    },
+    "immigration-notices": {
+      "hash": "1e207881e2b3d221",
+      "length": 5447,
+      "revisedAt": null,
+      "etag": null,
+      "lastModified": null,
+      "checkedAt": "2026-08-30T23:54:57.389Z",
+      "history": []
+    }
+  }
+}
