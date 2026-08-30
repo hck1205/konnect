@@ -17,6 +17,25 @@ PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export PATH
 
 TAG="${1:?사용법: deploy.sh <이미지태그>}"
+
+# 태그 형식을 앞단에서 검증한다.
+#
+# 이 스크립트는 authorized_keys 의 command= 로 강제 실행되며, 인자는 배포 키를
+# 가진 쪽이 보낸 값이다. 셸의 변수 치환은 확장된 값 안의 ; 나 | 를 다시
+# 해석하지 않으므로 명령 주입은 일어나지 않는다(실제로 `x; id` 로 확인함 —
+# id 는 실행되지 않고 태그가 "x;" 가 됐다).
+#
+# 그래도 검증하는 이유는 **실패 지점을 앞으로 당기기 위해서**다. 검증이 없으면
+# 잘못된 태그가 pull 단계까지 내려가 docker 의 "invalid reference format" 같은
+# 맥락 없는 에러로 죽는다. 여기서 걸러야 무엇이 잘못됐는지 바로 보인다.
+case "$TAG" in
+  *[!A-Za-z0-9._-]* | "" | -* | .* )
+    echo "!!! 태그 형식이 잘못됐다: '$TAG'"
+    echo "    영숫자와 . _ - 만 쓸 수 있고, - 나 . 로 시작할 수 없다."
+    exit 2
+    ;;
+esac
+
 DIR=/srv/app/konnect
 COMPOSE="docker compose -f $DIR/docker-compose.yml"
 OWNER=hck1205
