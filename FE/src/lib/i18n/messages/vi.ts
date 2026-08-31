@@ -74,6 +74,26 @@ export const vi = {
   'question.koreanTerm': 'Thuật ngữ tiếng Hàn — sao chép để tìm kiếm',
 
 
+  // ── 질문 목록 ────────────────────────────────────────────
+  'list.title': 'Câu hỏi',
+  'list.description': 'Câu hỏi từ những người đang sống, học tập và làm việc tại Hàn Quốc.',
+  'list.empty': 'Chưa có câu hỏi nào.',
+  'list.emptyHint': 'Hãy là người hỏi đầu tiên — người từng trải sẽ biết câu trả lời.',
+  'list.emptyFiltered': 'Không có câu hỏi nào khớp với bộ lọc này.',
+  'list.emptyFilteredHint': 'Thử chủ đề khác, hoặc xoá bộ lọc.',
+  'list.answers': { zero: 'Chưa có trả lời', other: '{count} trả lời' },
+  'list.accepted': 'Đã chọn',
+  'list.loadMore': 'Xem thêm',
+  'list.filterTopic': 'Chủ đề',
+  'list.allTopics': 'Tất cả',
+  'list.clearFilter': 'Xoá bộ lọc',
+  'topic.visa': 'Thị thực',
+  'topic.language': 'Ngôn ngữ',
+  'topic.education': 'Học tập',
+  'topic.housing': 'Nhà ở',
+  'topic.work': 'Việc làm',
+  'topic.social': 'Cộng đồng',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': 'Câu hỏi',
   'nav.guides': 'Hướng dẫn',
