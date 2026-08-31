@@ -37,10 +37,8 @@ export interface QuestionViewProps {
 export function QuestionView({ question, answers, pathname }: QuestionViewProps) {
   const { t, locale } = useI18n();
 
-  const nav = [
-    { href: routes.questions(locale), label: t('nav.questions') },
-    { href: `/${locale}/guides`, label: t('nav.guides') },
-  ];
+  // 있는 것만 링크한다 — guides 는 Phase 2 라 지금 누르면 404 다(HomeView 와 같은 이유)
+  const nav = [{ href: routes.questions(locale), label: t('nav.questions') }];
 
   const accepted = answers.find((a) => a.id === question.acceptedAnswerId);
   const rest = answers.filter((a) => a.id !== question.acceptedAnswerId);

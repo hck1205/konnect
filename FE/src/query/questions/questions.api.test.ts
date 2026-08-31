@@ -48,4 +48,19 @@ describe('buildListParams', () => {
       buildListParams({ topic: 'visa', tags: ['visa:f-2'] }, { limit: 10 }),
     ).toEqual({ topic: 'visa', tags: 'visa:f-2', limit: '10' });
   });
+
+  /**
+   * 게시판은 topic × type 이다. 이 줄이 빠지면 화면은 필터를 건 것처럼 보이는데
+   * 요청에는 안 실려서 **전체 목록이 그대로 나온다** — 조용히 틀리는 종류다.
+   */
+  it('type 을 함께 보낸다 — 게시판의 두 번째 축', () => {
+    expect(buildListParams({ topic: 'visa', type: 'question' })).toEqual({
+      topic: 'visa',
+      type: 'question',
+    });
+  });
+
+  it('type 만 걸어도 실린다', () => {
+    expect(buildListParams({ type: 'recruit' })).toEqual({ type: 'recruit' });
+  });
 });

@@ -114,6 +114,26 @@ export const en = {
   'question.koreanTerm': 'Korean term — copy this to search',
 
 
+  // ── 질문 목록 ────────────────────────────────────────────
+  'list.title': 'Questions',
+  'list.description': 'Questions from people living, studying, and working in Korea.',
+  'list.empty': 'No questions here yet.',
+  'list.emptyHint': 'Be the first to ask — someone who has been through it will know.',
+  'list.emptyFiltered': 'No questions match this filter.',
+  'list.emptyFilteredHint': 'Try a different topic, or clear the filter.',
+  'list.answers': { zero: 'No answers', one: '{count} answer', other: '{count} answers' },
+  'list.accepted': 'Answered',
+  'list.loadMore': 'Load more',
+  'list.filterTopic': 'Topic',
+  'list.allTopics': 'All',
+  'list.clearFilter': 'Clear filter',
+  'topic.visa': 'Visa',
+  'topic.language': 'Language',
+  'topic.education': 'Study',
+  'topic.housing': 'Housing',
+  'topic.work': 'Work',
+  'topic.social': 'Community',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': 'Questions',
   'nav.guides': 'Guides',

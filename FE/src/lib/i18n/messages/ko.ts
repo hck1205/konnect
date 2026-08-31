@@ -104,6 +104,26 @@ export const ko = {
   'question.koreanTerm': '한국어 용어 — 복사해서 검색하세요',
 
 
+  // ── 질문 목록 ────────────────────────────────────────────
+  'list.title': '질문',
+  'list.description': '한국에서 살고, 공부하고, 일하는 사람들의 질문.',
+  'list.empty': '아직 질문이 없습니다.',
+  'list.emptyHint': '먼저 물어보세요 — 겪어 본 사람이 답합니다.',
+  'list.emptyFiltered': '이 조건에 맞는 질문이 없습니다.',
+  'list.emptyFilteredHint': '다른 주제를 보거나 필터를 지워 보세요.',
+  'list.answers': { zero: '답변 없음', other: '답변 {count}개' },
+  'list.accepted': '채택됨',
+  'list.loadMore': '더 보기',
+  'list.filterTopic': '주제',
+  'list.allTopics': '전체',
+  'list.clearFilter': '필터 지우기',
+  'topic.visa': '비자',
+  'topic.language': '어학',
+  'topic.education': '학업',
+  'topic.housing': '거주',
+  'topic.work': '채용',
+  'topic.social': '교류',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': '질문',
   'nav.guides': '가이드',

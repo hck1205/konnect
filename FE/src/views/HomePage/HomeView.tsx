@@ -1,7 +1,8 @@
 'use client';
 
-import { BookOpen, MessageCircleQuestion, Users } from 'lucide-react';
+import { MessageCircleQuestion } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
+import { routes } from '@/lib/routes';
 import { AppShell } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { PageTitle } from '@/components/layout/PageTitle';
@@ -18,10 +19,23 @@ import { LocaleSwitcher } from '@/components/i18n/LocaleSwitcher';
 export function HomeView({ pathname }: { pathname: string }) {
   const { t, locale } = useI18n();
 
+  /**
+   * **있는 것만 링크한다.**
+   *
+   * 예전에는 guides·meetups 도 걸려 있었는데 라우트가 없어 셋 다 404 였다.
+   * 가이드는 "반복 질문이 승격된 문서"라 질문이 쌓여야 성립하고(Phase 2),
+   * meetups 는 색인 라우트 표에 아직 없다
+   * → docs/30-architecture/07-routes-and-indexing.md
+   *
+   * 사전의 `nav.guides`·`nav.meetups` 는 지운 게 아니라 남겨 뒀다 —
+   * 그 화면이 생기면 여기 한 줄만 되돌리면 된다.
+   */
   const nav = [
-    { href: `/${locale}/questions`, label: t('nav.questions'), icon: <MessageCircleQuestion className="size-4" /> },
-    { href: `/${locale}/guides`, label: t('nav.guides'), icon: <BookOpen className="size-4" /> },
-    { href: `/${locale}/meetups`, label: t('nav.meetups'), icon: <Users className="size-4" /> },
+    {
+      href: routes.questions(locale),
+      label: t('nav.questions'),
+      icon: <MessageCircleQuestion className="size-4" />,
+    },
   ];
 
   return (

@@ -44,9 +44,11 @@
 - **query 계층** — `auth`·`questions`·`answers`, 도메인별 `.api`/`.keys`/`.hooks`
 - **질문 상세** `/[locale]/questions/[id]/[slug]` — SSR·canonical·hreflang·301 정규화
 - 테스트: unit 267 · **integration 7(라이브 BE)** · contrast 64 · routing 11 · seo 8
-- ⚠️ **홈은 있는데 네비게이션이 전부 죽어 있다.** `HomeView` 가 `/questions`·`/guides`·
-  `/meetups` 로 링크하는데 **그 라우트가 없다** — 있는 것은 `questions/[id]/[slug]` 뿐이라
-  세 링크 모두 404 다. 상세로 들어가는 입구가 실질적으로 없어 URL 을 직접 열어야 한다
+- **질문 목록** `/[locale]/questions` — 주제 필터(6개) · 커서 페이지네이션 · 빈 상태.
+  **색인은 필터 없는 기본 판만**이고 `?topic=`·`?cursor=` 가 붙으면 `noindex, follow` +
+  canonical 은 기본 URL 을 가리킨다([07-routes](../30-architecture/07-routes-and-indexing.md))
+- 홈 네비에서 **죽은 링크를 걷어냈다.** `/guides` 는 Phase 2(반복 질문이 승격된 문서),
+  `/meetups` 는 색인 라우트 표에 아직 없다 — 사전 키는 남겨 뒀으니 화면이 생기면 한 줄만 되돌린다
 
 ### 인프라 — 배포까지 돈다
 
@@ -127,9 +129,11 @@ TOPIK 과 사회통합프로그램(KIIP)이 F-2-7 점수와 F-5 요건에 직접
 ## 다음에 할 일 (권장 순서)
 
 1. ~~출처 감시 서버 설치~~ — **끝났다.** cron `0 9 * * *` 등록, 1·2차 실행 확인
-2. **② 목록 화면** — 상세로 들어가는 입구. 홈 네비의 죽은 링크 3개가 여기서 산다.
-   `topic` × `type` 필터는 BE·계약·FE 타입까지 준비돼 있다
-4. **OAuth** — 이게 없으면 쓰기가 영원히 불가능하다
+2. ~~목록 화면~~ — **끝났다.** `check:routing` 11건 · `check:seo` 7건 통과
+3. **OAuth** — 없으면 쓰기가 영원히 불가능하다. 이제 읽는 길은 다 뚫렸으므로 이게 유일한 하드 블로커다
+4. **허브 페이지** — `/visa/[code]`·`/topics/[topic]`. 필터 URL 을 색인하지 않기로 했으므로
+   **SEO 유입은 여기가 만든다.** 다만 [승격 기준](../50-decisions/0008-nationality-as-tag-not-space.md)
+   (질문 20건 이상 + 답변률 평균 이상)을 넘는 값이 아직 없다
 
 ## 알아 두면 시간을 아끼는 것들
 

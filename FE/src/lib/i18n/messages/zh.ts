@@ -77,6 +77,26 @@ export const zh = {
   'question.koreanTerm': '韩语词条 — 复制后可用于搜索',
 
 
+  // ── 질문 목록 ────────────────────────────────────────────
+  'list.title': '提问',
+  'list.description': '在韩国生活、学习和工作的人提出的问题。',
+  'list.empty': '还没有提问。',
+  'list.emptyHint': '来做第一个提问的人 — 经历过的人会知道答案。',
+  'list.emptyFiltered': '没有符合此筛选条件的提问。',
+  'list.emptyFilteredHint': '换一个主题，或清除筛选。',
+  'list.answers': { zero: '暂无回答', other: '{count} 条回答' },
+  'list.accepted': '已采纳',
+  'list.loadMore': '加载更多',
+  'list.filterTopic': '主题',
+  'list.allTopics': '全部',
+  'list.clearFilter': '清除筛选',
+  'topic.visa': '签证',
+  'topic.language': '语言',
+  'topic.education': '学业',
+  'topic.housing': '居住',
+  'topic.work': '工作',
+  'topic.social': '交流',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': '问题',
   'nav.guides': '指南',
