@@ -40,6 +40,8 @@ export function buildListParams(
   // 게시판의 두 번째 축. topic 과 함께 걸리면 topic × type 이다
   if (filter.type) params.type = filter.type;
   if (filter.tags?.length) params.tags = filter.tags.join(',');
+  // OR 축. tags(AND) 와 다른 키라 둘을 함께 보낼 수 있다
+  if (filter.anyTags?.length) params.anyTags = filter.anyTags.join(',');
 
   // 공백만 있는 검색어는 필터 없음으로 수렴한다 (BE 도 트림한다)
   const q = filter.q?.trim();

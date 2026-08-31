@@ -68,6 +68,13 @@ export interface QuestionFilter {
   type?: PostType;
   /** 정규화된 태그. **AND** 로 걸린다 */
   tags?: string[];
+  /**
+   * 이 중 **하나라도** 가진 글 (OR). `tags`(AND) 와 함께 걸면 교집합이다.
+   *
+   * 여러 값을 하나로 묶어 보는 화면이 쓴다 — 관련 비자 묶음, 언어권, 별칭이 여럿인 태그.
+   * AND 만으로는 표현 자체가 불가능하다.
+   */
+  anyTags?: string[];
   /** 검색어 */
   q?: string;
   /** 답변이 있는 것만 / 없는 것만 */

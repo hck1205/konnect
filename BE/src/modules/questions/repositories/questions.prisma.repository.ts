@@ -82,6 +82,11 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
           tags: { some: { tag: { raw } } },
         })),
       }),
+      // anyTags 는 OR — `some` 안에 `in` 을 쓰면 "이 중 하나라도" 가 된다.
+      // 위의 AND 처럼 조건을 쪼개면 안 된다(그러면 전부 가진 것만 남는다).
+      ...(filter.anyTags?.length && {
+        tags: { some: { tag: { raw: { in: filter.anyTags } } } },
+      }),
       ...(filter.query && {
         OR: [
           { title: { contains: filter.query, mode: 'insensitive' } },

@@ -55,6 +55,7 @@ export class QuestionsService {
       type: dto.type,
       // 필터 태그도 저장 형태로 정규화한다 — 'D-2' 로 검색해도 찾아져야 한다
       tags: normalizeTagList(dto.tags ?? [], MAX_TAGS_PER_POST),
+      anyTags: normalizeTagList(dto.anyTags ?? [], MAX_TAGS_PER_POST),
       query: stringUtil.normalizeQuery(dto.q),
       answered:
         dto.answered === undefined ? undefined : dto.answered === 'true',

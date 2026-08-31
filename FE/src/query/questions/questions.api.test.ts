@@ -63,4 +63,18 @@ describe('buildListParams', () => {
   it('type 만 걸어도 실린다', () => {
     expect(buildListParams({ type: 'recruit' })).toEqual({ type: 'recruit' });
   });
+
+  /**
+   * AND 와 OR 는 **다른 키**로 나간다. 하나로 합치면 서버가 어느 쪽인지 알 수 없고,
+   * 합치는 순간 "F-2 또는 F-5 이면서 안산" 같은 질의가 표현 불가능해진다.
+   */
+  it('anyTags 는 tags 와 별개 키로 실린다', () => {
+    expect(
+      buildListParams({ tags: ['region:ansan'], anyTags: ['visa:f-2', 'visa:f-5'] }),
+    ).toEqual({ tags: 'region:ansan', anyTags: 'visa:f-2,visa:f-5' });
+  });
+
+  it('anyTags 가 비면 아예 실리지 않는다', () => {
+    expect(buildListParams({ anyTags: [] })).toEqual({});
+  });
 });
