@@ -2,7 +2,10 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { slugify } from './string.util';
 import { TAG_NAMESPACES } from '../../modules/tags';
-import { TOPICS } from '../../modules/questions/entities/question.entity';
+import {
+  POST_TYPES,
+  TOPICS,
+} from '../../modules/questions/entities/question.entity';
 
 /**
  * FE·BE 경계 계약.
@@ -61,5 +64,14 @@ describe('주제 계약 (contracts/topics.json)', () => {
     const { topics } = readJson<{ topics: string[] }>('topics.json');
     expect(topics.length).toBeGreaterThan(3);
     expect([...TOPICS]).toEqual(topics);
+  });
+});
+
+describe('글 종류 계약 (contracts/post-types.json)', () => {
+  it('종류 목록이 계약과 정확히 같다', () => {
+    const { types } = readJson<{ types: string[] }>('post-types.json');
+    expect(types.length).toBeGreaterThan(1);
+    // 순서까지 같아야 한다 — 게시판 필터의 표시 순서가 여기서 나온다
+    expect([...POST_TYPES]).toEqual(types);
   });
 });

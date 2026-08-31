@@ -7,7 +7,11 @@ import type {
   QuestionListFilter,
   QuestionsRepository,
 } from './questions.repository';
-import { toPrismaTopic, toQuestionRecord } from './questions.mapper';
+import {
+  toPrismaPostType,
+  toPrismaTopic,
+  toQuestionRecord,
+} from './questions.mapper';
 
 const INCLUDE = {
   author: { select: { nickname: true } },
@@ -39,6 +43,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
           title: record.title,
           body: record.body,
           topic: toPrismaTopic(record.topic),
+          type: toPrismaPostType(record.type),
           status: record.status,
           acceptedAnswerId: record.acceptedAnswerId,
           answerCount: record.answerCount,
@@ -65,6 +70,7 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
     const where: Prisma.QuestionWhereInput = {
       status: 'OPEN',
       ...(filter.topic && { topic: toPrismaTopic(filter.topic) }),
+      ...(filter.type && { type: toPrismaPostType(filter.type) }),
       ...(filter.authorId && { authorId: filter.authorId }),
       ...(filter.answered !== undefined && {
         answerCount: filter.answered ? { gt: 0 } : 0,
@@ -128,6 +134,9 @@ export class PrismaQuestionsRepository implements QuestionsRepository {
           ...(patch.body !== undefined && { body: patch.body }),
           ...(patch.topic !== undefined && {
             topic: toPrismaTopic(patch.topic),
+          }),
+          ...(patch.type !== undefined && {
+            type: toPrismaPostType(patch.type),
           }),
           ...(patch.status !== undefined && { status: patch.status }),
           ...(patch.acceptedAnswerId !== undefined && {

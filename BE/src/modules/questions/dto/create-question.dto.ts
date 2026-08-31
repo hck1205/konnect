@@ -1,5 +1,10 @@
 import { IsArray, IsIn, IsOptional, IsString, Length } from 'class-validator';
-import { TOPICS, type Topic } from '../entities/question.entity';
+import {
+  CREATABLE_POST_TYPES,
+  TOPICS,
+  type PostType,
+  type Topic,
+} from '../entities/question.entity';
 import {
   QUESTION_BODY_MAX,
   QUESTION_BODY_MIN,
@@ -22,6 +27,17 @@ export class CreateQuestionDto {
 
   @IsIn(TOPICS)
   topic!: Topic;
+
+  /**
+   * 생략하면 `question` 이다 — 이 필드가 생기기 전과 같게 동작한다.
+   *
+   * `POST_TYPES` 전체가 아니라 `CREATABLE_POST_TYPES` 로 좁히는 이유:
+   * enum 에 값이 있다고 만들 수 있는 것은 아니다. 후기·모집은 각자의 작성 폼과
+   * 화면이 생겨야 성립하는데, 지금 받아 주면 **읽을 화면이 없는 글**이 쌓인다.
+   */
+  @IsOptional()
+  @IsIn(CREATABLE_POST_TYPES)
+  type?: PostType;
 
   /** 정규화·중복 제거·상한은 서비스가 한다 — DTO 는 모양만 본다 */
   @IsOptional()

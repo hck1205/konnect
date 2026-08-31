@@ -19,6 +19,18 @@ export const TOPICS = [
 export type Topic = (typeof TOPICS)[number];
 
 /**
+ * 글의 종류 — 글쓴이가 **무엇을 하려는가**. `Topic`(무엇에 대한 글인가)과 다른 축이고,
+ * 게시판은 둘의 곱이다(`/ko/visa?type=review`).
+ *
+ * 형식(Guide·Checklist)이 아니라 의도로 자른 이유는 이 제품에 **전문가가 없기**
+ * 때문이다 — 권위 있는 안내 형식을 열면 틀린 해석이 '가이드'라는 이름을 달고 쌓인다.
+ *
+ * 지금 작성 폼이 있는 것은 `question` 뿐이다. 나머지는 필터로만 쓰인다.
+ */
+export const POST_TYPES = ['question', 'review', 'share', 'recruit'] as const;
+export type PostType = (typeof POST_TYPES)[number];
+
+/**
  * 공개 상태. **물리 삭제가 없다** — 답변이 달린 질문을 지우면 링크가 죽고
  * 그 답변이 무엇에 대한 답인지 알 수 없게 된다.
  */
@@ -31,6 +43,7 @@ export interface Question {
   title: string;
   body: string;
   topic: Topic;
+  type: PostType;
   /** 정규화된 태그 (`visa:f-2`) — 표시 형태로 저장하지 않는다 */
   tags: string[];
   /** 채택된 답변 id. 질문 작성자만 고를 수 있고 하나뿐이다 */
@@ -45,6 +58,8 @@ export interface Question {
 /** 목록 필터 — 전부 선택이다. 아무것도 없으면 최신순 전체다. */
 export interface QuestionFilter {
   topic?: Topic;
+  /** 게시판의 두 번째 축. topic 과 함께 걸리면 `topic × type` 이 된다 */
+  type?: PostType;
   /** 정규화된 태그. **AND** 로 걸린다 */
   tags?: string[];
   /** 검색어 */
@@ -57,8 +72,17 @@ export interface CreateQuestionInput {
   title: string;
   body: string;
   topic: Topic;
+  /** 생략하면 `question`. BE 는 지금 이 값만 받는다 — 작성 폼이 그것뿐이다 */
+  type?: PostType;
   tags?: string[];
 }
 
-/** 수정 — 보내는 필드만 바뀐다. `topic` 은 바꿀 수 있고 작성자는 못 바꾼다 */
-export type UpdateQuestionInput = Partial<CreateQuestionInput>;
+/**
+ * 수정 — 보내는 필드만 바뀐다. `topic` 은 바꿀 수 있고 작성자는 못 바꾼다.
+ *
+ * `type` 도 못 바꾼다. 종류를 바꾸면 읽을 화면이 없는 글이 생기고, 질문에 붙어 있던
+ * 채택·답변 수가 갈 곳을 잃는다 — BE 의 `UpdateQuestionDto` 와 같은 이유다.
+ */
+export type UpdateQuestionInput = Partial<
+  Omit<CreateQuestionInput, 'type'>
+>;

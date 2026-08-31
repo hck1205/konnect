@@ -1,6 +1,11 @@
 import { Transform } from 'class-transformer';
 import { IsBooleanString, IsIn, IsOptional, IsString } from 'class-validator';
-import { TOPICS, type Topic } from '../entities/question.entity';
+import {
+  POST_TYPES,
+  TOPICS,
+  type PostType,
+  type Topic,
+} from '../entities/question.entity';
 
 /**
  * 목록 쿼리.
@@ -21,6 +26,15 @@ export class ListQuestionsDto {
   @IsOptional()
   @IsIn(TOPICS)
   topic?: Topic;
+
+  /**
+   * 필터는 `POST_TYPES` 전체를 받는다 — 생성과 달리 좁히지 않는다.
+   * 아직 못 만드는 종류로 걸러도 빈 목록이 나올 뿐 틀린 결과는 아니고,
+   * 작성 폼이 열릴 때 여기를 또 고치지 않아도 된다.
+   */
+  @IsOptional()
+  @IsIn(POST_TYPES)
+  type?: PostType;
 
   @IsOptional()
   @Transform(({ value }): string[] => {

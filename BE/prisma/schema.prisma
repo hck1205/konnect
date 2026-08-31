@@ -96,6 +96,22 @@ model AuthIdentity {
 //  Q&A
 // ─────────────────────────────────────────────────────────────────────
 
+/// 글쓴이가 무엇을 하려는가. `Topic`(무엇에 대한 글인가)과 **다른 축**이고,
+/// 게시판은 둘의 곱이다 — /ko/visa?type=review.
+///
+/// 형식(Guide·Checklist)이 아니라 의도로 자른 이유는 이 제품에 전문가가 없기
+/// 때문이다 — 권위 있는 안내 형식을 열면 틀린 해석이 '가이드'라는 이름을 달고 쌓인다.
+///
+/// 지금 작성 폼이 있는 것은 QUESTION 뿐이다. 나머지 셋을 미리 둔 이유는
+/// enum 값을 나중에 더하면 마이그레이션이 한 번 더 필요하기 때문이다 —
+/// 값이 있어도 만들 경로가 없으면 아무 일도 일어나지 않는다.
+enum PostType {
+  QUESTION
+  REVIEW
+  SHARE
+  RECRUIT
+}
+
 /// 주제 — docs/10-domain 의 6영역과 대응한다.
 /// 태그와 달리 하나만 고르고 필수다. 목록의 1차 분류다.
 enum Topic {
@@ -114,12 +130,15 @@ enum ContentStatus {
 }
 
 model Question {
-  id        String        @id @db.VarChar(36)
-  authorId  String        @db.VarChar(36)
-  title     String        @db.VarChar(200)
-  body      String        @db.Text
-  topic     Topic
-  status    ContentStatus @default(OPEN)
+  id       String        @id @db.VarChar(36)
+  authorId String        @db.VarChar(36)
+  title    String        @db.VarChar(200)
+  body     String        @db.Text
+  topic    Topic
+  /// 기본값이 QUESTION 인 이유: 이 필드가 생기기 전의 글은 전부 질문이었다.
+  /// 기본값이 없으면 기존 행에 채울 값이 없어 마이그레이션이 막힌다.
+  type     PostType      @default(QUESTION)
+  status   ContentStatus @default(OPEN)
 
   /// 채택된 답변. 질문 작성자만 고르고 하나뿐이다.
   ///
@@ -134,14 +153,17 @@ model Question {
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(3)
 
-  author User          @relation(fields: [authorId], references: [id])
+  author  User          @relation(fields: [authorId], references: [id])
   answers Answer[]
-  tags   QuestionTag[]
+  tags    QuestionTag[]
 
   /// 목록의 기본 정렬은 id 역순(= 최신순)이고, 그 앞에 status 필터가 붙는다.
   /// 복합 인덱스 순서는 **필터 먼저, 정렬 나중**이어야 인덱스를 탄다.
   @@index([status, id(sort: Desc)])
   @@index([topic, status, id(sort: Desc)])
+  /// 게시판 = topic × type. 필터가 앞, 정렬이 뒤여야 인덱스를 탄다.
+  /// 지금은 전부 QUESTION 이라 선택도가 낮지만, 값이 섞이기 시작하면 이 순서가 듣는다.
+  @@index([topic, type, status, id(sort: Desc)])
   @@index([authorId, id(sort: Desc)])
   /// "아직 답 없는 질문" 필터 — 답변자가 가장 자주 쓰는 목록이다
   @@index([status, answerCount, id(sort: Desc)])
@@ -179,13 +201,13 @@ model Answer {
 /// 별도 테이블로 두는 이유: 문자열 배열로 두면 "이 태그를 쓴 질문 수"나
 /// 태그 목록 자동완성을 매번 전체 스캔해야 한다.
 model Tag {
-  id        String  @id @db.VarChar(36)
+  id        String   @id @db.VarChar(36)
   /// visa / region / school / topic / lang. 자유 태그는 null.
-  namespace String? @db.VarChar(24)
+  namespace String?  @db.VarChar(24)
   /// 정규화된 값 (`d-2`, `seoul`)
-  value     String  @db.VarChar(64)
+  value     String   @db.VarChar(64)
   /// 저장 형태 전체 (`visa:d-2`) — 조회 편의를 위한 비정규화
-  raw       String  @db.VarChar(96)
+  raw       String   @db.VarChar(96)
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   questions QuestionTag[]
@@ -208,7 +230,7 @@ model QuestionTag {
   /// 순서를 저장하는 이유: 사용자가 **먼저 적은 태그가 더 중요할 가능성이 높고**,
   /// 순서가 흔들리면 같은 질문의 태그 목록이 조회마다 달라 보인다.
   /// 조인 결과의 순서는 보장되지 않으므로 컬럼으로 못박는다.
-  position   Int    @default(0)
+  position Int @default(0)
 
   question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)

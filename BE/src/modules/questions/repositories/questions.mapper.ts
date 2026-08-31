@@ -1,9 +1,14 @@
 import {
   Prisma,
   type ContentStatus,
+  type PostType as PrismaPostType,
   type Topic as PrismaTopic,
 } from '@prisma/client';
-import type { QuestionRecord, Topic } from '../entities/question.entity';
+import type {
+  PostType,
+  QuestionRecord,
+  Topic,
+} from '../entities/question.entity';
 
 /**
  * 도메인 ↔ Prisma 변환.
@@ -24,6 +29,12 @@ export const toPrismaTopic = (topic: Topic): PrismaTopic =>
 export const toDomainTopic = (topic: PrismaTopic): Topic =>
   topic.toLowerCase() as Topic;
 
+export const toPrismaPostType = (type: PostType): PrismaPostType =>
+  type.toUpperCase() as PrismaPostType;
+
+export const toDomainPostType = (type: PrismaPostType): PostType =>
+  type.toLowerCase() as PostType;
+
 export const toPrismaStatus = (status: 'OPEN' | 'HIDDEN'): ContentStatus =>
   status;
 
@@ -37,6 +48,7 @@ export function toQuestionRecord(
     title: row.title,
     body: row.body,
     topic: toDomainTopic(row.topic),
+    type: toDomainPostType(row.type),
     // 입력 순서를 지킨다 — 인메모리 구현과 **같은 계약**이어야 한다.
     // 정렬해 버리면 "먼저 적은 태그가 앞"이라는 의미가 사라진다.
     // (조회 시 position 으로 정렬해서 가져오므로 여기서는 그대로 쓴다)

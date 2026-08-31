@@ -15,6 +15,7 @@ export function matchesFilter(
   if (record.status !== 'OPEN') return false;
 
   if (filter.topic && record.topic !== filter.topic) return false;
+  if (filter.type && record.type !== filter.type) return false;
   if (filter.authorId && record.authorId !== filter.authorId) return false;
 
   // 태그는 AND — OR 이면 태그를 더할수록 결과가 넓어져 필터의 의미가 없다
