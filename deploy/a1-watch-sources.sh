@@ -2,7 +2,10 @@
 # 공식 출처 감시 (A1 서버에서 cron 으로 실행).
 #
 #   설치: sudo install -m 755 deploy/a1-watch-sources.sh /srv/app/konnect/watch-sources.sh
-#   크론: 0 0 * * *  /srv/app/konnect/watch-sources.sh   # 09:00 KST
+#   크론: 0 9 * * *  /srv/app/konnect/watch-sources.sh   # 09:00 KST
+#
+#   ⚠️ A1 의 시간대는 **Asia/Seoul** 이다(UTC 아님). 그래서 시각을 그대로 적는다.
+#      예전 주석이 `0 0` 이었는데 그건 UTC 서버를 가정한 것이라 이 서버에서는 자정에 돈다.
 #
 # **왜 GitHub Actions 가 아니라 서버인가**
 #   법제처 OPEN API 는 호출하는 **IP 를 사전 등록**해야 한다("정확한 서버장비의
@@ -33,6 +36,26 @@ cd "$DIR"
 # compose 가 같은 디렉터리의 .env 를 알아서 읽고, 그래야 키가 이 셸의 환경변수로
 # 새지 않는다. 키가 없으면 법령 3건만 건너뛰고 페이지 감시는 계속 돈다.
 [ -f .env ] || { echo "!!! $DIR/.env 가 없다. 감시는 키 없이도 돌지만 구성이 잘못됐다."; exit 1; }
+
+# 어떤 이미지로 도나 — **돌고 있는 konnect-be 와 같은 것**을 쓴다.
+#
+# compose 의 기본값은 `:latest` 인데 이 서버에서 그 태그는 **낡은 것을 가리킨다.**
+# a1-deploy.sh 가 BE_IMAGE 에 커밋 SHA 태그를 넣어 pull 하므로, 서버는 `:latest` 를
+# 처음 한 번 받은 뒤로 다시 받은 적이 없다. 실제로 첫 실행이 11시간 전 이미지를 잡아
+# `Cannot find module '/app/scripts/watch-sources.mjs'` 로 죽었다 — 그 이미지에는
+# 감시 스크립트가 아직 없었다.
+#
+# 돌고 있는 컨테이너에서 가져오면 감시가 **지금 서비스 중인 코드와 같은 것**을 쓴다.
+BE_IMAGE="$(docker inspect konnect-be --format '{{.Config.Image}}' 2>/dev/null || true)"
+if [ -n "$BE_IMAGE" ]; then
+  export BE_IMAGE
+  echo "이미지: $BE_IMAGE (konnect-be 와 동일)"
+else
+  # 여기서 멈추지 않는다. 앱이 내려가 있다고 감시까지 멈출 이유는 없다.
+  # 다만 `:latest` 가 낡았을 수 있으므로 그 사실을 로그에 남긴다.
+  echo "!!! konnect-be 가 돌고 있지 않다 — compose 기본값(:latest)으로 진행한다."
+  echo "!!! 이 서버의 :latest 는 갱신되지 않으므로 낡았을 수 있다."
+fi
 
 LOG=$(mktemp)
 trap 'rm -f "$LOG"' EXIT
