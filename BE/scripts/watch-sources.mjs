@@ -13,6 +13,8 @@
  *   KONNECT_LAW_API_KEY  법제처 OPEN API 키(OC 값). 없으면 statute 를 건너뛴다.
  *                        → https://open.law.go.kr 에서 무료 발급
  *   LAW_API_KEY          prefix 없는 이름도 받는다(로컬 편의).
+ *   KONNECT_SOURCE_STATE 상태 파일 경로. 기본은 BE/data/source-state.json 이고,
+ *                        컨테이너에서는 볼륨(/app/var)으로 뺀다.
  *
  *   ⚠️ 운영 서버의 .env 는 **앱별 prefix** 를 쓴다(한 박스에 여러 앱이 있다).
  *      그래서 prefix 붙은 이름을 **먼저** 본다.
@@ -25,8 +27,29 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const REGISTRY = resolve(here, '../../contracts/official-sources.json');
-const STATE = resolve(here, '../data/source-state.json');
+/**
+ * 감시 대상 목록 — **사람이 관리하는 입력**이다.
+ *
+ * 예전엔 `contracts/` 에 있었다. 그 폴더는 "FE 와 BE 가 같아야 하는 규칙"의 자리인데
+ * (→ contracts/README.md) 이 파일은 FE 가 읽지 않고 대조하는 테스트도 없다 —
+ * 계약이 아니라 BE 의 입력이었다.
+ *
+ * 옮긴 결정적인 이유는 따로 있다. BE 이미지의 **빌드 컨텍스트가 `BE/`** 라
+ * (.github/workflows/deploy.yml) 저장소 루트의 파일은 이미지에 담을 수가 없다.
+ * 서버에서 돌리려면 이 파일이 `BE/` 안에 있어야 한다.
+ */
+const REGISTRY = resolve(here, '../data/official-sources.json');
+
+/**
+ * 상태 파일 — **파생 데이터다.** 해시는 원문에서 언제든 다시 만들 수 있다.
+ * 그래서 git 에 두지 않는다(예전엔 커밋했고, 그 탓에 감시가 저장소 쓰기 권한을 요구했다).
+ *
+ * 경로를 열어 두는 이유: 컨테이너에서는 레지스트리가 `/app/data` 에 있어
+ * **그 위에 볼륨을 덮으면 레지스트리가 가려진다.** 쓰기 경로만 밖으로 뺀다(`/app/var`).
+ */
+const STATE = process.env.KONNECT_SOURCE_STATE
+  ? resolve(process.env.KONNECT_SOURCE_STATE)
+  : resolve(here, '../data/source-state.json');
 
 const DRY = process.argv.includes('--dry');
 /**

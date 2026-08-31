@@ -8,7 +8,7 @@
 
 | | |
 | --- | --- |
-| 커밋 | 40 (2026-08-24 ~ 08-31) |
+| 커밋 | 42 (2026-08-24 ~ 08-31) |
 | 문서 | 96개 · ADR 11개 |
 | 코드 | BE 3,025줄 · FE 15,647줄 |
 | 배포 | **A1 서버에서 가동 중** — `https://134.185.112.123` (self-signed) |
@@ -44,7 +44,9 @@
 - **query 계층** — `auth`·`questions`·`answers`, 도메인별 `.api`/`.keys`/`.hooks`
 - **질문 상세** `/[locale]/questions/[id]/[slug]` — SSR·canonical·hreflang·301 정규화
 - 테스트: unit 267 · **integration 7(라이브 BE)** · contrast 64 · routing 11 · seo 8
-- ⚠️ **목록·홈 화면이 없다.** 상세로 들어가는 입구가 없어 URL 을 직접 열어야 한다
+- ⚠️ **홈은 있는데 네비게이션이 전부 죽어 있다.** `HomeView` 가 `/questions`·`/guides`·
+  `/meetups` 로 링크하는데 **그 라우트가 없다** — 있는 것은 `questions/[id]/[slug]` 뿐이라
+  세 링크 모두 404 다. 상세로 들어가는 입구가 실질적으로 없어 URL 을 직접 열어야 한다
 
 ### 인프라 — 배포까지 돈다
 
@@ -59,26 +61,32 @@ BE·FE 가 서로를 import 하지 않으므로([ADR-0002](../50-decisions/0002-
 
 ## 지금 막혀 있는 것
 
-### 1. 공식 출처 감시를 서버에서 못 돌린다 ← **바로 다음 작업**
+### 1. 출처 감시 — 저장소 작업은 끝났고 **서버 설치만 남았다**
 
-[감시 스크립트](../20-product/10-features/11-official-sources.md)는 로컬에서 **동작을 확인했다**
-(법령 3건 + 페이지 2건, 3회 연속 안정). 그런데 서버 배치가 막혔다.
+**A 안으로 갔다.** 구현하다 보니 문서가 몰랐던 벽이 하나 더 있었다:
+BE 이미지의 **빌드 컨텍스트가 `BE/`** 라([deploy.yml](../../.github/workflows/deploy.yml))
+저장소 루트의 `contracts/` 는 **애초에 이미지에 담을 수가 없다.**
 
-- 법제처 API 가 **호출 IP 사전 등록**을 요구해 GitHub Actions 에서는 못 돈다 → A1 cron 으로 옮김
-- 그런데 `deploy/a1-watch-sources.sh` 가 **서버에 저장소 체크아웃이 있다고 가정**하는데
-  A1 은 **이미지만 받아 실행**하는 서버라 소스가 없다 (`/srv/app/konnect/repo` 없음)
+그런데 `official-sources.json` 은 애초에 계약이 아니었다 —
+[contracts/README](../../contracts/README.md) 의 표에 없고, 읽는 코드는 감시 스크립트
+하나뿐이며 FE 는 손대지 않는다. 그래서 BE 소유로 옮겼다.
 
-**선택지 둘. 아직 안 정했다.**
+저장소 쪽은 전부 됐다:
 
-| | 내용 | 평가 |
-| --- | --- | --- |
-| **A** | BE 이미지에 `scripts/` 를 담고 `compose run --rm watch-sources` | **권장.** 서버에 git 불필요. `migrate` 와 같은 패턴 |
-| B | 서버에 저장소를 클론 | 프로덕션에 git 체크아웃 + push 권한이 생긴다 — 배포 키 `command=` 제약을 역행 |
+- `contracts/official-sources.json` → `BE/data/official-sources.json`
+- `BE/Dockerfile` 이 `scripts/`·`data/` 를 담고 `/app/var` 를 `node` 소유로 만든다
+- `deploy/a1-watch-sources.sh` 에서 git 체크아웃·commit·push 를 걷어냈다
+  (체크아웃이 사라지면서 `gh issue create` 에 `--repo` 가 필요해졌다 — cwd 로 저장소를
+  추론할 수 없다)
+- `deploy/docker-compose.yml` 을 **저장소로 가져오고** `watch-sources` 서비스를 넣었다
+- 상태 파일은 git 에서 뺐다 → named volume `konnect-source-state`
 
-A 로 가려면 **`docker-compose.yml` 이 필요한데 저장소에 없다**(서버에만 있다).
+**남은 것은 서버 반영뿐이다.** 프로덕션 변경이라 아직 하지 않았다 —
+compose 설치 · cron 스크립트 설치 · 첫 실행 확인이 필요하다.
+→ [03-deployment](../40-operations/03-deployment.md)
 
-상태 파일도 다시 봐야 한다. 지금은 git 에 커밋하는 설계인데,
-**해시는 파생 데이터라** 서버 로컬 파일이면 충분하고 그 편이 git 의존을 없앤다.
+⚠️ **이미지 빌드는 검증하지 못했다.** 로컬에 docker 가 없다. `COPY scripts`/`COPY data`
+가 실제로 붙는지는 다음 배포에서 처음 확인된다.
 
 ### 2. 게시판 구조 — 결정 대기
 
@@ -93,15 +101,18 @@ A 로 가려면 **`docker-compose.yml` 이 필요한데 저장소에 없다**(�
 
 | | 어디 |
 | --- | --- |
-| `docker-compose.yml`, `.env` 키 목록, 서버 초기 구성 | **A1 서버 `~/docs` 볼트** |
+| `.env` **값** (키 목록은 `.env.example` 에 있다), 서버 초기 구성 | **A1 서버 `~/docs` 볼트** |
 | `~/docs/fleet/konnect-deploy.md`, `stack/edge-ops.md`, `stack/cert-ops.md` | 같음 |
+
+`docker-compose.yml` 은 [`deploy/docker-compose.yml`](../../deploy/docker-compose.yml) 로
+들어왔다. 다만 **저장소가 단일 출처이고 서버는 사본**이라, 고친 뒤 손으로 설치해야 반영된다.
 
 저장소만 보는 사람은 **따라갈 수 없다.** [03-deployment](../40-operations/03-deployment.md)가
 위치를 가리키지만 내용은 없다.
 
 ## 다음에 할 일 (권장 순서)
 
-1. **출처 감시 서버 배치** — A 안. `docker-compose.yml` 확보가 선행
+1. **출처 감시 서버 설치** — 저장소 작업은 끝났다. compose·cron 설치 + 첫 실행 확인
 2. **게시판 구조** — `type` 결정 → BE 필드 + 계약 + 마이그레이션
 3. **② 목록 화면** — 상세로 들어가는 입구. 정렬(채택·신선도)이 처음 붙는 자리
 4. **OAuth** — 이게 없으면 쓰기가 영원히 불가능하다
@@ -117,6 +128,9 @@ A 로 가려면 **`docker-compose.yml` 이 필요한데 저장소에 없다**(�
 | OAuth 콜백에 로케일이 붙으면 **제공자가 거부** → matcher 에서 `auth` 제외 | [07-routes](../30-architecture/07-routes-and-indexing.md) |
 | 법제처 API 는 **키 + IP 등록**. 등록 안 된 IP 는 200 과 함께 실패 본문 | [11-official-sources](../20-product/10-features/11-official-sources.md) |
 | 서버 `.env` 는 여러 앱이 공유 → **`KONNECT_` prefix**. 이름이 어긋나면 실패가 아니라 "건너뜀" | [01-environments](../40-operations/01-environments.md) |
+| BE 이미지의 **빌드 컨텍스트가 `BE/`** 라 저장소 루트(`contracts/`)의 파일은 이미지에 못 담는다 | [11-official-sources](../20-product/10-features/11-official-sources.md) |
+| 볼륨을 `/app/data` 에 걸면 **이미지 안의 레지스트리가 가려진다** — 읽기·쓰기 경로를 나눈다 | 같음 |
+| `deploy/` 의 파일은 **배포로 안 간다**(이미지만 간다). 고치면 손으로 설치해야 한다 | [03-deployment](../40-operations/03-deployment.md) |
 | 하이코리아는 없는 주소에 **200 으로 에러 페이지**를 준다 | [11-official-sources](../20-product/10-features/11-official-sources.md) |
 | BE 로컬 실행은 `npm run dev` 가 아니라 **`start:dev`** (`dev` 는 마이그레이션까지 돌려 Postgres 를 요구) | [02-local-development](../40-operations/02-local-development.md) |
 

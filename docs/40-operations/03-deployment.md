@@ -32,6 +32,24 @@ FE와 BE는 **독립 이미지**로 배포하되 **같은 오리진**으로 서�
 - `.github/workflows/ci.yml` — PR 검증 (BE/FE 병렬)
 - `.github/workflows/deploy.yml` — 빌드·푸시·배포·스모크
 - `deploy/a1-deploy.sh` — 서버 측 실행체 (`/srv/app/konnect/deploy.sh` 로 설치)
+- `deploy/docker-compose.yml` — 스택 정의 (`/srv/app/konnect/docker-compose.yml` 로 설치)
+- `deploy/a1-watch-sources.sh` — 출처 감시 cron (`/srv/app/konnect/watch-sources.sh` 로 설치)
+
+### `deploy/` 는 자동으로 서버에 가지 않는다
+
+배포 워크플로가 옮기는 것은 **이미지뿐**이다. 위 세 파일은 고칠 때마다 **손으로
+설치**해야 반영된다. 이걸 잊으면 서버는 옛 정의로 계속 돈다 —
+저장소를 고쳤는데 아무것도 안 바뀌는, 원인을 찾기 어려운 상태가 된다.
+
+```bash
+scp deploy/docker-compose.yml oracle-main:/tmp/konnect-compose.yml
+ssh oracle-main 'sudo install -m 644 /tmp/konnect-compose.yml /srv/app/konnect/docker-compose.yml'
+ssh oracle-main 'docker compose -f /srv/app/konnect/docker-compose.yml config --quiet'   # 검증
+```
+
+`docker-compose.yml` 은 **한동안 서버에만 있었다.** 그래서 저장소만 보는 사람은
+스택의 모양을 알 수 없었고, 출처 감시를 붙이려다 파일이 없어 막혔다.
+지금은 저장소가 단일 출처이고 서버가 사본이다.
 
 **서버에서 빌드하지 않는다.** `next build`는 2~4GB를 쓴다. 2 OCPU 프로덕션 박스에서
 빌드하면 서비스가 흔들린다. A1은 pull과 실행만 한다.
