@@ -1,6 +1,15 @@
-import { ContentStatus, Topic as PrismaTopic } from '@prisma/client';
-import { TOPICS } from '../entities/question.entity';
-import { toDomainTopic, toPrismaTopic } from './questions.mapper';
+import {
+  ContentStatus,
+  PostType as PrismaPostType,
+  Topic as PrismaTopic,
+} from '@prisma/client';
+import { POST_TYPES, TOPICS } from '../entities/question.entity';
+import {
+  toDomainPostType,
+  toDomainTopic,
+  toPrismaPostType,
+  toPrismaTopic,
+} from './questions.mapper';
 
 /**
  * 도메인 enum ↔ Prisma enum 계약.
@@ -31,6 +40,34 @@ describe('Topic 계약 — 도메인 ↔ Prisma', () => {
   it('왕복 변환이 원래 값을 돌려준다', () => {
     for (const topic of TOPICS) {
       expect(toDomainTopic(toPrismaTopic(topic))).toBe(topic);
+    }
+  });
+});
+
+/**
+ * `Topic` 과 같은 이유로 필요하다 — 변환이 캐스팅이라 컴파일러가 안 잡는다.
+ * `POST_TYPES` 에 값을 더하고 스키마에 안 넣으면 그 값을 처음 저장하는 순간 터진다.
+ */
+describe('PostType 계약 — 도메인 ↔ Prisma', () => {
+  it('양쪽 개수가 같다', () => {
+    expect(POST_TYPES.length).toBe(Object.keys(PrismaPostType).length);
+  });
+
+  it('모든 도메인 종류가 Prisma enum 에 있다', () => {
+    for (const type of POST_TYPES) {
+      expect(Object.keys(PrismaPostType)).toContain(type.toUpperCase());
+    }
+  });
+
+  it('모든 Prisma 종류가 도메인 목록에 있다 — 한쪽만 추가하는 것을 막는다', () => {
+    for (const key of Object.keys(PrismaPostType)) {
+      expect(POST_TYPES as readonly string[]).toContain(key.toLowerCase());
+    }
+  });
+
+  it('왕복 변환이 원래 값을 돌려준다', () => {
+    for (const type of POST_TYPES) {
+      expect(toDomainPostType(toPrismaPostType(type))).toBe(type);
     }
   });
 });

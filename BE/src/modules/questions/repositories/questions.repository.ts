@@ -1,10 +1,16 @@
 import type { Page, PageQuery } from '../../../common';
-import type { QuestionRecord, Topic } from '../entities/question.entity';
+import type {
+  PostType,
+  QuestionRecord,
+  Topic,
+} from '../entities/question.entity';
 
 export const QUESTIONS_REPOSITORY = Symbol('QUESTIONS_REPOSITORY');
 
 export interface QuestionListFilter extends PageQuery {
   topic?: Topic;
+  /** 게시판의 두 번째 축. topic 과 함께 걸리면 `topic × type` 이 된다. */
+  type?: PostType;
   /** 이 태그를 **모두** 가진 질문 (AND). OR 이면 필터가 넓어져 쓸모가 없다. */
   tags?: string[];
   /** 정규화된 검색어. null 이면 필터 없음. */

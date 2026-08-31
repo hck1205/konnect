@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { slugify } from './slug';
 import { TAG_NAMESPACES } from '@/components/data-display/Tag';
-import { TOPICS } from '@/types';
+import { POST_TYPES, TOPICS } from '@/types';
 
 /**
  * FE·BE 경계 계약.
@@ -59,5 +59,14 @@ describe('주제 계약 (contracts/topics.json)', () => {
     expect(topics.length).toBeGreaterThan(3);
     // 순서까지 같아야 한다 — 목록 필터의 표시 순서가 여기서 나온다
     expect([...TOPICS]).toEqual(topics);
+  });
+});
+
+describe('글 종류 계약 (contracts/post-types.json)', () => {
+  it('종류 목록이 계약과 정확히 같다', () => {
+    const { types } = readJson('post-types.json') as { types: string[] };
+    expect(types.length).toBeGreaterThan(1);
+    // 순서까지 같아야 한다 — 게시판 필터의 표시 순서가 여기서 나온다
+    expect([...POST_TYPES]).toEqual(types);
   });
 });

@@ -1,0 +1,7 @@
+{
+  "_": "글의 종류 — BE questions/entities/question.entity.ts 와 FE types/question.ts 가 같아야 한다. 갈라지면 FE 가 보낸 type 을 BE 가 400 으로 거부하거나, 게시판 필터에서 조용히 빠진다.",
+  "_문서": "docs/00-overview/07-current-state.md",
+  "_축": "topic 이 '무엇에 대한 글인가'라면 type 은 '글쓴이가 무엇을 하려는가'다. 게시판은 둘의 곱이다 — /ko/visa?type=review.",
+  "_생성": "지금 UI 로 만들 수 있는 것은 question 뿐이다. 나머지 셋은 각자의 작성 폼이 생길 때 열린다 — 값을 미리 둔 이유는 마이그레이션을 한 번으로 끝내기 위해서다.",
+  "types": ["question", "review", "share", "recruit"]
+}

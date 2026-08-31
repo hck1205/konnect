@@ -36,6 +36,8 @@ export class QuestionsService {
       title: dto.title.trim(),
       body: dto.body,
       topic: dto.topic,
+      // 생략하면 질문이다 — 이 필드가 생기기 전과 같게 동작한다
+      type: dto.type ?? 'question',
       tags: normalizeTagList(dto.tags ?? [], MAX_TAGS_PER_POST),
       acceptedAnswerId: null,
       status: 'OPEN',
@@ -50,6 +52,7 @@ export class QuestionsService {
       cursor: dto.cursor,
       limit: dto.limit ?? 20,
       topic: dto.topic,
+      type: dto.type,
       // 필터 태그도 저장 형태로 정규화한다 — 'D-2' 로 검색해도 찾아져야 한다
       tags: normalizeTagList(dto.tags ?? [], MAX_TAGS_PER_POST),
       query: stringUtil.normalizeQuery(dto.q),

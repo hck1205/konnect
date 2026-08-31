@@ -121,6 +121,87 @@ describe('Q&A (e2e)', () => {
     });
   });
 
+  describe('글 종류(type) — 게시판의 두 번째 축', () => {
+    it('생략하면 question 이다 — 이 필드가 생기기 전과 같게 동작한다', async () => {
+      const { token } = await login('Maria');
+      const question = await createQuestion(token);
+
+      const res = await request(http)
+        .get(`/questions/${question.id}`)
+        .expect(200);
+      expect((res.body as ApiResponse<{ type: string }>).data.type).toBe(
+        'question',
+      );
+    });
+
+    it('아직 작성 폼이 없는 종류는 400 — 값이 있다고 만들 수 있는 것은 아니다', async () => {
+      const { token } = await login('Maria');
+      await request(http)
+        .post('/questions')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          title: 'x'.repeat(20),
+          body: 'y'.repeat(30),
+          topic: 'visa',
+          type: 'review',
+        })
+        .expect(400);
+    });
+
+    it('모르는 종류는 400', async () => {
+      const { token } = await login('Maria');
+      await request(http)
+        .post('/questions')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          title: 'x'.repeat(20),
+          body: 'y'.repeat(30),
+          topic: 'visa',
+          type: 'rant',
+        })
+        .expect(400);
+    });
+
+    it('type 으로 목록을 거른다 — topic 과 함께 걸면 topic × type 이다', async () => {
+      const { token } = await login('Maria');
+      await createQuestion(token);
+
+      const hit = await request(http)
+        .get('/questions?topic=visa&type=question')
+        .expect(200);
+      expect(
+        (hit.body as ApiResponse<{ items: unknown[] }>).data.items.length,
+      ).toBe(1);
+
+      // 아직 아무도 못 만드는 종류라 비어야 한다 — 필터는 전체 어휘를 받는다
+      const miss = await request(http)
+        .get('/questions?topic=visa&type=recruit')
+        .expect(200);
+      expect(
+        (miss.body as ApiResponse<{ items: unknown[] }>).data.items.length,
+      ).toBe(0);
+    });
+
+    it('수정으로 종류를 바꿀 수 없다 — 읽을 화면이 없는 글이 생긴다', async () => {
+      const { token } = await login('Maria');
+      const question = await createQuestion(token);
+
+      // whitelist 가 모르는 필드를 조용히 버리므로, 200 이되 값은 그대로여야 한다
+      await request(http)
+        .patch(`/questions/${question.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({ type: 'recruit' })
+        .expect(200);
+
+      const res = await request(http)
+        .get(`/questions/${question.id}`)
+        .expect(200);
+      expect((res.body as ApiResponse<{ type: string }>).data.type).toBe(
+        'question',
+      );
+    });
+  });
+
   describe('태그 정규화', () => {
     it('저장 시 정규화하고 중복을 제거한다', async () => {
       const { token } = await login('Maria');

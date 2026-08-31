@@ -17,9 +17,10 @@ export type { ReportReason, ReportTrack, ReportSubmission } from './report';
 export type { PostDraft } from './post';
 
 // ── BE 와 모양을 맞춰야 하는 것 (contracts/ 가 고정 어휘를 강제한다)
-export { TOPICS } from './question';
+export { TOPICS, POST_TYPES } from './question';
 export type {
   Topic,
+  PostType,
   QuestionStatus,
   Question,
   QuestionFilter,
