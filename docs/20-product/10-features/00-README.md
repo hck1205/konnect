@@ -16,3 +16,4 @@
 | [09-direct-messages.md](./09-direct-messages.md) | P2 — 안전 장치 전제 |
 | [10-post-editor.md](./10-post-editor.md) | **P0** |
 | [11-official-sources.md](./11-official-sources.md) | **공식 출처 감시** — 해석하지 않고 변경만 알린다 |
+| [12-official-data-pipeline.md](./12-official-data-pipeline.md) | **공식 데이터 파이프라인** — 긁어오고 정제하고 제공한다. 전문가 없이 핵심 정보를 내는 유일한 길 |
