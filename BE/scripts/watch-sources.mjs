@@ -10,8 +10,12 @@
  *   node scripts/watch-sources.mjs --dry     # 네트워크만, 저장 안 함
  *
  * 환경변수
- *   LAW_API_KEY   법제처 OPEN API 키(OC 값). 없으면 statute 를 건너뛴다.
- *                 → https://open.law.go.kr 에서 무료 발급
+ *   KONNECT_LAW_API_KEY  법제처 OPEN API 키(OC 값). 없으면 statute 를 건너뛴다.
+ *                        → https://open.law.go.kr 에서 무료 발급
+ *   LAW_API_KEY          prefix 없는 이름도 받는다(로컬 편의).
+ *
+ *   ⚠️ 운영 서버의 .env 는 **앱별 prefix** 를 쓴다(한 박스에 여러 앱이 있다).
+ *      그래서 prefix 붙은 이름을 **먼저** 본다.
  *
  * → docs/20-product/10-features/11-official-sources.md
  */
@@ -25,7 +29,19 @@ const REGISTRY = resolve(here, '../../contracts/official-sources.json');
 const STATE = resolve(here, '../data/source-state.json');
 
 const DRY = process.argv.includes('--dry');
-const LAW_KEY = process.env.LAW_API_KEY ?? '';
+/**
+ * 운영 서버의 `.env` 는 앱별 prefix 를 쓴다(`KONNECT_...`) — 한 박스에 여러 앱이 있어서다.
+ * prefix 붙은 이름을 먼저 보고, 없으면 짧은 이름으로 떨어진다(로컬 편의).
+ *
+ * 이름이 어긋나면 **조용히 건너뛴다** — 실패가 아니라 "키 없음"으로 보이므로
+ * 눈치채기 어렵다. 그래서 어느 이름으로 찾았는지 로그에 남긴다.
+ */
+const LAW_KEY_VAR = process.env.KONNECT_LAW_API_KEY
+  ? 'KONNECT_LAW_API_KEY'
+  : process.env.LAW_API_KEY
+    ? 'LAW_API_KEY'
+    : null;
+const LAW_KEY = LAW_KEY_VAR ? process.env[LAW_KEY_VAR] : '';
 
 /** 남의 서버다 — 연락처를 남기고, 하루 1회면 충분하다 */
 const UA = 'konnect-source-watcher/1.0 (+https://github.com/hck1205/konnect)';
@@ -112,7 +128,7 @@ function contentHash(html) {
 
 /** 법제처 OPEN API — 법령 본문과 **시행일**을 가져온다 */
 async function fetchStatute(source) {
-  if (!LAW_KEY) return { skipped: 'LAW_API_KEY 없음' };
+  if (!LAW_KEY) return { skipped: 'KONNECT_LAW_API_KEY 없음' };
 
   const url =
     `https://www.law.go.kr/DRF/lawService.do?OC=${encodeURIComponent(LAW_KEY)}` +
@@ -163,6 +179,12 @@ async function check(source, prev) {
 }
 
 // ── 실행 ──────────────────────────────────────────────────────────
+console.log(
+  LAW_KEY_VAR
+    ? `법령 API 키: ${LAW_KEY_VAR} 사용`
+    : '법령 API 키 없음 — statute 는 건너뛴다 (페이지 감시는 계속 돈다)',
+);
+
 const registry = readJson(REGISTRY, null);
 if (!registry) {
   console.error(`✖ 레지스트리를 못 읽었다: ${REGISTRY}`);

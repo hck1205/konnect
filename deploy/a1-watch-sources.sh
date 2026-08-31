@@ -15,7 +15,8 @@ DIR=/srv/app/konnect
 REPO="$DIR/repo"          # 저장소 체크아웃 위치
 STATE_BRANCH=main
 
-# LAW_API_KEY 는 .env 에 둔다(권한 600). 없으면 법령은 건너뛰고 페이지 감시만 돈다.
+# KONNECT_LAW_API_KEY 는 .env 에 둔다(권한 600). 이 .env 는 여러 앱이 공유하므로
+# 앱별 prefix 를 쓴다. 없으면 법령은 건너뛰고 페이지 감시만 돈다.
 [ -f "$DIR/.env" ] && set -a && . "$DIR/.env" && set +a
 
 cd "$REPO"
