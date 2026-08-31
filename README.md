@@ -20,6 +20,7 @@ konnect/
 
 | 폴더 | 문서 |
 | --- | --- |
+| [**현재 상태**](./docs/00-overview/07-current-state.md) | **이어받을 때 여기부터** — 진행 상황·막힌 것·함정 |
 | [`docs/`](./docs/) | [문서 인덱스](./docs/README.md) — 여기서 시작 |
 | [`BE/`](./BE/) | [BE README](./BE/README.md) |
 | [`FE/`](./FE/) | [FE README](./FE/README.md) · [아키텍처](./FE/ARCHITECTURE.md) · [디자인 시스템](./docs/25-design/) |
