@@ -99,7 +99,21 @@ export class AnswersService {
     const updated = await this.repository.update(id, { status: 'HIDDEN' });
     if (!updated) throw new NotFoundException('Answer not found');
 
-    await this.questions.adjustAnswerCount(record.questionId, -1);
+    // 이미 HIDDEN 이면 감소하지 않는다 — DELETE 재시도나 중복 제출에서
+
+    // answerCount 가 실제보다 작아지면 ?answered 필터와 목록 카운트가
+
+    // **에러 없이 거짓말한다.** 되살리기도 재계산 경로도 없어 드리프트가 영구적이다.
+
+    //
+
+    // 조기 반환을 쓰지 않는 이유: hide 의 세 쓰기는 한 트랜잭션이 아니라서,
+
+    // 중간에 실패하면 지금은 DELETE 재시도가 복구한다. 조기 반환은 그 복구를 없앤다.
+
+    if (record.status === 'OPEN') {
+      await this.questions.adjustAnswerCount(record.questionId, -1);
+    }
 
     const question = await this.questions.findOne(record.questionId, user);
     if (question.acceptedAnswerId === id) {

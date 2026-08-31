@@ -16,12 +16,10 @@ export const routes = {
    * slug 가 없거나 틀리면 여기로 301 한다(제목이 수정되면 slug 가 바뀐다).
    * → docs/30-architecture/07-routes-and-indexing.md
    */
-  question: (locale: string, id: string, title: string) => {
-    const slug = questionSlug(title);
-    return slug
-      ? `/${locale}/questions/${id}/${slug}`
-      : `/${locale}/questions/${id}`;
-  },
+  question: (locale: string, id: string, title: string) =>
+    // questionSlug 가 빈 문자열을 내지 않으므로 분기가 필요 없다.
+    // 분기를 남겨 두면 slug 없는 경로가 정규 URL 이 되어 자기 자신으로 308 한다.
+    `/${locale}/questions/${id}/${questionSlug(title)}`,
 } as const;
 
 /**
@@ -32,8 +30,23 @@ export const routes = {
  */
 export const SLUG_MAX_LENGTH = 60;
 
+/**
+ * slug 가 비었을 때 대신 쓰는 값.
+ *
+ * ⚠️ **이게 없으면 그 질문은 어떤 주소로도 열리지 않는다.**
+ * `slugify` 는 `\p{L}\p{N}` 이 아닌 것을 전부 버리므로 이모지·문장부호만인 제목은
+ * 빈 문자열이 된다. 그러면 `routes.question` 이 slug 없는 경로를 내는데,
+ * slug 없는 라우트는 **정규 URL 로 308** 을 보낸다 — 그 정규 URL 이 자기 자신이라
+ * 무한 루프가 된다(실측: 같은 주소로 308 이 반복된다).
+ *
+ * 500 도 404 도 아니라 로그에 안 남는 조용한 종류다.
+ * `uniqueSlugs` 가 이미 같은 이유로 `|| fallback` 을 쓴다.
+ */
+export const SLUG_FALLBACK = 'q';
+
 export function questionSlug(title: string): string {
   const full = slugify(title);
+  if (!full) return SLUG_FALLBACK;
   if (full.length <= SLUG_MAX_LENGTH) return full;
 
   const cut = full.slice(0, SLUG_MAX_LENGTH);

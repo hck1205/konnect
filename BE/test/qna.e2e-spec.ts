@@ -186,6 +186,37 @@ describe('Q&A (e2e)', () => {
       ).toBe(0);
     });
 
+    it('답변 숨김을 두 번 보내도 answerCount 가 두 번 깎이지 않는다', async () => {
+      const { token: asker } = await login('Maria');
+      const { token: helper } = await login('Thu');
+      const question = await createQuestion(asker);
+      const answer = await createAnswer(helper, question.id);
+
+      const count = async () => {
+        const res = await request(http)
+          .get(`/questions/${question.id}`)
+          .expect(200);
+        return (res.body as ApiResponse<{ answerCount: number }>).data
+          .answerCount;
+      };
+
+      expect(await count()).toBe(1);
+
+      await request(http)
+        .delete(`/answers/${answer.id}`)
+        .set('Authorization', `Bearer ${helper}`)
+        .expect(200);
+      expect(await count()).toBe(0);
+
+      // 재시도·중복 제출로 도달한다. 여기서 또 깎이면 카운터가 음수가 되고
+      // ?answered 필터가 **에러 없이 거짓말한다** — 되살릴 경로가 없어 영구적이다.
+      await request(http)
+        .delete(`/answers/${answer.id}`)
+        .set('Authorization', `Bearer ${helper}`)
+        .expect(200);
+      expect(await count()).toBe(0);
+    });
+
     it('anyTags 는 OR 다 — 두 드라이버가 같은 의미를 내야 한다', async () => {
       const { token } = await login('Maria');
       // 기본 질문은 visa:d-2 · region:seoul 을 가진다

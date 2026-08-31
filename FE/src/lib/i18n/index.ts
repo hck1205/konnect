@@ -18,5 +18,6 @@ export {
   formatRelative,
 } from './format';
 export { MESSAGES } from './messages';
+export { t } from './t';
 export type { MessageKey } from './messages';
 export type { Messages, TranslateParams } from './translate';

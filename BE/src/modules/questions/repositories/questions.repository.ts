@@ -29,6 +29,16 @@ export interface QuestionListFilter extends PageQuery {
   query?: string | null;
   /** 답변 유무 필터 — "아직 답 없는 질문"을 찾는 답변자용 */
   answered?: boolean;
+  /**
+   * 작성자로 거른다.
+   *
+   * ⚠️ **지금은 어떤 API 도 이 값을 넘기지 않는다** — `ListQuestionsDto` 에 없다.
+   * 죽은 코드처럼 보이지만 계획된 `/[locale]/me`(내 질문)가 쓸 자리이고,
+   * 두 드라이버에 이미 같은 의미로 구현돼 있다.
+   * 지웠다가 다시 넣는 비용이 이 주석보다 크다 —
+   * `POST_TYPES` 에 값 넷을 두고 하나만 생성 가능하게 한 것과 같은 판단이다.
+   * → docs/30-architecture/07-routes-and-indexing.md
+   */
   authorId?: string;
 }
 
