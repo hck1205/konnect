@@ -87,11 +87,11 @@ export const vi = {
   'list.filterTopic': 'Chủ đề',
   'list.allTopics': 'Tất cả',
   'list.clearFilter': 'Xoá bộ lọc',
-  'topic.visa': 'Thị thực',
-  'topic.language': 'Ngôn ngữ',
-  'topic.education': 'Học tập',
-  'topic.housing': 'Nhà ở',
+  'topic.residency': 'Cư trú',
   'topic.work': 'Việc làm',
+  'topic.housing': 'Nhà ở',
+  'topic.admin': 'Giấy tờ',
+  'topic.language': 'Ngôn ngữ',
   'topic.social': 'Cộng đồng',
 
   // ── 네비게이션 ───────────────────────────────────────────

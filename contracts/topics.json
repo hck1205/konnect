@@ -1,5 +1,7 @@
 {
-  "_": "질문 주제 — BE questions/entities/question.entity.ts 와 FE types/question.ts 가 같아야 한다. 갈라지면 FE 가 보낸 topic 을 BE 가 400 으로 거부하거나, 목록 필터에서 조용히 빠진다.",
-  "_문서": "docs/10-domain/",
-  "topics": ["visa", "language", "education", "housing", "work", "social"]
+  "_": "글의 주제 — BE questions/entities/question.entity.ts 와 FE types/question.ts 가 같아야 한다. 갈라지면 FE 가 보낸 topic 을 BE 가 400 으로 거부하거나, 게시판 필터에서 조용히 빠진다.",
+  "_문서": "docs/50-decisions/0012-topic-vocabulary.md",
+  "_비자가_없는_이유": "비자는 카테고리가 아니라 축이다(09-content-pillars). 모든 주제에 비자가 걸리므로 topic 값으로 두면 나머지 다섯이 '비자 아닌 것'이 된다. 비자는 visa: 태그 네임스페이스로만 존재한다.",
+  "_학업이_없는_이유": "ADR-0007 이 재학 중인 유학생을 비타깃으로 내렸다. 졸업 후 잔류 시점이 타깃이고 그건 residency·work 로 간다.",
+  "topics": ["residency", "work", "housing", "admin", "language", "social"]
 }

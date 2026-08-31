@@ -127,11 +127,11 @@ export const en = {
   'list.filterTopic': 'Topic',
   'list.allTopics': 'All',
   'list.clearFilter': 'Clear filter',
-  'topic.visa': 'Visa',
-  'topic.language': 'Language',
-  'topic.education': 'Study',
-  'topic.housing': 'Housing',
+  'topic.residency': 'Residency',
   'topic.work': 'Work',
+  'topic.housing': 'Housing',
+  'topic.admin': 'Paperwork',
+  'topic.language': 'Language',
   'topic.social': 'Community',
 
   // ── 네비게이션 ───────────────────────────────────────────

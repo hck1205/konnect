@@ -112,14 +112,24 @@ enum PostType {
   RECRUIT
 }
 
-/// 주제 — docs/10-domain 의 6영역과 대응한다.
-/// 태그와 달리 하나만 고르고 필수다. 목록의 1차 분류다.
+/// 주제 — 태그와 달리 하나만 고르고 필수다. 목록의 1차 분류이자 게시판의 축이다.
+///
+/// **VISA 가 없다.** 비자는 카테고리가 아니라 축이기 때문이다 — 집·일·행정 모두에
+/// 체류자격이 걸린다. topic 값으로 두면 나머지가 "비자 아닌 것"이 되어 버린다.
+/// 비자는 `visa:` 태그 네임스페이스로만 존재한다. → docs/20-product/20-prd/09-content-pillars.md
+///
+/// **EDUCATION 이 없다.** ADR-0007 이 재학 중인 유학생을 비타깃으로 내렸다.
+/// 졸업 후 잔류 시점이 타깃이고 그 질문은 RESIDENCY·WORK 로 간다.
+///
+/// → docs/50-decisions/0012-topic-vocabulary.md
 enum Topic {
-  VISA
-  LANGUAGE
-  EDUCATION
-  HOUSING
+  /// 영주·귀화·체류자격 — 비치헤드(ADR-0007)의 집이다
+  RESIDENCY
   WORK
+  HOUSING
+  /// 행정·서류 — 아포스티유, 본국 서류, 각종 신고. 국적별로 답이 갈리는 것이 여기 모인다
+  ADMIN
+  LANGUAGE
   SOCIAL
 }
 

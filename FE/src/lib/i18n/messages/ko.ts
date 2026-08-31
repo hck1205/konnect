@@ -117,11 +117,11 @@ export const ko = {
   'list.filterTopic': '주제',
   'list.allTopics': '전체',
   'list.clearFilter': '필터 지우기',
-  'topic.visa': '비자',
-  'topic.language': '어학',
-  'topic.education': '학업',
+  'topic.residency': '체류·영주',
+  'topic.work': '채용·직장',
   'topic.housing': '거주',
-  'topic.work': '채용',
+  'topic.admin': '행정·서류',
+  'topic.language': '어학',
   'topic.social': '교류',
 
   // ── 네비게이션 ───────────────────────────────────────────

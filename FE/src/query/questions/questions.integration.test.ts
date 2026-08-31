@@ -54,7 +54,7 @@ describe('질문 — 쓰기와 계약', () => {
     const created = await createQuestion({
       title: 'Does volunteer work count toward F-2-7 points?',
       body: 'Integration test — checking the FE/BE contract.',
-      topic: 'visa',
+      topic: 'residency',
       tags: ['visa:f-2', 'topic:residency'],
     });
 

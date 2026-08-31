@@ -1,13 +1,23 @@
 /**
- * 주제 — [10-domain](docs/10-domain/) 의 6영역과 대응한다.
- * 태그와 달리 **하나만** 고르고 필수다. 목록의 1차 분류다.
+ * 주제 — 태그와 달리 **하나만** 고르고 필수다. 목록의 1차 분류이자 게시판의 축이다.
+ *
+ * **`visa` 가 없다.** 비자는 카테고리가 아니라 **축**이다 — 집·일·행정 모두에 체류자격이
+ * 걸린다. topic 값으로 두면 나머지가 "비자 아닌 것"이 되고, `visa:` 태그 네임스페이스와
+ * 이중 등록이 된다. → docs/20-product/20-prd/09-content-pillars.md
+ *
+ * **`education` 이 없다.** 재학 중인 유학생은 비타깃이다([ADR-0007]). 졸업 후 잔류
+ * 시점이 타깃이고 그 질문은 `residency`·`work` 로 간다.
+ *
+ * → docs/50-decisions/0012-topic-vocabulary.md
  */
 export const TOPICS = [
-  'visa',
-  'language',
-  'education',
-  'housing',
+  /** 영주·귀화·체류자격 — 비치헤드의 집이다 */
+  'residency',
   'work',
+  'housing',
+  /** 행정·서류 — 아포스티유, 본국 서류, 각종 신고. 국적별로 답이 갈리는 것이 여기 모인다 */
+  'admin',
+  'language',
   'social',
 ] as const;
 export type Topic = (typeof TOPICS)[number];
