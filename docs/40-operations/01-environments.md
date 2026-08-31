@@ -36,8 +36,9 @@
 **`API_PROXY_TARGET`은 빌드 시점 값이다** (Next 의 rewrites 가 빌드에 고정된다).
 런타임에 주입해도 반영되지 않으므로 배포 파이프라인에서 설정해야 한다.
 
-**`LAW_API_KEY`는 IP 에 묶인다.** 법제처 OPEN API 는 키뿐 아니라 **호출하는
+**`KONNECT_LAW_API_KEY` 는 IP 에 묶인다.** 법제처 OPEN API 는 키뿐 아니라 **호출하는
 서버의 IP 가 사전 등록**되어 있어야 한다 — 그래서 이 키는 **A1 서버 전용**이고
 GitHub Actions 나 다른 기계에 넣어도 동작하지 않는다
 ([공식 출처 감시](../20-product/10-features/11-official-sources.md)).
 비워 두면 법령 감시만 꺼지고 나머지는 돈다.
+이름의 `KONNECT_` prefix 는 **운영 서버 `.env` 를 여러 앱이 공유**하기 때문이다.
