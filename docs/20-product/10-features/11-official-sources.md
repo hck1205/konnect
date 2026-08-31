@@ -36,7 +36,7 @@ konnect 는 그 사이를 잇는다. 다만 **답을 말하지 않는다** —
 ## 시스템 — 생성이 아니라 감시
 
 ```
-① 출처 레지스트리        사람이 관리하는 목록 (contracts/official-sources.json)
+① 출처 레지스트리        사람이 관리하는 목록 (BE/data/official-sources.json)
         │                visa:f-2 → 시행령 별표1의2 · 하이코리아 안내 · 공지사항
         ▼
 ② 주기 수집 (자동)        법제처 OPEN API · 페이지 해시
@@ -124,11 +124,52 @@ konnect 는 그 사이를 잇는다. 다만 **답을 말하지 않는다** —
 
 | | |
 | --- | --- |
-| 레지스트리 | [`contracts/official-sources.json`](../../../contracts/official-sources.json) — 사람이 관리 |
-| 감시 스크립트 | `BE/scripts/watch-sources.mjs` |
-| 상태(기준선) | `BE/data/source-state.json` — **커밋한다.** 없으면 매일 "최초 기록"이 된다 |
+| 레지스트리 | [`BE/data/official-sources.json`](../../../BE/data/official-sources.json) — 사람이 관리 |
+| 감시 스크립트 | `BE/scripts/watch-sources.mjs` — BE 이미지에 담겨 서버에서 돈다 |
+| 상태(기준선) | `BE/data/source-state.json`(로컬) · named volume `konnect-source-state`(서버) — **커밋하지 않는다** |
 | 스케줄 | `deploy/a1-watch-sources.sh` — **A1 서버 cron**, 매일 09:00 KST |
 | 알림 | 변경 시 **이슈 생성** — "봤다/안 봤다"가 추적되어야 한다 |
+
+### 왜 레지스트리가 `contracts/` 가 아닌가
+
+한동안 `contracts/official-sources.json` 이었다. 그런데 그 폴더는
+[FE 와 BE 가 **같아야 하는** 규칙의 자리](../../../contracts/README.md)이고, 이 파일은
+FE 가 읽지 않으며 양쪽을 대조하는 테스트도 없다 — 계약이 아니라 BE 의 입력이었다.
+
+옮긴 결정적인 이유는 따로 있다. BE 이미지의 **빌드 컨텍스트가 `BE/`** 라
+([deploy.yml](../../../.github/workflows/deploy.yml)) 저장소 루트의 파일은 이미지에
+담을 수가 없다. 서버에서 감시를 돌리려면 레지스트리가 `BE/` 안에 있어야 한다.
+
+### 상태 파일을 커밋하지 않는 이유
+
+해시는 **파생 데이터**다 — 원문에서 언제든 다시 만들 수 있다. 커밋하면 두 가지가 따라온다.
+
+1. 감시가 **저장소 쓰기 권한**을 요구한다. 프로덕션에 push 권한을 두는 것은
+   배포 키에 `command=` 제약을 걸어 셸조차 막아 둔 방향과 정반대다
+2. 낡은 기준선이 **거짓 "변경됨"** 을 만든다
+
+서버에서는 named volume 에 둔다. 지워져도 다음 실행이 "최초 기록"으로 다시 만든다
+(그 한 번은 변경을 감지하지 못한다 — 그게 유일한 대가다).
+
+## 배포 — 서버에서 어떻게 도나
+
+```
+cron(09:00 KST) → /srv/app/konnect/watch-sources.sh
+                     └─ docker compose run --rm watch-sources
+                          ├─ 이미지: konnect-be (scripts/ + data/ 포함)
+                          ├─ 읽기: /app/data/official-sources.json   ← 이미지
+                          └─ 쓰기: /app/var/source-state.json        ← named volume
+```
+
+**GitHub Actions 가 아니라 서버인 이유**는 법제처 API 가 호출 IP 를 사전 등록하게 하기
+때문이다(아래 "겪은 함정"). 러너 IP 는 매번 바뀐다.
+
+**A1 에 저장소 체크아웃을 두지 않는 이유**는 그 서버가 이미지만 받아 실행하도록
+설계됐기 때문이다. 감시 하나 때문에 프로덕션에 git 과 push 권한을 들이지 않는다 —
+스크립트를 이미지에 넣으면 `migrate` 와 **같은 패턴**이 된다.
+
+⚠️ 볼륨을 `/app/data` 에 걸면 **이미지 안의 레지스트리가 가려진다.** 그래서 읽기(`/app/data`)와
+쓰기(`/app/var`)를 다른 디렉터리로 나누고 `KONNECT_SOURCE_STATE` 로 가리킨다.
 
 ### 만들면서 잡은 함정
 

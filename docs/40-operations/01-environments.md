@@ -42,3 +42,8 @@ GitHub Actions 나 다른 기계에 넣어도 동작하지 않는다
 ([공식 출처 감시](../20-product/10-features/11-official-sources.md)).
 비워 두면 법령 감시만 꺼지고 나머지는 돈다.
 이름의 `KONNECT_` prefix 는 **운영 서버 `.env` 를 여러 앱이 공유**하기 때문이다.
+
+**`KONNECT_SOURCE_STATE` 는 서버에서만 쓴다.** 감시 기준선의 **쓰기** 경로다.
+레지스트리는 이미지 안 `/app/data` 에 있어서 거기에 볼륨을 걸면 레지스트리가 가려진다 —
+그래서 읽기와 쓰기를 다른 디렉터리로 나눈다(`/app/var`). 로컬에서는 비워 두면
+`BE/data/source-state.json` 으로 떨어진다.
