@@ -90,11 +90,11 @@ export const zh = {
   'list.filterTopic': '主题',
   'list.allTopics': '全部',
   'list.clearFilter': '清除筛选',
-  'topic.visa': '签证',
-  'topic.language': '语言',
-  'topic.education': '学业',
-  'topic.housing': '居住',
+  'topic.residency': '居留·永住',
   'topic.work': '工作',
+  'topic.housing': '居住',
+  'topic.admin': '行政·材料',
+  'topic.language': '语言',
   'topic.social': '交流',
 
   // ── 네비게이션 ───────────────────────────────────────────

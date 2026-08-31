@@ -45,8 +45,8 @@ describe('buildListParams', () => {
 
   it('필터와 페이지를 함께 보낸다', () => {
     expect(
-      buildListParams({ topic: 'visa', tags: ['visa:f-2'] }, { limit: 10 }),
-    ).toEqual({ topic: 'visa', tags: 'visa:f-2', limit: '10' });
+      buildListParams({ topic: 'residency', tags: ['visa:f-2'] }, { limit: 10 }),
+    ).toEqual({ topic: 'residency', tags: 'visa:f-2', limit: '10' });
   });
 
   /**
@@ -54,8 +54,8 @@ describe('buildListParams', () => {
    * 요청에는 안 실려서 **전체 목록이 그대로 나온다** — 조용히 틀리는 종류다.
    */
   it('type 을 함께 보낸다 — 게시판의 두 번째 축', () => {
-    expect(buildListParams({ topic: 'visa', type: 'question' })).toEqual({
-      topic: 'visa',
+    expect(buildListParams({ topic: 'residency', type: 'question' })).toEqual({
+      topic: 'residency',
       type: 'question',
     });
   });

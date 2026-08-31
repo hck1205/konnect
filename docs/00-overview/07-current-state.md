@@ -104,6 +104,19 @@ compose 설치 · cron 스크립트 설치 · 첫 실행 확인이 필요하다.
 지금 열면 **읽을 화면이 없는 글**이 쌓인다. 네 값을 미리 둔 것은 나중에
 enum 마이그레이션을 한 번 더 하지 않기 위해서다. 필터는 네 값을 다 받는다.
 
+⚠️ **주제 어휘 자체가 어긋나 있었고, 재편했다**([ADR-0012](../50-decisions/0012-topic-vocabulary.md)).
+`visa` 가 카테고리로 들어가 있었는데 [09-content-pillars](../20-product/20-prd/09-content-pillars.md)는
+"비자는 카테고리가 아니라 **축**"이라고 결론냈고, `visa:` 태그와 이중 등록이었다.
+`education` 은 ADR-0007 이 비타깃으로 내린 세그먼트인데 남아 있었다.
+그리고 **비치헤드의 집(`residency`)과 국적별로 갈리는 것이 모일 자리(`admin`)가 아예 없었다.**
+
+```
+지금  residency · work · housing · admin · language · social
+옛것  visa · language · education · housing · work · social
+```
+
+기존 3건은 손실 없이 이관됐다(`VISA → RESIDENCY`).
+
 **`language` 와 `social` 은 합치지 않는다.** [ADR-0007](../50-decisions/0007-settlement-intent-as-primary-axis.md)의
 비치헤드가 영주·귀화 준비자라, 그들에게 한국어는 취미가 아니라 **요건**이다 —
 TOPIK 과 사회통합프로그램(KIIP)이 F-2-7 점수와 F-5 요건에 직접 들어간다.

@@ -7,13 +7,19 @@
  * 나머지 필드는 통합 테스트(`*.integration.test.ts`)가 실제 응답으로 확인한다.
  */
 
-/** 주제 — 태그와 달리 **하나만** 고르고 필수다. 목록의 1차 분류다. */
+/**
+ * 주제 — 태그와 달리 **하나만** 고르고 필수다. 목록의 1차 분류이자 게시판의 축이다.
+ *
+ * `visa` 가 없는 것은 누락이 아니다 — 비자는 카테고리가 아니라 **축**이라 `visa:` 태그로만
+ * 존재한다. `education` 이 없는 것도 결정이다(재학 중은 비타깃).
+ * → docs/50-decisions/0012-topic-vocabulary.md
+ */
 export const TOPICS = [
-  'visa',
-  'language',
-  'education',
-  'housing',
+  'residency',
   'work',
+  'housing',
+  'admin',
+  'language',
   'social',
 ] as const;
 export type Topic = (typeof TOPICS)[number];

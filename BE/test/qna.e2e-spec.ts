@@ -36,7 +36,7 @@ describe('Q&A (e2e)', () => {
       .send({
         title: 'Can I change from D-2 to E-7 before I graduate?',
         body: 'I have an offer from a company in Seoul but my degree finishes in February.',
-        topic: 'visa',
+        topic: 'residency',
         tags: ['Visa:D_2', 'visa:d-2', 'region:seoul'],
         ...overrides,
       })
@@ -98,7 +98,7 @@ describe('Q&A (e2e)', () => {
     it('비회원은 질문을 쓸 수 없다', async () => {
       await request(http)
         .post('/questions')
-        .send({ title: 'x'.repeat(20), body: 'y'.repeat(30), topic: 'visa' })
+        .send({ title: 'x'.repeat(20), body: 'y'.repeat(30), topic: 'residency' })
         .expect(401);
     });
 
@@ -107,7 +107,7 @@ describe('Q&A (e2e)', () => {
       await request(http)
         .post('/questions')
         .set('Authorization', `Bearer ${token}`)
-        .send({ title: 'help', body: 'y'.repeat(30), topic: 'visa' })
+        .send({ title: 'help', body: 'y'.repeat(30), topic: 'residency' })
         .expect(400);
     });
 
@@ -142,7 +142,7 @@ describe('Q&A (e2e)', () => {
         .send({
           title: 'x'.repeat(20),
           body: 'y'.repeat(30),
-          topic: 'visa',
+          topic: 'residency',
           type: 'review',
         })
         .expect(400);
@@ -156,7 +156,7 @@ describe('Q&A (e2e)', () => {
         .send({
           title: 'x'.repeat(20),
           body: 'y'.repeat(30),
-          topic: 'visa',
+          topic: 'residency',
           type: 'rant',
         })
         .expect(400);
@@ -167,7 +167,7 @@ describe('Q&A (e2e)', () => {
       await createQuestion(token);
 
       const hit = await request(http)
-        .get('/questions?topic=visa&type=question')
+        .get('/questions?topic=residency&type=question')
         .expect(200);
       expect(
         (hit.body as ApiResponse<{ items: unknown[] }>).data.items.length,
@@ -175,7 +175,7 @@ describe('Q&A (e2e)', () => {
 
       // 아직 아무도 못 만드는 종류라 비어야 한다 — 필터는 전체 어휘를 받는다
       const miss = await request(http)
-        .get('/questions?topic=visa&type=recruit')
+        .get('/questions?topic=residency&type=recruit')
         .expect(200);
       expect(
         (miss.body as ApiResponse<{ items: unknown[] }>).data.items.length,

@@ -11,7 +11,7 @@ describe('questionKeys', () => {
   it('모든 키가 all 로 시작한다 — 위에서 한 번에 지울 수 있어야 한다', () => {
     const keys = [
       questionKeys.lists(),
-      questionKeys.list({ topic: 'visa' }),
+      questionKeys.list({ topic: 'residency' }),
       questionKeys.details(),
       questionKeys.detail('q1'),
       questionKeys.answers('q1'),
@@ -27,7 +27,7 @@ describe('questionKeys', () => {
   });
 
   it('필터가 다르면 다른 키다', () => {
-    expect(questionKeys.list({ topic: 'visa' })).not.toEqual(
+    expect(questionKeys.list({ topic: 'residency' })).not.toEqual(
       questionKeys.list({ topic: 'housing' }),
     );
   });
