@@ -1,14 +1,32 @@
 {
-  "checkedAt": "2026-08-30T23:54:57.389Z",
+  "checkedAt": "2026-08-31T00:06:22.831Z",
   "sources": {
     "immigration-act-enforcement-decree": {
-      "skipped": "LAW_API_KEY 없음"
+      "hash": "3b5accb8bc5d997e",
+      "length": 204879,
+      "revisedAt": "20250601",
+      "etag": null,
+      "lastModified": null,
+      "checkedAt": "2026-08-31T00:06:22.831Z",
+      "history": []
     },
     "immigration-act": {
-      "skipped": "LAW_API_KEY 없음"
+      "hash": "779a84de1c9ee575",
+      "length": 158273,
+      "revisedAt": "20260123",
+      "etag": null,
+      "lastModified": null,
+      "checkedAt": "2026-08-31T00:06:22.831Z",
+      "history": []
     },
     "nationality-act": {
-      "skipped": "LAW_API_KEY 없음"
+      "hash": "22ba52e9251b7962",
+      "length": 32288,
+      "revisedAt": "20221001",
+      "etag": null,
+      "lastModified": null,
+      "checkedAt": "2026-08-31T00:06:22.831Z",
+      "history": []
     },
     "hikorea-visa-guide": {
       "hash": "dadba7ad8a21d83a",
@@ -16,7 +34,7 @@
       "revisedAt": null,
       "etag": null,
       "lastModified": null,
-      "checkedAt": "2026-08-30T23:54:57.389Z",
+      "checkedAt": "2026-08-31T00:06:22.831Z",
       "history": []
     },
     "immigration-notices": {
@@ -25,7 +43,7 @@
       "revisedAt": null,
       "etag": null,
       "lastModified": null,
-      "checkedAt": "2026-08-30T23:54:57.389Z",
+      "checkedAt": "2026-08-31T00:06:22.831Z",
       "history": []
     }
   }
