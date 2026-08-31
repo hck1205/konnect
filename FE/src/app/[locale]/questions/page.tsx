@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { QuestionListPage } from '@/views/QuestionListPage';
 import { fetchQuestions } from '@/query/questions';
-import { DEFAULT_LOCALE, LOCALES, isLocale, type Locale } from '@/lib/i18n';
+import { DEFAULT_LOCALE, isLocale, t, type Locale } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
-import { en } from '@/lib/i18n/messages';
+import { localeAlternates, noindexAlternates } from '@/lib/seo';
 import { TOPICS, type Topic } from '@/types';
 
 /**
@@ -47,30 +47,22 @@ export async function generateMetadata({
   const locale = toLocale(rawLocale);
   const sp = await searchParams;
 
-  // 메타데이터는 서버 컴포넌트라 useI18n 을 쓸 수 없다.
-  // 기준 사전(en)을 직접 읽는다 — 로케일별 제목은 다음 단계에서 다룬다.
-  const title = en['list.title'];
-  const description = en['list.description'];
+  // 서버라 useI18n 을 쓸 수 없다. 배럴이 내주는 순수 함수를 쓴다.
+  //
+  // ⚠️ 지금은 의도적으로 **기준 로케일(en)** 로 고정한다. 로케일별 문구로 바꾸는 것은
+  // check:seo 의 설명 길이 규칙과 zh·vi 원어민 미검수 문제를 함께 정해야 한다 —
+  // 검수 안 된 판이 색인되는 것이 R1 영역에서 실제 피해다.
+  const title = t(DEFAULT_LOCALE, 'list.title');
+  const description = t(DEFAULT_LOCALE, 'list.description');
 
   if (isFiltered(sp)) {
-    return {
-      title,
-      description,
-      // 필터 판은 색인하지 않되, 링크는 따라가게 둔다(상세로 가는 크롤 경로다)
-      robots: { index: false, follow: true },
-      // canonical 은 언제나 필터 없는 정규 URL 을 가리킨다
-      alternates: { canonical: routes.questions(locale) },
-    };
+    return { title, description, ...noindexAlternates(routes.questions(locale)) };
   }
 
   return {
     title,
     description,
-    alternates: {
-      canonical: routes.questions(locale),
-      // hreflang — 없으면 언어별 판이 중복 콘텐츠로 묶여 한 언어만 남는다
-      languages: Object.fromEntries(LOCALES.map((l) => [l, routes.questions(l)])),
-    },
+    alternates: localeAlternates(locale, routes.questions),
   };
 }
 

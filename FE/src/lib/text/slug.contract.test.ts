@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { slugify } from './slug';
@@ -68,5 +68,30 @@ describe('글 종류 계약 (contracts/post-types.json)', () => {
     expect(types.length).toBeGreaterThan(1);
     // 순서까지 같아야 한다 — 게시판 필터의 표시 순서가 여기서 나온다
     expect([...POST_TYPES]).toEqual(types);
+  });
+});
+
+/**
+ * 계약 **폴더 자체**의 계약.
+ *
+ * 지금까지 각 테스트가 아는 파일만 열어 봤다. 그래서 새 계약 파일을 추가하고
+ * 한쪽 테스트에만 붙이면 **다른 쪽은 그 파일이 있는지도 모른 채 초록**이었다.
+ * contracts/README 가 표로 관리하는 목록과 실제 파일이 갈라지는 것도 못 잡았다.
+ *
+ * 여기서 **파일 목록 자체**를 못박는다 — 추가·삭제·이름 변경이 양쪽에서 동시에 깨진다.
+ */
+describe('계약 폴더 (contracts/)', () => {
+  it('계약 파일 목록이 정확히 이것뿐이다 — 새 파일은 양쪽 테스트에 함께 붙인다', () => {
+    const files = readdirSync(contracts)
+      .filter((f) => f.endsWith('.json'))
+      .sort();
+    // official-sources.json 은 여기 없다 — 계약이 아니라 BE 의 입력이라
+    // BE/data/ 로 옮겼다(ADR 없이 옮긴 것이 아니라 12-official-data-pipeline 에 근거가 있다)
+    expect(files).toEqual([
+      'post-types.json',
+      'slug-cases.json',
+      'tag-namespaces.json',
+      'topics.json',
+    ]);
   });
 });

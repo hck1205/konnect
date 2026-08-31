@@ -11,6 +11,7 @@ import { PageTitle } from '@/components/layout/PageTitle';
 import { Footer } from '@/components/layout/Footer';
 import { LocaleSwitcher } from '@/components/i18n/LocaleSwitcher';
 import { Button } from '@/components/primitives/Button';
+import { buttonVariants } from '@/components/primitives/Button/Button.utils';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { TOPICS, type Question, type Topic } from '@/types';
 import { QuestionRow } from './parts/QuestionRow';
@@ -106,10 +107,14 @@ export function QuestionListView({
           description={topic ? t('list.emptyFilteredHint') : t('list.emptyHint')}
           action={
             topic ? (
-              <Link href={base}>
-                <Button size="sm" variant="outline">
-                  {t('list.clearFilter')}
-                </Button>
+              // Link 안에 Button 을 넣으면 <a> 안에 <button> 이 되어 유효하지 않은
+              // HTML 이다. 브라우저가 임의로 고치고 키보드 조작도 어긋난다.
+              // 링크로 두고 버튼 모양만 입힌다 — 실제로 하는 일이 이동이다.
+              <Link
+                href={base}
+                className={buttonVariants({ size: 'sm', variant: 'outline' })}
+              >
+                {t('list.clearFilter')}
               </Link>
             ) : null
           }
@@ -130,10 +135,9 @@ export function QuestionListView({
                 ? `${base}?topic=${topic}&cursor=${nextCursor}`
                 : `${base}?cursor=${nextCursor}`
             }
+            className={buttonVariants({ size: 'sm', variant: 'outline' })}
           >
-            <Button size="sm" variant="outline">
-              {t('list.loadMore')}
-            </Button>
+            {t('list.loadMore')}
           </Link>
         </div>
       ) : null}
