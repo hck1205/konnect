@@ -24,6 +24,13 @@ export function matchesFilter(
     if (!filter.tags.every((tag) => owned.has(tag))) return false;
   }
 
+  // anyTags 는 OR — 여러 값을 하나로 묶어 보는 화면이 쓴다.
+  // tags(AND) 와 **함께 걸리면 교집합**이다. 두 필터를 하나로 합치지 않는 이유가 이것이다.
+  if (filter.anyTags?.length) {
+    const owned = new Set(record.tags);
+    if (!filter.anyTags.some((tag) => owned.has(tag))) return false;
+  }
+
   if (filter.answered !== undefined) {
     const hasAnswer = record.answerCount > 0;
     if (hasAnswer !== filter.answered) return false;

@@ -44,6 +44,15 @@ export class ListQuestionsDto {
   })
   tags?: string[];
 
+  /** 이 중 **하나라도** 가진 질문 (OR). `tags`(AND) 와 함께 걸면 교집합이다. */
+  @IsOptional()
+  @Transform(({ value }): string[] => {
+    if (Array.isArray(value)) return value as string[];
+    if (typeof value === 'string') return value.split(',');
+    return [];
+  })
+  anyTags?: string[];
+
   /** 검색어. 트림 후 비면 필터 없음으로 수렴한다 */
   @IsOptional()
   @IsString()

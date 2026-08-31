@@ -98,7 +98,11 @@ describe('Q&A (e2e)', () => {
     it('비회원은 질문을 쓸 수 없다', async () => {
       await request(http)
         .post('/questions')
-        .send({ title: 'x'.repeat(20), body: 'y'.repeat(30), topic: 'residency' })
+        .send({
+          title: 'x'.repeat(20),
+          body: 'y'.repeat(30),
+          topic: 'residency',
+        })
         .expect(401);
     });
 
@@ -179,6 +183,36 @@ describe('Q&A (e2e)', () => {
         .expect(200);
       expect(
         (miss.body as ApiResponse<{ items: unknown[] }>).data.items.length,
+      ).toBe(0);
+    });
+
+    it('anyTags 는 OR 다 — 두 드라이버가 같은 의미를 내야 한다', async () => {
+      const { token } = await login('Maria');
+      // 기본 질문은 visa:d-2 · region:seoul 을 가진다
+      await createQuestion(token);
+
+      // 하나라도 맞으면 나온다
+      const hit = await request(http)
+        .get('/questions?anyTags=visa:d-2,visa:f-5')
+        .expect(200);
+      expect(
+        (hit.body as ApiResponse<{ items: unknown[] }>).data.items.length,
+      ).toBe(1);
+
+      // 하나도 없으면 안 나온다
+      const miss = await request(http)
+        .get('/questions?anyTags=visa:f-5,visa:e-7')
+        .expect(200);
+      expect(
+        (miss.body as ApiResponse<{ items: unknown[] }>).data.items.length,
+      ).toBe(0);
+
+      // AND 와 함께 걸면 교집합이다 — OR 는 맞는데 AND 가 틀리면 안 나온다
+      const both = await request(http)
+        .get('/questions?anyTags=visa:d-2,visa:f-5&tags=region:busan')
+        .expect(200);
+      expect(
+        (both.body as ApiResponse<{ items: unknown[] }>).data.items.length,
       ).toBe(0);
     });
 
