@@ -5,15 +5,17 @@ import type { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { applyGlobalHarness } from '../src/app.setup';
 import type { ApiResponse } from '../src/common';
-import { resetDatabase } from './e2e.utils';
+import { assertDriverBound, resetDatabase } from './e2e.utils';
 
 /**
  * Q&A e2e — **권한 규칙이 서버에서 강제되는지**가 핵심이다.
  * FE 의 버튼 숨김은 UX 일 뿐 보안이 아니다.
  *
- * DB_DRIVER 미설정이라 인메모리로 뜬다(Postgres 불필요).
+ * DB_DRIVER 미설정이면 인메모리로 뜬다(Postgres 불필요). CI 는 이 파일을
+ * **인메모리와 Prisma 두 번** 돌린다 — 그 <같은 테스트라는 사실>이 계약이므로
+ * 드라이버별로 다른 테스트를 만들면 안 된다.
  */
-describe('Q&A (e2e)', () => {
+describe(`Q&A (e2e · ${process.env.DB_DRIVER ?? 'memory'} 드라이버)`, () => {
   let app: INestApplication<App>;
   let http: App;
 
@@ -62,6 +64,11 @@ describe('Q&A (e2e)', () => {
     app = applyGlobalHarness(moduleFixture.createNestApplication());
     await app.init();
     http = app.getHttpServer();
+
+    // CI 가 이 파일을 **두 드라이버로 각각** 돌린다. 그런데 두 번째 실행에서
+    // DB_DRIVER 를 빠뜨리면 <prisma 드라이버> 라는 이름의 스텝이 인메모리를
+    // 검사하며 초록이 된다 — 계약을 지킨다고 믿는데 같은 것을 두 번 돌리는 상태다.
+    assertDriverBound(app);
 
     // 인메모리는 앱마다 새로 비지만 DB 는 남는다 — 두 드라이버의 전제를 맞춘다
     await resetDatabase(app);
