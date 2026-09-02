@@ -123,4 +123,8 @@ export const zh = {
   'home.topicHeading': '按主题浏览',
   'home.visaHeading': '签证与居留资格',
 
+  'nav.brandHome': 'konnect — 首页',
+  'nav.main': '主导航',
+  'nav.sidebar': '页面侧栏',
+
 } satisfies Messages;

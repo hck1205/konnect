@@ -169,4 +169,8 @@ export const en = {
   'nav.guides': 'Guides',
   'nav.meetups': 'Meetups',
 
+  'nav.brandHome': 'konnect — home',
+  'nav.main': 'Main navigation',
+  'nav.sidebar': 'Page sidebar',
+
 } satisfies Messages;

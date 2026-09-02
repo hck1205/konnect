@@ -121,4 +121,8 @@ export const vi = {
   'home.topicHeading': 'Duyệt theo chủ đề',
   'home.visaHeading': 'Visa và tư cách lưu trú',
 
+  'nav.brandHome': 'konnect — trang chủ',
+  'nav.main': 'Điều hướng chính',
+  'nav.sidebar': 'Thanh bên trang',
+
 } satisfies Messages;

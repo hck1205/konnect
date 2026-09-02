@@ -37,9 +37,12 @@ export function SiteShell({ pathname, nav, aside, width = 'prose', children }: S
     <AppShell
       width={width}
       aside={aside}
+      asideLabel={t('nav.sidebar')}
       header={
         <PageHeader
           homeHref={routes.home(locale)}
+          homeLabel={t('nav.brandHome')}
+          navLabel={t('nav.main')}
           nav={nav}
           currentPath={pathname}
           actions={

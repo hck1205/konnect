@@ -24,7 +24,15 @@ const HEADER_HEIGHT = '3.5rem';
  *
  * `--header-h` 를 여기서 세팅한다 — `scroll-margin-block-start` 가 이 값을 쓴다.
  */
-export function PageHeader({ homeHref, nav = [], currentPath, actions, className }: PageHeaderProps) {
+export function PageHeader({
+  homeHref,
+  homeLabel,
+  navLabel,
+  nav = [],
+  currentPath,
+  actions,
+  className,
+}: PageHeaderProps) {
   const hasNav = nav.length > 0;
 
   return (
@@ -38,12 +46,12 @@ export function PageHeader({ homeHref, nav = [], currentPath, actions, className
       <Container width="wide" className="flex h-full items-center gap-4">
         {/* 내부 이동은 next/link 로 — 클라이언트 내비게이션과 프리페치가 붙는다.
             (Ladle 은 Next 런타임이 없어 vite alias 로 평범한 <a> 스텁을 물린다) */}
-        <NextLink href={homeHref} aria-label="konnect — home">
+        <NextLink href={homeHref} aria-label={homeLabel}>
           <BrandMark />
         </NextLink>
 
         {hasNav ? (
-          <nav aria-label="Main" className="hidden md:block">
+          <nav aria-label={navLabel} className="hidden md:block">
             <HeaderNav items={nav} currentPath={currentPath} />
           </nav>
         ) : null}
@@ -64,7 +72,7 @@ export function PageHeader({ homeHref, nav = [], currentPath, actions, className
                   />
                 )}
               >
-                <nav aria-label="Main">
+                <nav aria-label={navLabel}>
                   <HeaderNav items={nav} currentPath={currentPath} vertical />
                 </nav>
               </Popover>

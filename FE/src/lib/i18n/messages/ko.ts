@@ -150,4 +150,8 @@ export const ko = {
   'home.topicHeading': '주제로 찾기',
   'home.visaHeading': '체류자격',
 
+  'nav.brandHome': 'konnect — 홈',
+  'nav.main': '주요 메뉴',
+  'nav.sidebar': '페이지 사이드바',
+
 } satisfies Messages;

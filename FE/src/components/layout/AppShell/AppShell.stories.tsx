@@ -26,7 +26,7 @@ const NAV = [
 export const GuideWithSidebar: Story = () => (
   <div className="-m-6">
     <AppShell
-      header={<PageHeader homeHref="/en" nav={NAV} currentPath="/guides" actions={<Button size="sm">Sign in</Button>} />}
+      header={<PageHeader homeHref="/en" homeLabel="konnect — home" navLabel="Main navigation" nav={NAV} currentPath="/guides" actions={<Button size="sm">Sign in</Button>} />}
       footer={<Footer disclaimer="konnect is a community, not a legal or immigration service." />}
       aside={
         <TableOfContents
@@ -64,7 +64,7 @@ export const GuideWithSidebar: Story = () => (
 
 export const WithoutSidebar: Story = () => (
   <div className="-m-6">
-    <AppShell header={<PageHeader homeHref="/en" nav={NAV} currentPath="/questions" />} width="content">
+    <AppShell header={<PageHeader homeHref="/en" homeLabel="konnect — home" navLabel="Main navigation" nav={NAV} currentPath="/questions" />} width="content">
       <PageTitle title="Questions" description="Ask the people who have been through it." />
     </AppShell>
   </div>
