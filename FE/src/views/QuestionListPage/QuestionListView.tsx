@@ -69,10 +69,10 @@ export function QuestionListView({
             aria-current={f.key === active ? 'page' : undefined}
             className={cn(
               'rounded-full border px-3 py-1 text-xs transition-colors',
-              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-border',
+              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring',
               f.key === active
-                ? 'border-accent-border bg-accent text-accent-on'
-                : 'border-border text-fg-subtle hover:bg-surface-sunk',
+                ? 'border-focus-ring bg-brand-solid text-fg-on-solid'
+                : 'border-border text-fg-subtle hover:bg-surface-sunken',
             )}
           >
             {f.label}

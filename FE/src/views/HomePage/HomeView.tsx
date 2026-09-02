@@ -86,7 +86,7 @@ export function HomeView({ pathname }: { pathname: string }) {
             <li key={topic}>
               <Link
                 href={routes.topic(locale, topic)}
-                className="block rounded-lg border border-border px-3 py-2 text-sm transition-colors hover:bg-surface-sunk"
+                className="block rounded-lg border border-border px-3 py-2 text-sm transition-colors hover:bg-surface-sunken"
               >
                 {t(`topic.${topic}`)}
               </Link>
@@ -109,7 +109,7 @@ export function HomeView({ pathname }: { pathname: string }) {
                 // 보이는 글자는 코드뿐이라(F-5) 스크린리더로 훑으면 링크 목록이
                 // "에프 오 다시 파이브" 의 나열이 된다. 접근 이름에 법령상 명칭을 준다.
                 aria-label={spineTitle(spine, locale)}
-                className="inline-block rounded-full border border-border px-3 py-1 text-xs text-fg-subtle transition-colors hover:bg-surface-sunk"
+                className="inline-block rounded-full border border-border px-3 py-1 text-xs text-fg-subtle transition-colors hover:bg-surface-sunken"
               >
                 {/* 귀화는 체류자격이 아니라 `codeLabel` 이 없다 — 코드를 대문자로
                     올리면 `NATURALIZATION` 이라는 칩이 나온다 */}
