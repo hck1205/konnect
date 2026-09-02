@@ -145,4 +145,9 @@ export const ko = {
   'nav.guides': '가이드',
   'nav.meetups': '모임',
 
+  'home.tagline': '한국에 살고, 공부하고, 일하고, 여행하는 외국인들의 커뮤니티입니다.',
+  'home.intro': '{arc}, 비자, 집, 언어 — 먼저 겪은 사람들에게 물어보세요.',
+  'home.topicHeading': '주제로 찾기',
+  'home.visaHeading': '체류자격',
+
 } satisfies Messages;

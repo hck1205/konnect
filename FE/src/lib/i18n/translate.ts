@@ -33,12 +33,26 @@ export function interpolate(template: string, params?: TranslateParams): string 
  * 아랍어는 여섯 개다. 그래서 카테고리를 우리가 정하지 않고 `Intl.PluralRules` 에 묻는다.
  *
  * 고른 카테고리가 번역에 없으면 `other` 로 떨어진다 — 모든 언어가 갖는 유일한 카테고리다.
+ *
+ * ## 0 은 카테고리가 아니라 **정확값**으로 먼저 본다
+ *
+ * `zero` 는 복수 **카테고리**이고 우리 네 언어 중 아무도 갖고 있지 않다
+ * (`Intl.PluralRules('en').select(0)` 은 `'other'` 다. ko·zh·vi 는 카테고리가
+ * `other` 하나뿐이다). 그런데 **네 사전이 전부 `zero` 를 적어 놨다** —
+ * `'No answers'` · `'답변 없음'` · `'暂无回答'` · `'Chưa có trả lời'`.
+ * 어느 언어에서도 선택되지 않아 화면에는 `0 answers` · `답변 0개` 가 나갔다.
+ *
+ * 번역자 넷이 같은 의도를 적었는데 코드가 못 고르는 것이므로 **코드를 고친다.**
+ * ICU 도 정확값(`=0`)과 카테고리(`zero`)를 따로 둔다 — 여기서는 이름 하나로
+ * 둘을 겸한다(사전이 이미 그렇게 쓰였다). 아랍어처럼 `zero` 가 진짜 카테고리인
+ * 언어에서는 `select(0)` 이 어차피 `'zero'` 라 결과가 같다.
  */
 export function selectPlural(
   value: Exclude<MessageValue, string>,
   count: number,
   locale: Locale,
 ): string | undefined {
+  if (count === 0 && value.zero !== undefined) return value.zero;
   const category = new Intl.PluralRules(locale).select(count);
   return value[category] ?? value.other;
 }
@@ -67,4 +81,27 @@ export function translate(
   if (picked === undefined) return key;
 
   return interpolate(picked, params);
+}
+
+/**
+ * 번역문을 자리표시자 하나를 기준으로 **앞/뒤로 쪼갠다.**
+ *
+ * 왜 필요한가: 문장 가운데 한 낱말만 다른 태그로 감싸야 할 때가 있다.
+ * 홈의 "Alien Registration Card (외국인등록증)" 이 그렇다 — 그 낱말은
+ * `lang="ko" translate="no"` 여야 한다(사용자가 **실제 서류에서 이 글자를
+ * 눈으로 찾는다**. 브라우저 번역기가 바꿔 버리면 찾을 수 없다).
+ *
+ * 태그를 사전 안에 넣지 않는 이유: 번역자가 마크업을 손대게 되고, 사전이
+ * HTML 을 담기 시작하면 XSS 표면이 된다. **사전은 문구만, 태그는 화면이.**
+ *
+ * 자리표시자가 없으면 `after` 가 `null` 이다 — 있고 없고를 화면이 구분할 수 있어야
+ * 슬롯을 그릴지 말지 정한다. 빈 문자열로 뭉개면 그 판정이 사라진다.
+ */
+export function splitAtSlot(
+  text: string,
+  name: string,
+): { before: string; after: string | null } {
+  const at = text.indexOf(`{${name}}`);
+  if (at < 0) return { before: text, after: null };
+  return { before: text.slice(0, at), after: text.slice(at + name.length + 2) };
 }

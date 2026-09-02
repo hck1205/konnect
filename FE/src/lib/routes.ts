@@ -6,16 +6,14 @@ import { slugify } from '@/lib/text';
  * 경로가 바뀌어도 이 파일만 고치면 된다.
  */
 export const routes = {
+  /**
+   * 홈. **로케일을 붙여야 한다** — `/` 로 보내면 프록시가 Accept-Language 로
+   * 다시 협상해서, `/en` 을 보고 있던 사용자가 브랜드 로고를 눌렀을 때
+   * 브라우저 설정에 따라 `/ko` 로 튕긴다. 사용자가 이미 고른 언어를 버리는 셈이다.
+   */
   home: (locale: string) => `/${locale}`,
   questions: (locale: string) => `/${locale}/questions`,
 
-  /**
-   * 질문 상세의 **정규 URL**.
-   *
-   * id 는 UUIDv7 이라 사람도 검색엔진도 읽을 수 없다 — 제목 slug 를 붙인다.
-   * slug 가 없거나 틀리면 여기로 308 한다(제목이 수정되면 slug 가 바뀐다).
-   * → docs/30-architecture/07-routes-and-indexing.md
-   */
   /**
    * 비자 척추. **질문이 0건이어도 성립하는 페이지**라 승격 기준을 적용하지 않는다 —
    * 법령은 우리 사용자와 무관하게 이미 존재한다.
@@ -26,12 +24,22 @@ export const routes = {
   /** 주제 허브. 게시판의 1차 축이고 값이 여섯으로 닫혀 있다 */
   topic: (locale: string, topic: string) => `/${locale}/topics/${topic}`,
 
-  /** 작성 화면. 척추에서 열 때 태그를 미리 채워 보낸다 */
-  ask: (locale: string, tags?: readonly string[]) =>
-    tags?.length
-      ? `/${locale}/ask?tags=${tags.join(',')}`
-      : `/${locale}/ask`,
+  /*
+   * 작성 화면(`ask`)은 **여기 없다.** 라우트가 아직 없기 때문이다.
+   *
+   * 한 번 있었고, 없는 `/[locale]/ask` 를 가리켰다 — 척추 48판 대부분의
+   * 유일한 출구가 404 로 갔는데 타입체크·린트·빌드·테스트가 전부 통과했다.
+   * 헬퍼가 먼저 생기면 화면이 그걸 믿고 링크를 건다. **page 를 먼저 만들고
+   * 그 다음에 여기 추가한다** — `routes.contract.test.ts` 가 순서를 강제한다.
+   */
 
+  /**
+   * 질문 상세의 **정규 URL**.
+   *
+   * id 는 UUIDv7 이라 사람도 검색엔진도 읽을 수 없다 — 제목 slug 를 붙인다.
+   * slug 가 없거나 틀리면 여기로 308 한다(제목이 수정되면 slug 가 바뀐다).
+   * → docs/30-architecture/07-routes-and-indexing.md
+   */
   question: (locale: string, id: string, title: string) =>
     // questionSlug 가 빈 문자열을 내지 않으므로 분기가 필요 없다.
     // 분기를 남겨 두면 slug 없는 경로가 정규 URL 이 되어 자기 자신으로 308 한다.

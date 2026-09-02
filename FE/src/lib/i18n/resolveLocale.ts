@@ -55,4 +55,20 @@ export function negotiateLocale(acceptLanguage: string | null | undefined): Loca
   return DEFAULT_LOCALE;
 }
 
+/**
+ * URL 세그먼트 → 로케일. **모르는 값이면 기준 언어로 떨어진다.**
+ *
+ * 프록시가 `/[locale]` 을 이미 협상해 넣지만, 라우트 셸은 그걸 믿을 수 없다 —
+ * `/xx/questions` 같은 주소로 직접 들어오면 세그먼트가 뭐든 될 수 있다.
+ * 그래서 여섯 개 라우트 셸이 전부 이 한 줄을 각자 갖고 있었다(넷은 `toLocale`
+ * 이라는 같은 이름으로, 둘은 인라인 삼항으로). 폴백 규칙이 여섯 군데 흩어져 있으면
+ * 기준 언어를 바꿀 때 한 곳이 남는다.
+ *
+ * `negotiateLocale`(Accept-Language 협상)과 다르다 — 이건 **이미 정해진 세그먼트**를
+ * 검증할 뿐이라 협상하지 않는다.
+ */
+export function toLocale(raw: string): Locale {
+  return isLocale(raw) ? raw : DEFAULT_LOCALE;
+}
+
 export { LOCALES, DEFAULT_LOCALE };

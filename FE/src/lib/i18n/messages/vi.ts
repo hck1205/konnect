@@ -115,4 +115,10 @@ export const vi = {
   'nav.guides': 'Hướng dẫn',
   'nav.meetups': 'Gặp gỡ',
 
+  'home.tagline': 'Cộng đồng cho người nước ngoài sống, học tập, làm việc và du lịch tại Hàn Quốc.',
+  'home.intro':
+    'Thẻ đăng ký người nước ngoài ({arc}), visa, nhà ở, ngôn ngữ — hãy hỏi những người đã trải qua.',
+  'home.topicHeading': 'Duyệt theo chủ đề',
+  'home.visaHeading': 'Visa và tư cách lưu trú',
+
 } satisfies Messages;

@@ -18,6 +18,7 @@ const NAV = [
 export const SignedOut: Story = () => (
   <div className="-m-6">
     <PageHeader
+      homeHref="/en"
       nav={NAV}
       currentPath="/questions"
       actions={<Button size="sm">Sign in</Button>}
@@ -34,6 +35,7 @@ export const SignedOut: Story = () => (
 export const SignedIn: Story = () => (
   <div className="-m-6">
     <PageHeader
+      homeHref="/en"
       nav={NAV}
       currentPath="/guides/visa/d-2"
       actions={

@@ -4,16 +4,12 @@ import { ExternalLink, FileText, MessageCircleQuestion } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { useI18n } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
-import { AppShell } from '@/components/layout/AppShell';
-import { PageHeader } from '@/components/layout/PageHeader';
+import { SiteShell } from '@/components/layout/SiteShell';
 import { PageTitle } from '@/components/layout/PageTitle';
-import { Footer } from '@/components/layout/Footer';
-import { LocaleSwitcher } from '@/components/i18n/LocaleSwitcher';
-import { Button } from '@/components/primitives/Button';
 import { Banner } from '@/components/feedback/Banner';
 import type { OfficialSourceRef } from '@/data/visa-spine';
 import type { Question } from '@/types';
-import { QuestionRow } from '@/views/QuestionListPage/parts/QuestionRow';
+import { QuestionRow } from '@/components/community/QuestionRow';
 
 export interface SpineViewProps {
   title: string;
@@ -21,8 +17,6 @@ export interface SpineViewProps {
   description: string;
   sources: readonly OfficialSourceRef[];
   questions: Question[];
-  /** 이 척추에서 새 글을 쓸 때 미리 채울 태그 */
-  askTags: readonly string[];
   pathname: string;
 }
 
@@ -53,22 +47,7 @@ export function SpineView({
   const { t, locale } = useI18n();
 
   return (
-    <AppShell
-      width="prose"
-      header={
-        <PageHeader
-          nav={[{ href: routes.questions(locale), label: t('nav.questions') }]}
-          currentPath={pathname}
-          actions={
-            <>
-              <LocaleSwitcher pathname={pathname} />
-              <Button size="sm">{t('common.signIn')}</Button>
-            </>
-          }
-        />
-      }
-      footer={<Footer disclaimer={t('message.safety')} />}
-    >
+    <SiteShell pathname={pathname} nav={[{ href: routes.questions(locale), label: t('nav.questions') }]}>
       <PageTitle title={title} description={description} />
 
       {/*
@@ -160,11 +139,13 @@ export function SpineView({
         ) : (
           <div className="mt-1">
             {questions.map((q) => (
-              <QuestionRow key={q.id} question={q} />
+              // `<h2>이것에 대한 질문</h2>` 안이라 h3 이다 — 기본값 h2 로 두면
+              // 자기를 담은 절 제목과 형제가 되어 개요가 평평해진다
+              <QuestionRow key={q.id} question={q} level={3} />
             ))}
           </div>
         )}
       </section>
-    </AppShell>
+    </SiteShell>
   );
 }

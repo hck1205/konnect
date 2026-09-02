@@ -118,4 +118,9 @@ export const zh = {
   'nav.guides': '指南',
   'nav.meetups': '聚会',
 
+  'home.tagline': '在韩国生活、学习、工作和旅行的外国人社区。',
+  'home.intro': '外国人登录证（{arc}）、签证、住房、语言 — 问问已经经历过的人。',
+  'home.topicHeading': '按主题浏览',
+  'home.visaHeading': '签证与居留资格',
+
 } satisfies Messages;

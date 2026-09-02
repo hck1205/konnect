@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { interpolate, selectPlural, translate, type Messages } from './translate';
+import { interpolate, selectPlural, splitAtSlot, translate, type Messages } from './translate';
 
 const EN: Messages = {
   'common.cancel': 'Cancel',
@@ -84,5 +84,46 @@ describe('translate', () => {
 
   it('count 가 없으면 0 으로 본다 — 던지지 않는다', () => {
     expect(translate(EN, EN, 'comment.count', 'en')).toBe('{count} comments');
+  });
+});
+
+describe('splitAtSlot', () => {
+  it('자리표시자 앞뒤로 쪼갠다', () => {
+    expect(splitAtSlot('ARC ({arc}), visas', 'arc')).toEqual({
+      before: 'ARC (',
+      after: '), visas',
+    });
+  });
+
+  it('문장 맨 앞의 자리표시자 — before 가 빈 문자열이다(한국어 판이 이 모양이다)', () => {
+    expect(splitAtSlot('{arc}, 비자, 집', 'arc')).toEqual({ before: '', after: ', 비자, 집' });
+  });
+
+  it('자리표시자가 없으면 after 가 null 이다 — 슬롯을 그리지 않는다는 신호다', () => {
+    // 빈 문자열이면 "뒤가 비었다" 와 구분되지 않아 슬롯이 잘못 그려진다
+    expect(splitAtSlot('no slot here', 'arc')).toEqual({ before: 'no slot here', after: null });
+  });
+
+  it('다른 이름의 자리표시자는 건드리지 않는다', () => {
+    expect(splitAtSlot('{count} of {arc}', 'arc')).toEqual({ before: '{count} of ', after: '' });
+  });
+});
+
+describe('0 은 카테고리가 아니라 정확값으로 고른다', () => {
+  // 네 사전이 전부 zero 를 적었는데 어느 언어에서도 선택되지 않았다.
+  // en 은 zero 카테고리가 없고, ko·zh·vi 는 카테고리가 other 하나뿐이다.
+  const answers = { zero: 'No answers', one: '{count} answer', other: '{count} answers' };
+
+  it.each(['en', 'ko', 'zh', 'vi'] as const)('%s 에서 0 이면 zero 를 쓴다', (locale) => {
+    expect(selectPlural(answers, 0, locale)).toBe('No answers');
+  });
+
+  it('zero 가 없으면 평소대로 카테고리를 따른다', () => {
+    expect(selectPlural({ other: '{count}개' }, 0, 'ko')).toBe('{count}개');
+  });
+
+  it('0 이 아니면 zero 를 쓰지 않는다', () => {
+    expect(selectPlural(answers, 1, 'en')).toBe('{count} answer');
+    expect(selectPlural(answers, 3, 'en')).toBe('{count} answers');
   });
 });

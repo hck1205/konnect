@@ -9,7 +9,7 @@ export {
 export type { Locale } from './locales';
 export { LocaleProvider, useI18n } from './LocaleProvider';
 export type { I18n } from './LocaleProvider';
-export { negotiateLocale, splitLocalePath, withLocale } from './resolveLocale';
+export { negotiateLocale, splitLocalePath, toLocale, withLocale } from './resolveLocale';
 export {
   formatCurrency,
   formatDate,
@@ -20,4 +20,5 @@ export {
 export { MESSAGES } from './messages';
 export { t } from './t';
 export type { MessageKey } from './messages';
+export { splitAtSlot } from './translate';
 export type { Messages, TranslateParams } from './translate';

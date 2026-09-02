@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { SpinePage } from '@/views/SpinePage';
-import { fetchQuestions } from '@/query/questions';
-import { DEFAULT_LOCALE, LOCALES, isLocale, t, type Locale } from '@/lib/i18n';
+import { fetchSpineQuestions } from '@/query/questions';
+import { LOCALES, t, toLocale } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
 import { localeAlternates } from '@/lib/seo';
-import { OFFICIAL_SOURCES, VISA_SPINES } from '@/data/visa-spine';
+import { sourcesForTopic } from '@/data/visa-spine';
 import { TOPICS, type Topic } from '@/types';
 
 /**
@@ -25,39 +25,11 @@ interface RouteParams {
   topic: string;
 }
 
-const toLocale = (raw: string): Locale => (isLocale(raw) ? raw : DEFAULT_LOCALE);
-
 const toTopic = (raw: string): Topic | undefined =>
   (TOPICS as readonly string[]).includes(raw) ? (raw as Topic) : undefined;
 
-/**
- * 그 주제에 속한 비자 척추들의 출처를 합친다.
- *
- * 순서는 `OFFICIAL_SOURCES` 의 선언 순서를 따른다 — 자격마다 다른 순서로 나오면
- * 같은 문서가 페이지마다 다른 자리에 있어 읽는 사람이 헷갈린다.
- */
-const sourcesForTopic = (topic: Topic) => {
-  const ids = new Set(
-    VISA_SPINES.filter((s) => s.topic === topic).flatMap((s) => s.sourceIds),
-  );
-  return OFFICIAL_SOURCES.filter((s) => ids.has(s.id));
-};
-
 /** 비자 척추와 같은 이유로 ISR 이다 — 질문이 빌드 시점에 얼어붙지 않게 한다 */
 export const revalidate = 300;
-
-/**
- * 관련 질문은 치명적이지 않다 — 비자 척추와 같은 이유다.
- * CI 러너에는 BE 가 없어 프리렌더 중 ECONNREFUSED 가 나면 빌드가 통째로 죽는다.
- */
-async function loadQuestions(topic: Topic) {
-  try {
-    return (await fetchQuestions({ topic }, { limit: 10 })).items;
-  } catch (error) {
-    console.error('[spine] fetchQuestions failed', { topic, error });
-    return [];
-  }
-}
 
 export function generateStaticParams() {
   return LOCALES.flatMap((locale) =>
@@ -97,7 +69,7 @@ export default async function Page({
   // 자체를 그리지 않는다 — 빈 목록 위에 "링크하고 인용합니다" 고지만 남으면
   // 무엇에 대한 고지인지 알 수 없다.
   const sources = sourcesForTopic(topic);
-  const questions = await loadQuestions(topic);
+  const questions = await fetchSpineQuestions(`topic:${topic}`, { topic });
 
   return (
     <SpinePage
@@ -107,7 +79,6 @@ export default async function Page({
       questions={questions}
       // 주제 허브에서 쓰는 글은 태그가 아니라 topic 으로 분류된다.
       // 작성 화면이 topic 을 쿼리로 받게 되면 여기도 바뀐다.
-      askTags={[]}
       pathname={routes.topic(locale, topic)}
     />
   );

@@ -24,6 +24,7 @@
  * → docs/10-domain/10-visa-immigration/03-content-and-risk-policy.md
  */
 
+import type { Locale } from '@/lib/i18n';
 import type { Topic } from '@/types';
 
 export interface VisaSpine {
@@ -205,3 +206,48 @@ export const OFFICIAL_SOURCES: readonly OfficialSourceRef[] = [
 
 export const findSource = (id: string): OfficialSourceRef | undefined =>
   OFFICIAL_SOURCES.find((s) => s.id === id);
+
+/**
+ * 화면에 쓸 자격 이름. `영주 (F-5)` · `Naturalization`.
+ *
+ * 라우트 셸에만 있었는데 홈의 비자 네비도 같은 규칙이 필요해졌다. 두 벌이 되면
+ * 한쪽만 고쳐진다 — `codeLabel` 이 `null` 인 귀화를 `NATURALIZATION` 이라고
+ * 부르던 것이 정확히 그 종류의 실수다. **규칙은 데이터 옆에 둔다.**
+ *
+ * ⚠️ `officialName` 은 ko·en 둘뿐이라 zh·vi 는 en 으로 떨어진다.
+ * 법령 명칭의 공식 중국어·베트남어 번역이 없기 때문이고, 지어내지 않는다 —
+ * 이 페이지가 하는 일은 인용이지 번역이 아니다.
+ */
+export function spineName(spine: VisaSpine, locale: Locale): string {
+  return locale === 'ko' ? spine.officialName.ko : spine.officialName.en;
+}
+
+export function spineTitle(spine: VisaSpine, locale: Locale): string {
+  const name = spineName(spine, locale);
+  return spine.codeLabel ? `${name} (${spine.codeLabel})` : name;
+}
+
+/** 명칭의 **근거 법령** → 사전 키. 자격은 시행령, 귀화는 국적법이다 */
+export const BASIS_KEY = {
+  'enforcement-decree': 'spine.basisDecree',
+  'nationality-act': 'spine.basisNationalityAct',
+} as const satisfies Record<VisaSpine['basis'], string>;
+
+/**
+ * 그 주제에 속한 비자 척추들의 출처를 합친다.
+ *
+ * 라우트 셸에 있었는데, 이건 **데이터에 대한 규칙**이지 라우팅이 아니다.
+ * 옆에 둬야 `visa-spine.test.ts` 가 같이 본다 — 라우트 셸 안에 있으면
+ * 테스트에서 부를 수 없어 아래 불변식이 검증 밖에 남는다.
+ *
+ * ⚠️ **선언 순서를 따르는 것이 요점이다.** 척추를 훑으며 모으면 자격마다 순서가
+ * 달라져 같은 문서가 페이지마다 다른 자리에 온다. 법령 목록에서 읽는 사람은
+ * 위치로 기억하기 때문에, 순서가 흔들리면 "이 문서를 아까 봤나" 를 판단할 수 없다.
+ * 그래서 모으는 순서가 아니라 `OFFICIAL_SOURCES` 를 **거르는** 방식으로 쓴다.
+ */
+export function sourcesForTopic(topic: Topic): OfficialSourceRef[] {
+  const ids = new Set(
+    VISA_SPINES.filter((s) => s.topic === topic).flatMap((s) => s.sourceIds),
+  );
+  return OFFICIAL_SOURCES.filter((s) => ids.has(s.id));
+}

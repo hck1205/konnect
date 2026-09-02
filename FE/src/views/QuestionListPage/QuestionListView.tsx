@@ -5,16 +5,12 @@ import { MessageCircleQuestion } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { useI18n } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
-import { AppShell } from '@/components/layout/AppShell';
-import { PageHeader } from '@/components/layout/PageHeader';
+import { SiteShell } from '@/components/layout/SiteShell';
 import { PageTitle } from '@/components/layout/PageTitle';
-import { Footer } from '@/components/layout/Footer';
-import { LocaleSwitcher } from '@/components/i18n/LocaleSwitcher';
-import { Button } from '@/components/primitives/Button';
 import { buttonVariants } from '@/components/primitives/Button/Button.utils';
 import { EmptyState } from '@/components/feedback/EmptyState';
 import { TOPICS, type Question, type Topic } from '@/types';
-import { QuestionRow } from './parts/QuestionRow';
+import { QuestionRow } from '@/components/community/QuestionRow';
 
 export interface QuestionListViewProps {
   questions: Question[];
@@ -62,22 +58,7 @@ export function QuestionListView({
   const active: Topic | 'all' = topic ?? 'all';
 
   return (
-    <AppShell
-      width="prose"
-      header={
-        <PageHeader
-          nav={nav}
-          currentPath={pathname}
-          actions={
-            <>
-              <LocaleSwitcher pathname={pathname} />
-              <Button size="sm">{t('common.signIn')}</Button>
-            </>
-          }
-        />
-      }
-      footer={<Footer disclaimer={t('message.safety')} />}
-    >
+    <SiteShell pathname={pathname} nav={nav}>
       <PageTitle title={t('list.title')} description={t('list.description')} />
 
       <nav aria-label={t('list.filterTopic')} className="mt-4 flex flex-wrap gap-1.5">
@@ -141,6 +122,6 @@ export function QuestionListView({
           </Link>
         </div>
       ) : null}
-    </AppShell>
+    </SiteShell>
   );
 }

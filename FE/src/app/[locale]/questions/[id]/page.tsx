@@ -1,6 +1,6 @@
 import { notFound, permanentRedirect } from 'next/navigation';
 import { fetchQuestion } from '@/query/questions';
-import { DEFAULT_LOCALE, isLocale } from '@/lib/i18n';
+import { toLocale } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
 
 /**
@@ -19,7 +19,7 @@ export default async function Page({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale: rawLocale, id } = await params;
-  const locale = isLocale(rawLocale) ? rawLocale : DEFAULT_LOCALE;
+  const locale = toLocale(rawLocale);
 
   const question = await fetchQuestion(id);
   if (!question) notFound();
