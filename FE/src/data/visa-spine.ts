@@ -30,10 +30,28 @@ export interface VisaSpine {
   /** URL 세그먼트이자 `visa:` 태그의 값. 소문자 하이픈 표기 */
   code: string;
   /**
-   * 출입국관리법 시행령 **별표1의2 의 항목명**이다. 우리가 지은 이름이 아니다.
+   * 법령이 정한 공식 명칭이다. 우리가 지은 이름이 아니다.
+   * 체류자격은 출입국관리법 시행령 별표1의2, **귀화는 국적법**이 정한다 — `basis` 참조.
    * 법령은 저작권법 제7조상 보호받지 못하는 저작물이라 그대로 인용할 수 있다.
    */
   officialName: { ko: string; en: string };
+  /**
+   * 그 명칭의 **근거 법령**. 자격마다 다르다.
+   *
+   * ⚠️ 이걸 데이터로 두지 않고 화면에 한 문장으로 박았더니 **귀화까지
+   * "출입국관리법 시행령 별표1의2 의 명칭" 이라고 진술**했다. 귀화는 거기에 없다 —
+   * 국적법 소관이다. 사용자가 원문을 찾아갈 때 쓰는 정보라 틀리면 엉뚱한 법령으로 보낸다.
+   * 해석을 쓰지 않겠다고 해 놓고 **사실을 틀리게 말하는 것**이 더 나쁘다.
+   *
+   * 문장이 아니라 **식별자**를 담는다 — 문구는 사전(네 로케일)이 갖는다.
+   * 데이터에 ko/en 문장을 넣으면 zh·vi 판이 영어로 떨어진다.
+   */
+  basis: 'enforcement-decree' | 'nationality-act';
+  /**
+   * 제목 괄호 안에 넣을 코드. `귀화 (NATURALIZATION)` 이 되지 않게 **체류자격에만** 있다.
+   * 귀화는 체류자격이 아니라 국적 취득이다.
+   */
+  codeLabel: string | null;
   /** 이 자격을 다루는 공식 출처의 id — `BE/data/official-sources.json` 과 대조된다 */
   sourceIds: string[];
   /** 관련 질문을 찾을 때 쓰는 태그 */
@@ -55,6 +73,8 @@ export const VISA_SPINES: readonly VisaSpine[] = [
   {
     code: 'f-5',
     officialName: { ko: '영주', en: 'Permanent Residence' },
+    basis: 'enforcement-decree',
+    codeLabel: 'F-5',
     sourceIds: [
       'immigration-act-enforcement-decree',
       'immigration-act',
@@ -67,6 +87,8 @@ export const VISA_SPINES: readonly VisaSpine[] = [
   {
     code: 'f-2',
     officialName: { ko: '거주', en: 'Residence' },
+    basis: 'enforcement-decree',
+    codeLabel: 'F-2',
     sourceIds: [
       'immigration-act-enforcement-decree',
       'immigration-act',
@@ -79,6 +101,8 @@ export const VISA_SPINES: readonly VisaSpine[] = [
   {
     code: 'naturalization',
     officialName: { ko: '귀화', en: 'Naturalization' },
+    basis: 'nationality-act',
+    codeLabel: null,
     // 체류자격이 아니라 국적 취득이다 — 근거 법령이 국적법으로 다르다
     sourceIds: ['nationality-act', 'immigration-notices'],
     tag: 'visa:naturalization',
@@ -87,6 +111,8 @@ export const VISA_SPINES: readonly VisaSpine[] = [
   {
     code: 'e-7',
     officialName: { ko: '특정활동', en: 'Specific Activities' },
+    basis: 'enforcement-decree',
+    codeLabel: 'E-7',
     sourceIds: [
       'immigration-act-enforcement-decree',
       'immigration-act',
@@ -99,6 +125,8 @@ export const VISA_SPINES: readonly VisaSpine[] = [
   {
     code: 'd-10',
     officialName: { ko: '구직', en: 'Job Seeking' },
+    basis: 'enforcement-decree',
+    codeLabel: 'D-10',
     sourceIds: [
       'immigration-act-enforcement-decree',
       'hikorea-visa-guide',
@@ -110,6 +138,8 @@ export const VISA_SPINES: readonly VisaSpine[] = [
   {
     code: 'd-2',
     officialName: { ko: '유학', en: 'Study Abroad' },
+    basis: 'enforcement-decree',
+    codeLabel: 'D-2',
     sourceIds: [
       'immigration-act-enforcement-decree',
       'immigration-act',

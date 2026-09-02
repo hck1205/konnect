@@ -106,6 +106,8 @@ export const vi = {
   'spine.guide': 'Hướng dẫn',
   'spine.missing': 'Chưa có',
   'spine.missingNote': 'Ngày kiểm tra gần nhất và dấu thay đổi chưa có trên trang này — trình theo dõi chạy hằng ngày trên máy chủ nhưng ứng dụng chưa đọc được kết quả.',
+  'spine.basisDecree': 'Tên gọi theo Nghị định thi hành Luật Xuất nhập cảnh, Phụ lục 1-2.',
+  'spine.basisNationalityAct': 'Thủ tục nhập quốc tịch theo Luật Quốc tịch.',
   'spine.topicIntro': 'Câu hỏi, và các nguồn chính thức đằng sau.',
 
   // ── 네비게이션 ───────────────────────────────────────────

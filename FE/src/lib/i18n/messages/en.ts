@@ -146,6 +146,8 @@ export const en = {
   'spine.guide': 'Guide',
   'spine.missing': 'Not here yet',
   'spine.missingNote': 'Last-checked dates and change badges are not on this page yet — the watcher runs daily on the server but the app cannot read its output.',
+  'spine.basisDecree': 'Official designation in the Enforcement Decree of the Immigration Act, Appendix 1-2.',
+  'spine.basisNationalityAct': 'A route to citizenship defined by the Nationality Act.',
   'spine.topicIntro': 'Questions, and the official sources behind them.',
 
   // ── 네비게이션 ───────────────────────────────────────────

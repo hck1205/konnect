@@ -136,6 +136,8 @@ export const ko = {
   'spine.guide': '안내',
   'spine.missing': '아직 없는 것',
   'spine.missingNote': '마지막 확인일과 변경 배지는 아직 이 페이지에 없습니다 — 감시는 서버에서 매일 도는데 앱이 그 결과를 읽지 못합니다.',
+  'spine.basisDecree': '출입국관리법 시행령 별표1의2 가 정한 명칭입니다.',
+  'spine.basisNationalityAct': '국적법이 정한 국적 취득 절차입니다.',
   'spine.topicIntro': '질문과, 그 뒤에 있는 공식 출처.',
 
   // ── 네비게이션 ───────────────────────────────────────────

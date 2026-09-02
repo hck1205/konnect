@@ -5,7 +5,7 @@ import { fetchQuestions } from '@/query/questions';
 import { DEFAULT_LOCALE, LOCALES, isLocale, t, type Locale } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
 import { localeAlternates } from '@/lib/seo';
-import { OFFICIAL_SOURCES, VISA_SPINES, findSource } from '@/data/visa-spine';
+import { OFFICIAL_SOURCES, VISA_SPINES } from '@/data/visa-spine';
 import { TOPICS, type Topic } from '@/types';
 
 /**
@@ -43,6 +43,22 @@ const sourcesForTopic = (topic: Topic) => {
   return OFFICIAL_SOURCES.filter((s) => ids.has(s.id));
 };
 
+/** 비자 척추와 같은 이유로 ISR 이다 — 질문이 빌드 시점에 얼어붙지 않게 한다 */
+export const revalidate = 300;
+
+/**
+ * 관련 질문은 치명적이지 않다 — 비자 척추와 같은 이유다.
+ * CI 러너에는 BE 가 없어 프리렌더 중 ECONNREFUSED 가 나면 빌드가 통째로 죽는다.
+ */
+async function loadQuestions(topic: Topic) {
+  try {
+    return (await fetchQuestions({ topic }, { limit: 10 })).items;
+  } catch (error) {
+    console.error('[spine] fetchQuestions failed', { topic, error });
+    return [];
+  }
+}
+
 export function generateStaticParams() {
   return LOCALES.flatMap((locale) =>
     TOPICS.map((topic) => ({ locale, topic })),
@@ -77,21 +93,18 @@ export default async function Page({
   const topic = toTopic(rawTopic);
   if (!topic) notFound();
 
-  const spineSources = sourcesForTopic(topic);
-  // 비자와 엮이지 않는 주제(교류·어학)는 아직 출처가 없다. 그때는 빈 배열이고
-  // 화면이 출처 절을 그대로 비운다 — 없는 것을 있는 척하지 않는다.
-  const sources = spineSources.length
-    ? spineSources
-    : ([] as ReturnType<typeof findSource>[]).filter((s) => s !== undefined);
-
-  const page = await fetchQuestions({ topic }, { limit: 10 });
+  // 비자와 엮이지 않는 주제(교류·어학)는 출처가 0건이다. 그때 화면은 출처 절
+  // 자체를 그리지 않는다 — 빈 목록 위에 "링크하고 인용합니다" 고지만 남으면
+  // 무엇에 대한 고지인지 알 수 없다.
+  const sources = sourcesForTopic(topic);
+  const questions = await loadQuestions(topic);
 
   return (
     <SpinePage
       title={t(locale, `topic.${topic}`)}
       description={t(locale, 'spine.topicIntro')}
       sources={sources}
-      questions={page.items}
+      questions={questions}
       // 주제 허브에서 쓰는 글은 태그가 아니라 topic 으로 분류된다.
       // 작성 화면이 topic 을 쿼리로 받게 되면 여기도 바뀐다.
       askTags={[]}

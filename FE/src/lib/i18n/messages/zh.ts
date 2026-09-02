@@ -109,6 +109,8 @@ export const zh = {
   'spine.guide': '指南',
   'spine.missing': '尚未提供',
   'spine.missingNote': '最后确认日期和变更标记尚未显示 —— 监控每天在服务器运行，但应用还读不到结果。',
+  'spine.basisDecree': '出入境管理法施行令附表1之2 所定名称。',
+  'spine.basisNationalityAct': '国籍法所定的取得国籍程序。',
   'spine.topicIntro': '提问，以及背后的官方来源。',
 
   // ── 네비게이션 ───────────────────────────────────────────
