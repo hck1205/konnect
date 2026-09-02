@@ -6,7 +6,7 @@ import { LOCALES, t, toLocale } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
 import { localeAlternates } from '@/lib/seo';
 import { sourcesForTopic } from '@/data/visa-spine';
-import { TOPICS, type Topic } from '@/types';
+import { TOPICS, isTopic } from '@/types';
 
 /**
  * 주제 허브 — `/[locale]/topics/[topic]`.
@@ -25,9 +25,6 @@ interface RouteParams {
   topic: string;
 }
 
-const toTopic = (raw: string): Topic | undefined =>
-  (TOPICS as readonly string[]).includes(raw) ? (raw as Topic) : undefined;
-
 /** 비자 척추와 같은 이유로 ISR 이다 — 질문이 빌드 시점에 얼어붙지 않게 한다 */
 export const revalidate = 300;
 
@@ -42,10 +39,10 @@ export async function generateMetadata({
 }: {
   params: Promise<RouteParams>;
 }): Promise<Metadata> {
-  const { locale: rawLocale, topic: rawTopic } = await params;
+  const { locale: rawLocale, topic } = await params;
   const locale = toLocale(rawLocale);
-  const topic = toTopic(rawTopic);
-  if (!topic) return { title: 'konnect' };
+  // isTopic 은 타입 가드라 이 아래에서 topic 은 Topic 이다 — 별칭이 필요 없다
+  if (!isTopic(topic)) return { title: 'konnect' };
 
   return {
     title: t(locale, `topic.${topic}`),
@@ -59,11 +56,11 @@ export default async function Page({
 }: {
   params: Promise<RouteParams>;
 }) {
-  const { locale: rawLocale, topic: rawTopic } = await params;
+  const { locale: rawLocale, topic } = await params;
   const locale = toLocale(rawLocale);
 
-  const topic = toTopic(rawTopic);
-  if (!topic) notFound();
+  // notFound() 는 never 를 반환하므로 이 아래에서 topic 은 Topic 으로 좁혀진다
+  if (!isTopic(topic)) notFound();
 
   // 비자와 엮이지 않는 주제(교류·어학)는 출처가 0건이다. 그때 화면은 출처 절
   // 자체를 그리지 않는다 — 빈 목록 위에 "링크하고 인용합니다" 고지만 남으면

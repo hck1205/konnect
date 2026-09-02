@@ -20,7 +20,7 @@ export type { PostDraft } from './post';
 export { TAG_NAMESPACES } from './tag';
 export type { TagNamespace, ParsedTag } from './tag';
 
-export { TOPICS, POST_TYPES } from './question';
+export { TOPICS, POST_TYPES, isTopic } from './question';
 export type {
   Topic,
   PostType,
