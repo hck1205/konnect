@@ -13,7 +13,7 @@ export const routes = {
    * 질문 상세의 **정규 URL**.
    *
    * id 는 UUIDv7 이라 사람도 검색엔진도 읽을 수 없다 — 제목 slug 를 붙인다.
-   * slug 가 없거나 틀리면 여기로 301 한다(제목이 수정되면 slug 가 바뀐다).
+   * slug 가 없거나 틀리면 여기로 308 한다(제목이 수정되면 slug 가 바뀐다).
    * → docs/30-architecture/07-routes-and-indexing.md
    */
   /**

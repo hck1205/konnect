@@ -217,6 +217,27 @@ describe('Q&A (e2e)', () => {
       expect(await count()).toBe(0);
     });
 
+    it('숨겨진 질문 아래에서도 답변자가 자기 답변을 숨길 수 있다', async () => {
+      const { token: asker } = await login('Maria');
+      const { token: helper } = await login('Thu');
+      const question = await createQuestion(asker);
+      const answer = await createAnswer(helper, question.id);
+
+      // 질문 작성자가 질문을 숨긴다. 답변자는 그 질문을 볼 권한이 없어진다.
+      await request(http)
+        .delete(`/questions/${question.id}`)
+        .set('Authorization', `Bearer ${asker}`)
+        .expect(200);
+
+      // 답변자가 자기 답변을 숨긴다. 쓰기는 커밋되는데 예전에는 응답이 404 였다 —
+      // 시스템 판정을 **사용자 가시성 경로**(findOne)로 읽었기 때문이다.
+      // 성공한 작업이 실패로 보고되면 클라이언트가 재시도하고, 재시도는 카운트를 또 깎는다.
+      await request(http)
+        .delete(`/answers/${answer.id}`)
+        .set('Authorization', `Bearer ${helper}`)
+        .expect(200);
+    });
+
     it('anyTags 는 OR 다 — 두 드라이버가 같은 의미를 내야 한다', async () => {
       const { token } = await login('Maria');
       // 기본 질문은 visa:d-2 · region:seoul 을 가진다

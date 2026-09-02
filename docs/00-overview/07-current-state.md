@@ -42,7 +42,7 @@
 - 디자인 시스템 80여 종 · Ladle 스토리
 - i18n `en`·`ko`·`zh`·`vi` (로케일 URL 세그먼트, `Accept-Language` 협상)
 - **query 계층** — `auth`·`questions`·`answers`, 도메인별 `.api`/`.keys`/`.hooks`
-- **질문 상세** `/[locale]/questions/[id]/[slug]` — SSR·canonical·hreflang·301 정규화
+- **질문 상세** `/[locale]/questions/[id]/[slug]` — SSR·canonical·hreflang·308 정규화
 - 테스트: unit 267 · **integration 7(라이브 BE)** · contrast 64 · routing 11 · seo 8
 - **질문 목록** `/[locale]/questions` — 주제 필터(6개) · 커서 페이지네이션 · 빈 상태.
   **색인은 필터 없는 기본 판만**이고 `?topic=`·`?cursor=` 가 붙으면 `noindex, follow` +

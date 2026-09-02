@@ -74,8 +74,11 @@ id 는 UUIDv7 이라 사람도 검색엔진도 읽을 수 없다.
 /en/questions/019...c3/does-volunteer-work-count-toward-f-2-7-points
 ```
 
-- slug 없이 들어오면 **정규 URL 로 301**
-- slug 가 틀려도 id 로 찾아 **정규 URL 로 301** (제목이 수정되면 slug 가 바뀐다)
+- slug 없이 들어오면 **정규 URL 로 308**
+- slug 가 틀려도 id 로 찾아 **정규 URL 로 308** (제목이 수정되면 slug 가 바뀐다)
+- **308 이지 301 이 아니다.** `permanentRedirect` 가 내는 코드이고 메서드를 보존한다 —
+  색인 이전 효과는 301 과 같다. 문서가 301 이라고 적어 두면 응답을 확인한 사람이
+  "코드가 문서와 다르다" 로 읽는다
 - `canonical` 은 항상 현재 정규 URL
 
 ## 색인하지 않는 페이지

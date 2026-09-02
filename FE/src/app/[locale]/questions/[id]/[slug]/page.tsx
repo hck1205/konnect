@@ -72,7 +72,7 @@ export default async function Page({ params }: { params: Promise<RouteParams> })
   if (!question) notFound();
 
   // 제목이 수정되면 slug 가 바뀐다 — 옛 주소로 들어와도 정규 URL 로 보낸다.
-  // 301(permanent)인 이유: 검색엔진이 색인을 옮겨야 한다.
+  // 308(permanent)인 이유: 검색엔진이 색인을 옮겨야 한다. 308 은 메서드를 보존한다.
   const canonicalSlug = questionSlug(question.title);
   if (decodeSlug(slug) !== canonicalSlug) {
     permanentRedirect(routes.question(locale, question.id, question.title));
