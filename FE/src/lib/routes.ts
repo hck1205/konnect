@@ -16,6 +16,22 @@ export const routes = {
    * slug 가 없거나 틀리면 여기로 301 한다(제목이 수정되면 slug 가 바뀐다).
    * → docs/30-architecture/07-routes-and-indexing.md
    */
+  /**
+   * 비자 척추. **질문이 0건이어도 성립하는 페이지**라 승격 기준을 적용하지 않는다 —
+   * 법령은 우리 사용자와 무관하게 이미 존재한다.
+   * → docs/20-product/10-features/12-official-data-pipeline.md
+   */
+  visa: (locale: string, code: string) => `/${locale}/visa/${code}`,
+
+  /** 주제 허브. 게시판의 1차 축이고 값이 여섯으로 닫혀 있다 */
+  topic: (locale: string, topic: string) => `/${locale}/topics/${topic}`,
+
+  /** 작성 화면. 척추에서 열 때 태그를 미리 채워 보낸다 */
+  ask: (locale: string, tags?: readonly string[]) =>
+    tags?.length
+      ? `/${locale}/ask?tags=${tags.join(',')}`
+      : `/${locale}/ask`,
+
   question: (locale: string, id: string, title: string) =>
     // questionSlug 가 빈 문자열을 내지 않으므로 분기가 필요 없다.
     // 분기를 남겨 두면 slug 없는 경로가 정규 URL 이 되어 자기 자신으로 308 한다.

@@ -97,6 +97,20 @@ export const zh = {
   'topic.language': '语言',
   'topic.social': '交流',
 
+  // ── 척추 페이지 ──────────────────────────────────────────
+  'spine.officialSources': '官方来源',
+  'spine.sourcesNote': '我们只提供链接和引用，不作解释 —— 制度会变，错误的答案可能导致失去居留资格。',
+  'spine.viewOriginal': '查看原文',
+  'spine.relatedQuestions': '相关提问',
+  'spine.noQuestions': '还没有相关提问。',
+  'spine.askFirst': '提出第一个问题',
+  'spine.statute': '法令',
+  'spine.notice': '公告',
+  'spine.guide': '指南',
+  'spine.missing': '尚未提供',
+  'spine.missingNote': '最后确认日期和变更标记尚未显示 —— 监控每天在服务器运行，但应用还读不到结果。',
+  'spine.topicIntro': '提问，以及背后的官方来源。',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': '问题',
   'nav.guides': '指南',

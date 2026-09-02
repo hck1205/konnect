@@ -1,8 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { MessageCircleQuestion } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
+import { TOPICS } from '@/types';
+import { VISA_SPINES } from '@/data/visa-spine';
 import { AppShell } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { PageTitle } from '@/components/layout/PageTitle';
@@ -69,6 +72,45 @@ export function HomeView({ pathname }: { pathname: string }) {
         </span>
         ), visas, housing, language — ask the people who have been through it.
       </p>
+
+      {/*
+        홈에서 나가는 링크가 하나도 없었다. 커서 페이지네이션이라 목록을 크롤 경로로
+        쓸 수 없고(sitemap 이 유일한 열거 수단인데 그것도 아직 없다), 그러면 상세
+        페이지에 도달할 경로가 사실상 없다 — 검색이 유일한 유입 채널인 서비스에서
+        그건 구조적으로 보이지 않는다는 뜻이다.
+        → docs/30-architecture/07-routes-and-indexing.md
+      */}
+      <nav aria-label={t('list.filterTopic')} className="mt-8">
+        <h2 className="text-sm font-semibold">{t('list.filterTopic')}</h2>
+        <ul className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+          {TOPICS.map((topic) => (
+            <li key={topic}>
+              <Link
+                href={routes.topic(locale, topic)}
+                className="block rounded-lg border border-border px-3 py-2 text-sm transition-colors hover:bg-surface-sunk"
+              >
+                {t(`topic.${topic}`)}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav aria-label="visa" className="mt-6">
+        <h2 className="text-sm font-semibold">{t('spine.officialSources')}</h2>
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {VISA_SPINES.map((spine) => (
+            <li key={spine.code}>
+              <Link
+                href={routes.visa(locale, spine.code)}
+                className="inline-block rounded-full border border-border px-3 py-1 text-xs text-fg-subtle transition-colors hover:bg-surface-sunk"
+              >
+                {spine.code.toUpperCase()}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </AppShell>
   );
 }

@@ -134,6 +134,20 @@ export const en = {
   'topic.language': 'Language',
   'topic.social': 'Community',
 
+  // ── 척추 페이지 ──────────────────────────────────────────
+  'spine.officialSources': 'Official sources',
+  'spine.sourcesNote': 'We link and quote. We do not interpret — rules change and a wrong answer can cost your status.',
+  'spine.viewOriginal': 'View original',
+  'spine.relatedQuestions': 'Questions about this',
+  'spine.noQuestions': 'No questions about this yet.',
+  'spine.askFirst': 'Ask the first one',
+  'spine.statute': 'Statute',
+  'spine.notice': 'Notice',
+  'spine.guide': 'Guide',
+  'spine.missing': 'Not here yet',
+  'spine.missingNote': 'Last-checked dates and change badges are not on this page yet — the watcher runs daily on the server but the app cannot read its output.',
+  'spine.topicIntro': 'Questions, and the official sources behind them.',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': 'Questions',
   'nav.guides': 'Guides',
