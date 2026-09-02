@@ -1,4 +1,6 @@
-import { normalizeTag } from '@/components/data-display/Tag';
+// 규칙은 lib/text 가 소유한다 — 다른 컴포넌트에서 가져오면 components→components
+// 간선이 생기고, 그 컴포넌트를 옮길 때 상관없는 폼이 함께 깨진다.
+import { normalizeTag } from '@/lib/text';
 
 export interface AddTagResult {
   next: string[];

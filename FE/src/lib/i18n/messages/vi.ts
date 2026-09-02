@@ -94,9 +94,35 @@ export const vi = {
   'topic.language': 'Ngôn ngữ',
   'topic.social': 'Cộng đồng',
 
+  // ── 척추 페이지 ──────────────────────────────────────────
+  'spine.officialSources': 'Nguồn chính thức',
+  'spine.sourcesNote': 'Chúng tôi dẫn liên kết và trích dẫn, không diễn giải — quy định thay đổi và câu trả lời sai có thể khiến bạn mất tư cách lưu trú.',
+  'spine.viewOriginal': 'Xem bản gốc',
+  'spine.relatedQuestions': 'Câu hỏi về mục này',
+  'spine.noQuestions': 'Chưa có câu hỏi nào về mục này.',
+  'spine.askFirst': 'Đặt câu hỏi đầu tiên',
+  'spine.statute': 'Văn bản luật',
+  'spine.notice': 'Thông báo',
+  'spine.guide': 'Hướng dẫn',
+  'spine.missing': 'Chưa có',
+  'spine.missingNote': 'Ngày kiểm tra gần nhất và dấu thay đổi chưa có trên trang này — trình theo dõi chạy hằng ngày trên máy chủ nhưng ứng dụng chưa đọc được kết quả.',
+  'spine.basisDecree': 'Tên gọi theo Nghị định thi hành Luật Xuất nhập cảnh, Phụ lục 1-2.',
+  'spine.basisNationalityAct': 'Thủ tục nhập quốc tịch theo Luật Quốc tịch.',
+  'spine.topicIntro': 'Câu hỏi, và các nguồn chính thức đằng sau.',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': 'Câu hỏi',
   'nav.guides': 'Hướng dẫn',
   'nav.meetups': 'Gặp gỡ',
+
+  'home.tagline': 'Cộng đồng cho người nước ngoài sống, học tập, làm việc và du lịch tại Hàn Quốc.',
+  'home.intro':
+    'Thẻ đăng ký người nước ngoài ({arc}), visa, nhà ở, ngôn ngữ — hãy hỏi những người đã trải qua.',
+  'home.topicHeading': 'Duyệt theo chủ đề',
+  'home.visaHeading': 'Visa và tư cách lưu trú',
+
+  'nav.brandHome': 'konnect — trang chủ',
+  'nav.main': 'Điều hướng chính',
+  'nav.sidebar': 'Thanh bên trang',
 
 } satisfies Messages;

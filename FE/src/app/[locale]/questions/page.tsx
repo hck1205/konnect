@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { QuestionListPage } from '@/views/QuestionListPage';
 import { fetchQuestions } from '@/query/questions';
-import { DEFAULT_LOCALE, isLocale, t, type Locale } from '@/lib/i18n';
+import { DEFAULT_LOCALE, t, toLocale } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
 import { localeAlternates, noindexAlternates } from '@/lib/seo';
 import { TOPICS, type Topic } from '@/types';
@@ -26,8 +26,6 @@ interface SearchParams {
   topic?: string;
   cursor?: string;
 }
-
-const toLocale = (raw: string): Locale => (isLocale(raw) ? raw : DEFAULT_LOCALE);
 
 /** 모르는 값이 오면 필터 없음으로 수렴한다 — 400 을 낼 이유가 없다 */
 const toTopic = (raw?: string): Topic | undefined =>

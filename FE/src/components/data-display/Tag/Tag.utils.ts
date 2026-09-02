@@ -1,39 +1,11 @@
-import { slugify } from '@/lib/text';
-import { TAG_NAMESPACES, type ParsedTag, type TagNamespace } from './Tag.types';
-
-const isNamespace = (v: string): v is TagNamespace =>
-  (TAG_NAMESPACES as readonly string[]).includes(v);
+import { parseTag } from '@/lib/text';
+import type { TagNamespace } from '@/types/tag';
 
 /**
- * 태그 문자열 정규화.
+ * 태그의 **표시 형태**. 규칙(`normalizeTag`·`parseTag`)은 `lib/text/tag.ts` 에 있다.
  *
- * 공용 `slugify` 에 네임스페이스 구분자(`:`)만 보존하도록 위임한다 —
- * 제목 slug·앵커 id 와 **같은 규칙**이어야 표기가 갈라지지 않는다.
+ * 이 파일에 남은 것은 전부 사람에게 보이는 문제다 — 저장 형태를 어떻게 읽게 할 것인가.
  */
-export function normalizeTag(raw: string): string {
-  return slugify(raw, { keep: ':' });
-}
-
-/**
- * `visa:d-2` → `{ namespace: 'visa', value: 'd-2' }`
- *
- * 알려지지 않은 접두사(`foo:bar`)는 네임스페이스로 인정하지 않고 **자유 태그로 취급**한다.
- * 오타가 새 네임스페이스를 만들어내면 고정 어휘의 의미가 사라진다.
- */
-export function parseTag(raw: string): ParsedTag {
-  const normalized = normalizeTag(raw);
-  const idx = normalized.indexOf(':');
-
-  if (idx <= 0) return { namespace: null, value: normalized, raw: normalized };
-
-  const head = normalized.slice(0, idx);
-  const rest = normalized.slice(idx + 1);
-
-  if (!isNamespace(head) || rest.length === 0) {
-    return { namespace: null, value: normalized, raw: normalized };
-  }
-  return { namespace: head, value: rest, raw: normalized };
-}
 
 /** `d-2` → `D-2` (체류자격 코드는 전부 대문자) */
 const upperAll = (v: string) => v.toUpperCase();

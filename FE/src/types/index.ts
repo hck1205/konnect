@@ -17,6 +17,9 @@ export type { ReportReason, ReportTrack, ReportSubmission } from './report';
 export type { PostDraft } from './post';
 
 // ── BE 와 모양을 맞춰야 하는 것 (contracts/ 가 고정 어휘를 강제한다)
+export { TAG_NAMESPACES } from './tag';
+export type { TagNamespace, ParsedTag } from './tag';
+
 export { TOPICS, POST_TYPES } from './question';
 export type {
   Topic,

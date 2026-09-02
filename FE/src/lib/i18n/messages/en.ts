@@ -134,9 +134,43 @@ export const en = {
   'topic.language': 'Language',
   'topic.social': 'Community',
 
+  // ── 척추 페이지 ──────────────────────────────────────────
+  'spine.officialSources': 'Official sources',
+  'spine.sourcesNote': 'We link and quote. We do not interpret — rules change and a wrong answer can cost your status.',
+  'spine.viewOriginal': 'View original',
+  'spine.relatedQuestions': 'Questions about this',
+  'spine.noQuestions': 'No questions about this yet.',
+  'spine.askFirst': 'Ask the first one',
+  'spine.statute': 'Statute',
+  'spine.notice': 'Notice',
+  'spine.guide': 'Guide',
+  'spine.missing': 'Not here yet',
+  'spine.missingNote': 'Last-checked dates and change badges are not on this page yet — the watcher runs daily on the server but the app cannot read its output.',
+  'spine.basisDecree': 'Official designation in the Enforcement Decree of the Immigration Act, Appendix 1-2.',
+  'spine.basisNationalityAct': 'A route to citizenship defined by the Nationality Act.',
+  'spine.topicIntro': 'Questions, and the official sources behind them.',
+
+  // ── 홈 ──────────────────────────────────────────────────
+  // 홈 본문은 **이 서비스가 무엇인지**를 말하는 유일한 자리라 하드코딩 유혹이 크다.
+  // 실제로 하드코딩돼 있었고, zh·vi 사용자가 중국어·베트남어 화면에서 영어를 읽었다.
+  // 사전끼리만 비교하는 messages.test.ts 는 이걸 원리적으로 볼 수 없다.
+  'home.tagline': 'A community for foreigners living, studying, working, and travelling in Korea.',
+  // `{arc}` 는 한국어 원문(외국인등록증)이 들어갈 자리다. **네 판 모두 이 자리를 쓴다** —
+  // 한국어 판에서도 그 낱말은 사용자가 실제 서류에서 눈으로 찾아야 하는 원문이라
+  // `lang="ko" translate="no"` 가 그대로 필요하다. 자리를 비우면
+  // 사전 간 자리표시자 대조가 깨지고, 그 예외가 한 번 생기면 규칙이 아니게 된다.
+  'home.intro':
+    'Alien Registration Card ({arc}), visas, housing, language — ask the people who have been through it.',
+  'home.topicHeading': 'Browse by topic',
+  'home.visaHeading': 'Visa and residence status',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': 'Questions',
   'nav.guides': 'Guides',
   'nav.meetups': 'Meetups',
+
+  'nav.brandHome': 'konnect — home',
+  'nav.main': 'Main navigation',
+  'nav.sidebar': 'Page sidebar',
 
 } satisfies Messages;

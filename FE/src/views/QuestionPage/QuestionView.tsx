@@ -3,11 +3,7 @@
 import { ExternalLink, ShieldCheck } from 'lucide-react';
 import { useI18n } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
-import { AppShell } from '@/components/layout/AppShell';
-import { PageHeader } from '@/components/layout/PageHeader';
-import { Footer } from '@/components/layout/Footer';
-import { LocaleSwitcher } from '@/components/i18n/LocaleSwitcher';
-import { Button } from '@/components/primitives/Button';
+import { SiteShell } from '@/components/layout/SiteShell';
 import { Heading } from '@/components/primitives/Heading';
 import { Prose } from '@/components/data-display/Prose';
 import { Tag } from '@/components/data-display/Tag';
@@ -44,22 +40,7 @@ export function QuestionView({ question, answers, pathname }: QuestionViewProps)
   const rest = answers.filter((a) => a.id !== question.acceptedAnswerId);
 
   return (
-    <AppShell
-      width="prose"
-      header={
-        <PageHeader
-          nav={nav}
-          currentPath={pathname}
-          actions={
-            <>
-              <LocaleSwitcher pathname={pathname} />
-              <Button size="sm">{t('common.signIn')}</Button>
-            </>
-          }
-        />
-      }
-      footer={<Footer disclaimer={t('message.safety')} />}
-    >
+    <SiteShell pathname={pathname} nav={nav}>
       <article className="flex flex-col gap-4">
         {question.status === 'HIDDEN' ? (
           <Banner tone="info">{t('question.hidden')}</Banner>
@@ -121,7 +102,7 @@ export function QuestionView({ question, answers, pathname }: QuestionViewProps)
           </div>
         )}
       </section>
-    </AppShell>
+    </SiteShell>
   );
 }
 

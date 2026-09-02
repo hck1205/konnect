@@ -97,9 +97,34 @@ export const zh = {
   'topic.language': '语言',
   'topic.social': '交流',
 
+  // ── 척추 페이지 ──────────────────────────────────────────
+  'spine.officialSources': '官方来源',
+  'spine.sourcesNote': '我们只提供链接和引用，不作解释 —— 制度会变，错误的答案可能导致失去居留资格。',
+  'spine.viewOriginal': '查看原文',
+  'spine.relatedQuestions': '相关提问',
+  'spine.noQuestions': '还没有相关提问。',
+  'spine.askFirst': '提出第一个问题',
+  'spine.statute': '法令',
+  'spine.notice': '公告',
+  'spine.guide': '指南',
+  'spine.missing': '尚未提供',
+  'spine.missingNote': '最后确认日期和变更标记尚未显示 —— 监控每天在服务器运行，但应用还读不到结果。',
+  'spine.basisDecree': '出入境管理法施行令附表1之2 所定名称。',
+  'spine.basisNationalityAct': '国籍法所定的取得国籍程序。',
+  'spine.topicIntro': '提问，以及背后的官方来源。',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': '问题',
   'nav.guides': '指南',
   'nav.meetups': '聚会',
+
+  'home.tagline': '在韩国生活、学习、工作和旅行的外国人社区。',
+  'home.intro': '外国人登录证（{arc}）、签证、住房、语言 — 问问已经经历过的人。',
+  'home.topicHeading': '按主题浏览',
+  'home.visaHeading': '签证与居留资格',
+
+  'nav.brandHome': 'konnect — 首页',
+  'nav.main': '主导航',
+  'nav.sidebar': '页面侧栏',
 
 } satisfies Messages;

@@ -1,6 +1,6 @@
 # 현재 상태
 
-> **갱신: 2026-08-31.** 세션이 바뀌어도 여기부터 읽으면 이어받을 수 있게 쓴다.
+> **갱신: 2026-09-03.** 세션이 바뀌어도 여기부터 읽으면 이어받을 수 있게 쓴다.
 > 결정의 *근거*는 여기 적지 않는다 — [ADR](../50-decisions/)과 [PRD](../20-product/20-prd/)가 갖는다.
 > 이 문서는 **무엇이 되어 있고 무엇이 막혀 있는가**만 답한다.
 
@@ -12,7 +12,7 @@
 | 문서 | 96개 · ADR 11개 |
 | 코드 | BE 3,025줄 · FE 15,647줄 |
 | 배포 | **A1 서버에서 가동 중** — `https://134.185.112.123` (self-signed) |
-| 열린 PR | [#1](https://github.com/hck1205/konnect/pull/1) — 레퍼런스·분류·출처 감시 |
+| 열린 PR | [#9](https://github.com/hck1205/konnect/pull/9) — 척추 페이지 · 리팩토링 |
 
 ## 무엇이 되어 있나
 
@@ -42,13 +42,24 @@
 - 디자인 시스템 80여 종 · Ladle 스토리
 - i18n `en`·`ko`·`zh`·`vi` (로케일 URL 세그먼트, `Accept-Language` 협상)
 - **query 계층** — `auth`·`questions`·`answers`, 도메인별 `.api`/`.keys`/`.hooks`
-- **질문 상세** `/[locale]/questions/[id]/[slug]` — SSR·canonical·hreflang·301 정규화
-- 테스트: unit 267 · **integration 7(라이브 BE)** · contrast 64 · routing 11 · seo 8
+- **질문 상세** `/[locale]/questions/[id]/[slug]` — SSR·canonical·hreflang·308 정규화
+- 테스트: unit 434 · **integration 7(라이브 BE)** · contrast 64 · routing 11 · seo 8
 - **질문 목록** `/[locale]/questions` — 주제 필터(6개) · 커서 페이지네이션 · 빈 상태.
   **색인은 필터 없는 기본 판만**이고 `?topic=`·`?cursor=` 가 붙으면 `noindex, follow` +
   canonical 은 기본 URL 을 가리킨다([07-routes](../30-architecture/07-routes-and-indexing.md))
+- **척추 페이지** `/[locale]/visa/[code]` · `/[locale]/topics/[topic]` — 48판이
+  빌드 시점에 프리렌더된다(값이 6+6 으로 닫혀 있어서 가능하다). **질문 0건에서도
+  성립하는 유일한 페이지 종류**다 — 법령은 우리 사용자와 무관하게 이미 존재한다.
+  해석하지 않고 **링크와 인용과 날짜만** 싣는다
+  → [12-official-data-pipeline](../20-product/10-features/12-official-data-pipeline.md)
+- 홈이 척추로 나가는 입구가 됐다 — 주제 6 + 자격 6. 커서 페이지네이션이라 목록을
+  크롤 경로로 쓸 수 없으므로, 홈에 링크가 없으면 상세에 도달할 길이 사실상 없다
 - 홈 네비에서 **죽은 링크를 걷어냈다.** `/guides` 는 Phase 2(반복 질문이 승격된 문서),
   `/meetups` 는 색인 라우트 표에 아직 없다 — 사전 키는 남겨 뒀으니 화면이 생기면 한 줄만 되돌린다
+- 죽은 링크가 다시 생기지 않게 **`routes.ts` 와 `src/app` 을 대조한다**
+  (`routes.contract.test.ts`) — page 를 먼저 만들고 헬퍼를 나중에 추가한다
+- 하드코딩된 화면 문자열을 **검사가 본다**(`hardcodedText.test.ts`).
+  사전끼리 비교하는 `messages.test.ts` 는 이걸 원리적으로 못 본다
 
 ### 인프라 — 배포까지 돈다
 
@@ -144,9 +155,14 @@ TOPIK 과 사회통합프로그램(KIIP)이 F-2-7 점수와 F-5 요건에 직접
 1. ~~출처 감시 서버 설치~~ — **끝났다.** cron `0 9 * * *` 등록, 1·2차 실행 확인
 2. ~~목록 화면~~ — **끝났다.** `check:routing` 11건 · `check:seo` 7건 통과
 3. **OAuth** — 없으면 쓰기가 영원히 불가능하다. 이제 읽는 길은 다 뚫렸으므로 이게 유일한 하드 블로커다
-4. **허브 페이지** — `/visa/[code]`·`/topics/[topic]`. 필터 URL 을 색인하지 않기로 했으므로
-   **SEO 유입은 여기가 만든다.** 다만 [승격 기준](../50-decisions/0008-nationality-as-tag-not-space.md)
-   (질문 20건 이상 + 답변률 평균 이상)을 넘는 값이 아직 없다
+4. ~~허브 페이지~~ — **끝났다.** 48판 프리렌더. 승격 기준(질문 20건)을 적용하지
+   않는 이유는 척추가 **질문이 아니라 법령 위에 서기** 때문이다
+5. **sitemap · robots** — `/sitemap.xml` 이 지금 **HTML 을 200 으로 준다.**
+   필터 URL 을 색인하지 않기로 했으므로 sitemap 이 유일한 열거 수단인데 없다.
+   척추 48판이 만들어졌으니 이제 실을 것이 있다
+6. **감시 결과를 앱이 읽게 한다** — 감시는 매일 도는데 결과가 named volume 에만
+   있어 화면이 "확인 날짜"를 못 보여준다. 척추가 `spine.missing` 으로 그 빈 칸을
+   **드러내고 있다**(감추지 않는다). 설계는 정해졌다 — 해시만 Postgres 로 올린다
 
 ## 알아 두면 시간을 아끼는 것들
 
@@ -164,6 +180,12 @@ TOPIK 과 사회통합프로그램(KIIP)이 F-2-7 점수와 F-5 요건에 직접
 | `deploy/` 의 파일은 **배포로 안 간다**(이미지만 간다). 고치면 손으로 설치해야 한다 | [03-deployment](../40-operations/03-deployment.md) |
 | 하이코리아는 없는 주소에 **200 으로 에러 페이지**를 준다 | [11-official-sources](../20-product/10-features/11-official-sources.md) |
 | BE 로컬 실행은 `npm run dev` 가 아니라 **`start:dev`** (`dev` 는 마이그레이션까지 돌려 Postgres 를 요구) | [02-local-development](../40-operations/02-local-development.md) |
+| **FE 빌드 컨텍스트도 `FE/`** 다. 그래서 척추 데이터가 FE 안에 산다 — 테스트가 `BE/data` 와 대조한다 | [12-official-data-pipeline](../20-product/10-features/12-official-data-pipeline.md) |
+| 프리렌더 중 BE 를 부르면 **CI 빌드가 통째로 죽는다**(러너에 BE 가 없다). 로컬은 BE 가 떠 있어 200 으로 보인다 — **화면이 떠도 빌드는 죽을 수 있다** | `FE/src/query/questions/questions.prerender.ts` |
+| `routes.ts` 는 `src/app` 을 참조하지 않는다 → **없는 라우트를 가리켜도 전부 통과한다** | [07-routes](../30-architecture/07-routes-and-indexing.md) |
+| `messages.test.ts` 는 사전끼리만 비교한다 → **컴포넌트에 박힌 영어는 보이지 않는다** | [06-i18n](../30-architecture/06-i18n-strategy.md) |
+| `Intl.PluralRules('en').select(0)` 은 `'other'` 다 — 사전의 `zero` 는 **어느 언어에서도 선택되지 않았다** | 같음 |
+| compose 를 고쳐도 **서버에 설치해야 반영된다.** `/en/questions` 가 500 이던 원인이 이것이었고, 스모크가 `/en` 만 봐서 안 잡혔다 | [03-deployment](../40-operations/03-deployment.md) |
 
 ## 로컬에서 띄우기
 

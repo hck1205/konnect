@@ -100,23 +100,25 @@ export class AnswersService {
     if (!updated) throw new NotFoundException('Answer not found');
 
     // 이미 HIDDEN 이면 감소하지 않는다 — DELETE 재시도나 중복 제출에서
-
     // answerCount 가 실제보다 작아지면 ?answered 필터와 목록 카운트가
-
     // **에러 없이 거짓말한다.** 되살리기도 재계산 경로도 없어 드리프트가 영구적이다.
-
     //
-
     // 조기 반환을 쓰지 않는 이유: hide 의 세 쓰기는 한 트랜잭션이 아니라서,
-
     // 중간에 실패하면 지금은 DELETE 재시도가 복구한다. 조기 반환은 그 복구를 없앤다.
-
     if (record.status === 'OPEN') {
       await this.questions.adjustAnswerCount(record.questionId, -1);
     }
 
-    const question = await this.questions.findOne(record.questionId, user);
-    if (question.acceptedAnswerId === id) {
+    // ⚠️ findOne(…, user) 을 쓰면 안 된다 — 그건 **사용자 가시성 경로**라
+    // 질문이 HIDDEN 이고 답변자가 질문 작성자가 아니면 404 를 던진다.
+    // 그런데 위의 두 쓰기는 이미 커밋된 뒤다: 답변은 숨겨졌고 카운트도 깎였는데
+    // 응답은 404 로 나간다. 클라이언트는 실패로 읽고 재시도한다.
+    //
+    // 바로 위 adjustAnswerCount 가 이미 권한 없는 시스템 접근이므로 새 문이 아니다.
+    const acceptedAnswerId = await this.questions.getAcceptedAnswerId(
+      record.questionId,
+    );
+    if (acceptedAnswerId === id) {
       // 시스템 경로로 푼다 — 답변을 숨긴 사람이 질문 작성자가 아닐 수 있다.
       // 예전에는 질문 작성자 행세를 하는 객체를 만들어 사용자용 경로를 통과시켰다.
       await this.questions.clearAcceptedAnswer(record.questionId);

@@ -2,7 +2,7 @@
  * 문자열 → slug 정규화. **이 규칙의 단일 출처다.**
  *
  * 같은 규칙이 세 곳에 각자 있었다: `utils/string.slugify`(제목→URL),
- * `Tag.normalizeTag`(태그 저장 형태), `TableOfContents.toAnchorId`(앵커 id).
+ * `Tag.normalizeTag`(태그 저장 형태 — 지금은 옆의 `tag.ts`), `TableOfContents.toAnchorId`(앵커 id).
  * 규칙이 갈라지면 **본문의 앵커와 목차의 링크가 어긋나** 링크가 죽고,
  * 같은 태그가 두 표기로 갈라져 필터가 무너진다.
  *

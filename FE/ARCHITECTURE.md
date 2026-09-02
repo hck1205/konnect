@@ -22,7 +22,7 @@ src/
     [locale]/              #   로케일 세그먼트 — SEO 를 위해 URL 에 둔다
       layout.tsx           #     <html lang> + Providers
       page.tsx             #     홈 → views/HomePage
-      questions/[id]/      #     slug 없는 주소 → 정규 URL 로 301
+      questions/[id]/      #     slug 없는 주소 → 정규 URL 로 308
         [slug]/page.tsx    #     상세 — SSR + canonical + hreflang
     providers.tsx          #   locale + react-query + jotai + 호스트들
     globals.css            #   Tailwind + 디자인 토큰(@theme)

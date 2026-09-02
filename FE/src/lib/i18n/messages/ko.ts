@@ -124,9 +124,34 @@ export const ko = {
   'topic.language': '어학',
   'topic.social': '교류',
 
+  // ── 척추 페이지 ──────────────────────────────────────────
+  'spine.officialSources': '공식 출처',
+  'spine.sourcesNote': '링크하고 인용합니다. 해석하지 않습니다 — 제도는 바뀌고, 틀린 답은 체류자격을 잃게 할 수 있습니다.',
+  'spine.viewOriginal': '원문 보기',
+  'spine.relatedQuestions': '이것에 대한 질문',
+  'spine.noQuestions': '아직 이것에 대한 질문이 없습니다.',
+  'spine.askFirst': '첫 질문 남기기',
+  'spine.statute': '법령',
+  'spine.notice': '공지',
+  'spine.guide': '안내',
+  'spine.missing': '아직 없는 것',
+  'spine.missingNote': '마지막 확인일과 변경 배지는 아직 이 페이지에 없습니다 — 감시는 서버에서 매일 도는데 앱이 그 결과를 읽지 못합니다.',
+  'spine.basisDecree': '출입국관리법 시행령 별표1의2 가 정한 명칭입니다.',
+  'spine.basisNationalityAct': '국적법이 정한 국적 취득 절차입니다.',
+  'spine.topicIntro': '질문과, 그 뒤에 있는 공식 출처.',
+
   // ── 네비게이션 ───────────────────────────────────────────
   'nav.questions': '질문',
   'nav.guides': '가이드',
   'nav.meetups': '모임',
+
+  'home.tagline': '한국에 살고, 공부하고, 일하고, 여행하는 외국인들의 커뮤니티입니다.',
+  'home.intro': '{arc}, 비자, 집, 언어 — 먼저 겪은 사람들에게 물어보세요.',
+  'home.topicHeading': '주제로 찾기',
+  'home.visaHeading': '체류자격',
+
+  'nav.brandHome': 'konnect — 홈',
+  'nav.main': '주요 메뉴',
+  'nav.sidebar': '페이지 사이드바',
 
 } satisfies Messages;

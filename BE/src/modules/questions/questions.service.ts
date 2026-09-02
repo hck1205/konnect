@@ -147,6 +147,21 @@ export class QuestionsService {
     await this.repository.update(questionId, { acceptedAnswerId: null });
   }
 
+  /**
+   * 채택된 답변 id — **권한 검사 없는 시스템 조회**다. AnswersService 가 호출한다.
+   *
+   * `findOne` 을 쓰지 않는 이유: 그건 사용자 가시성 경로라 숨겨진 질문에 404 를
+   * 던진다. 답변을 숨기는 쪽은 질문 작성자가 아닐 수 있고, 그때 쓰기는 이미
+   * 커밋된 뒤라 **성공한 작업이 실패로 보고된다.**
+   *
+   * 이름에 "시스템" 성격이 드러나야 한다는 것이 이 저장소의 규칙이고,
+   * 아래 clearAcceptedAnswer 가 같은 이유로 이미 그렇게 돼 있다.
+   */
+  async getAcceptedAnswerId(questionId: string): Promise<string | null> {
+    const record = await this.repository.findById(questionId);
+    return record?.acceptedAnswerId ?? null;
+  }
+
   /** 답변 수 증감 — AnswersService 가 호출한다 */
   async adjustAnswerCount(questionId: string, delta: number): Promise<void> {
     const record = await this.repository.findById(questionId);
@@ -156,7 +171,6 @@ export class QuestionsService {
     });
   }
 
-  /** 존재 + 소유 확인. 없으면 404, 남의 것이면 403. */
   /** 존재 + 소유 확인 — 규칙은 `common/assertOwned` 하나뿐이다 */
   private async requireOwned(
     id: string,
