@@ -33,10 +33,6 @@ interface RouteParams {
 export const revalidate = 300;
 
 /**
- * 제목. `codeLabel` 이 없으면 괄호를 붙이지 않는다 —
- * 귀화는 체류자격이 아니라 국적 취득이라 `귀화 (NATURALIZATION)` 은 틀린 모양이다.
- */
-/**
  * 빌드 시점에 모든 판을 만든다.
  *
  * 값이 여섯으로 **닫혀 있어서** 가능하다 — 지역(200+)이나 국적(190+)이었다면

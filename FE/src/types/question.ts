@@ -25,6 +25,20 @@ export const TOPICS = [
 export type Topic = (typeof TOPICS)[number];
 
 /**
+ * URL 세그먼트 → `Topic`. 모르는 값이면 `undefined`.
+ *
+ * 라우트 셸이 각자 갖고 있었다. 그런데 이건 **어휘에 대한 규칙**이지 라우팅이 아니다 —
+ * 어휘 옆에 둬야 `TOPICS` 를 고칠 때 같이 보이고, 테스트가 닿는다.
+ * `findVisaSpine` 이 데이터 옆에 사는 것과 같은 이유다.
+ *
+ * 좁히는 방식이 `includes` + 캐스트인 것은 `as const` 배열에서
+ * `Array.includes` 가 `string` 을 받지 못하기 때문이다. 캐스트가 있으므로
+ * 그 자리에 테스트를 둔다 — 이 저장소가 `topic` enum 매퍼에서 쓰는 원칙이다.
+ */
+export const isTopic = (raw: string): raw is Topic =>
+  (TOPICS as readonly string[]).includes(raw);
+
+/**
  * 글의 종류 — 글쓴이가 **무엇을 하려는가**. `Topic`(무엇에 대한 글인가)과 다른 축이고,
  * 게시판은 둘의 곱이다(`/ko/visa?type=review`).
  *
