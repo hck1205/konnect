@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { TOPICS } from '@/types';
-import { TAG_NAMESPACES } from '@/components/data-display/Tag';
+import { TAG_NAMESPACES } from '@/types/tag';
 import {
   OFFICIAL_SOURCES,
   VISA_SPINES,

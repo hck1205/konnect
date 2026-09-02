@@ -1,51 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { formatTagLabel, normalizeTag, parseTag } from './Tag.utils';
+import { formatTagLabel } from './Tag.utils';
 
-describe('normalizeTag', () => {
-  it('소문자로 내리고 공백을 하이픈으로 바꾼다', () => {
-    expect(normalizeTag('  Seoul National  ')).toBe('seoul-national');
-    expect(normalizeTag('D_2')).toBe('d-2');
-  });
-
-  it('네임스페이스 구분자는 보존한다', () => {
-    expect(normalizeTag('Visa: D-2')).toBe('visa:-d-2');
-  });
-
-  it('한글 자유 태그를 지우지 않는다', () => {
-    expect(normalizeTag('비자 연장')).toBe('비자-연장');
-  });
-
-  it('연속 하이픈과 양끝 하이픈을 정리한다', () => {
-    expect(normalizeTag('--a---b--')).toBe('a-b');
-  });
-});
-
-describe('parseTag', () => {
-  it('알려진 네임스페이스를 분리한다', () => {
-    expect(parseTag('visa:d-2')).toEqual({
-      namespace: 'visa',
-      value: 'd-2',
-      raw: 'visa:d-2',
-    });
-  });
-
-  it('알려지지 않은 접두사는 자유 태그로 취급한다 — 오타가 네임스페이스가 되면 안 된다', () => {
-    expect(parseTag('viza:d-2').namespace).toBeNull();
-    expect(parseTag('foo:bar').namespace).toBeNull();
-  });
-
-  it('값이 비면 자유 태그로 떨어진다', () => {
-    expect(parseTag('visa:').namespace).toBeNull();
-  });
-
-  it('구분자가 없으면 자유 태그다', () => {
-    expect(parseTag('interview')).toEqual({
-      namespace: null,
-      value: 'interview',
-      raw: 'interview',
-    });
-  });
-});
+/**
+ * 태그의 **표시 형태** 테스트. 저장 규칙(`normalizeTag`·`parseTag`)은
+ * `lib/text/tag.test.ts` 로 옮겼다 — 그쪽은 BE 와 대조되는 계약이고 여기는 화면 사정이다.
+ */
 
 describe('formatTagLabel', () => {
   it('체류자격 코드는 전부 대문자로 표시한다', () => {

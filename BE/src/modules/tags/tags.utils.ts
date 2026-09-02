@@ -12,7 +12,7 @@ const isNamespace = (v: string): v is TagNamespace =>
  * 태그 정규화.
  *
  * 공용 `slugify` 에 네임스페이스 구분자(`:`)만 보존하도록 위임한다 —
- * FE `Tag.normalizeTag` 와 **같은 규칙**이어야 한다.
+ * FE `lib/text/tag.normalizeTag` 와 **같은 규칙**이어야 한다.
  * 갈라지면 같은 태그가 두 표기로 저장되어 필터가 무너진다.
  */
 export function normalizeTag(raw: string): string {

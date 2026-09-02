@@ -1,5 +1,6 @@
 import { cn } from '@/lib/cn';
-import { NAMESPACE_LABEL, formatTagLabel, parseTag } from './Tag.utils';
+import { parseTag } from '@/lib/text';
+import { NAMESPACE_LABEL, formatTagLabel } from './Tag.utils';
 
 export interface TagProps {
   /** 저장 형태의 태그 문자열 (`visa:d-2`, `interview`) */
