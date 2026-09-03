@@ -5,6 +5,18 @@ import { fetchQuestions } from './questions.api';
 const SPINE_QUESTION_LIMIT = 10;
 
 /**
+ * 목록 조회의 결과. **"비었다" 와 "못 가져왔다" 를 구분한다.**
+ *
+ * 둘을 같은 값으로 접으면 화면이 사용자에게 **거짓을 말한다** — BE 가 죽었을 때
+ * "아직 질문이 없습니다" 를 보여주면 그건 사실이 아니고, 다시 시도할 이유도
+ * 주지 않는다. 이 저장소가 반복해서 당한 "모르는 것을 가장 좋은 값으로 채우는"
+ * 형태의 또 다른 얼굴이다.
+ */
+export type ListResult<T> =
+  | { ok: true; items: T[]; nextCursor: string | null }
+  | { ok: false };
+
+/**
  * **프리렌더 중에 죽지 않는** 질문 조회.
  *
  * ⚠️ 감싸지 않은 `fetchQuestions` 를 프리렌더 경로에서 부르면 CI 의 `next build`
@@ -23,6 +35,35 @@ const SPINE_QUESTION_LIMIT = 10;
  *
  * @param label 로그에 남길 이름. 어느 판이 실패했는지 알아야 한다
  */
+/**
+ * 목록 화면용 조회. **던지지 않는다.**
+ *
+ * ⚠️ 목록 라우트 셸의 주석은 *"BE 가 죽었을 때 500 을 내는 대신 빈 상태를
+ * 보여준다"* 고 적어 놓고 **`try/catch` 가 없었다.** 실측했다 — BE 를 못 만나면
+ * `/en/questions` 가 **500** 이다. 유입의 입구라 여기서 죽으면 상세로 가는 길까지
+ * 함께 막힌다.
+ *
+ * 주석이 코드보다 앞서 있는 것이 더 나쁘다: 다음 사람이 그 주석을 읽고
+ * "여기는 안전하다" 고 믿는다.
+ */
+export async function fetchQuestionListSafely(
+  filter: QuestionFilter,
+  page: { cursor?: string; limit: number },
+): Promise<ListResult<Question>> {
+  try {
+    const result = await fetchQuestions(filter, page);
+    if (!Array.isArray(result?.items)) {
+      // 200 인데 모양이 다른 응답. 이 저장소는 이미 두 번 겪었다(하이코리아·법제처)
+      console.error('[list] 응답 모양이 예상과 다르다', { filter, result });
+      return { ok: false };
+    }
+    return { ok: true, items: result.items, nextCursor: result.nextCursor ?? null };
+  } catch (error) {
+    console.error('[list] fetchQuestions failed', { filter, error });
+    return { ok: false };
+  }
+}
+
 export async function fetchSpineQuestions(
   label: string,
   filter: QuestionFilter,

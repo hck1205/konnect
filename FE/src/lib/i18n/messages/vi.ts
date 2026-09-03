@@ -141,4 +141,7 @@ export const vi = {
 
   'common.confirm': 'Xác nhận',
 
+  'list.unavailable': 'Không tải được câu hỏi',
+  'list.unavailableHint': 'Đây là lỗi từ phía chúng tôi. Vui lòng tải lại sau.',
+
 } satisfies Messages;

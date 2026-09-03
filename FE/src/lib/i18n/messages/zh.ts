@@ -143,4 +143,7 @@ export const zh = {
 
   'common.confirm': '确认',
 
+  'list.unavailable': '无法加载提问',
+  'list.unavailableHint': '这是我们的问题，请稍后刷新。',
+
 } satisfies Messages;

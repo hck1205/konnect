@@ -7,6 +7,16 @@ interface ErrorBoundaryProps {
   children: ReactNode;
   /** 커스텀 폴백. 주지 않으면 `ErrorState` 를 쓴다. */
   fallback?: (error: Error, reset: () => void) => ReactNode;
+  /**
+   * 기본 폴백에 쓸 문구. **번역된 값을 받는다.**
+   *
+   * 클래스 컴포넌트라 훅을 쓸 수 없어 사전을 직접 읽지 못한다 — 그래서
+   * prop 이다(`AppShell.asideLabel` 과 같은 이유·같은 규칙).
+   * `fallback` 을 주면 필요 없다.
+   */
+  title?: ReactNode;
+  description?: ReactNode;
+  retryLabel?: string;
   /** 에러 리포팅 훅 */
   onError?: (error: Error, info: ErrorInfo) => void;
 }
@@ -47,6 +57,14 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
     if (this.props.fallback) return this.props.fallback(error, this.reset);
 
-    return <ErrorState detail={error.message} onRetry={this.reset} />;
+    return (
+      <ErrorState
+        title={this.props.title ?? ''}
+        description={this.props.description ?? ''}
+        retryLabel={this.props.retryLabel}
+        detail={error.message}
+        onRetry={this.reset}
+      />
+    );
   }
 }
