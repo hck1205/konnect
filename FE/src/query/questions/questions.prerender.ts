@@ -28,7 +28,20 @@ export async function fetchSpineQuestions(
   filter: QuestionFilter,
 ): Promise<Question[]> {
   try {
-    return (await fetchQuestions(filter, { limit: SPINE_QUESTION_LIMIT })).items;
+    const page = await fetchQuestions(filter, { limit: SPINE_QUESTION_LIMIT });
+
+    // ⚠️ `try/catch` 는 **네트워크 실패만** 막는다. 200 인데 모양이 다른 응답은
+    // 그대로 통과해 `items` 가 `undefined` 가 되고, 화면의 `questions.length` 에서
+    // 터진다 — 프리렌더 중이면 **빌드가 통째로 죽는다.**
+    //
+    // 이 저장소는 "200 인데 실패 본문" 을 이미 두 번 겪었다(하이코리아의 에러
+    // 페이지, 법제처의 미등록 IP 응답). 프록시나 버전 스큐가 같은 모양을 만든다.
+    // 실제로 스텁 서버로 배포 헬스체크를 검증하다 이 경로에서 빌드가 죽었다.
+    if (!Array.isArray(page?.items)) {
+      console.error('[spine] 응답 모양이 예상과 다르다', { label, page });
+      return [];
+    }
+    return page.items;
   } catch (error) {
     console.error('[spine] fetchQuestions failed', { label, error });
     return [];

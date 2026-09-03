@@ -81,15 +81,44 @@ echo "--- 컨테이너 교체"
 $COMPOSE up -d --wait
 
 # --wait 는 컨테이너가 살아 있는지만 본다. 실제 응답까지 확인한다.
+#
+# ⚠️ 예전에는 /en 하나만 봤다. 그런데 홈은 BE 를 부르지 않는다(주제·자격 목록이
+# FE 안의 데이터다). 그래서 BE 가 완전히 죽어 있어도 "deploy done" 이 찍혔고,
+# 그 시점에는 되돌릴 수 없는 prisma migrate deploy 가 이미 끝나 있었다.
+#
+# 실제로 그 구멍으로 장애가 하나 지나갔다: compose 를 서버에 설치하지 않아
+# /en/questions 가 500 이던 것을 스모크가 /en 만 봐서 잡지 못했고,
+# 목록 화면이 배포된 시점부터 계속 죽어 있었다.
+#
+# 이제 세 층을 각각 본다:
+#   /en             FE 가 뜬다
+#   /api/health     FE -> BE 배선 (Next rewrite -> konnect-be:4000)
+#   /en/questions   FE -> BE -> DB 까지. 이게 실제 사용자 경로다
 echo "--- 헬스체크"
+
+probe() {
+  docker exec konnect-fe node -e \
+    "fetch('http://127.0.0.1:3000$1').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" \
+    2>/dev/null
+}
+
 ok=0
 for i in $(seq 1 20); do
-  if docker exec konnect-fe node -e \
-      "fetch('http://127.0.0.1:3000/en').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))" 2>/dev/null; then
+  if probe /en && probe /api/health && probe /en/questions; then
     ok=1; break
   fi
   sleep 3
 done
+
+if [ "$ok" -eq 1 ]; then
+  echo "    /en - /api/health - /en/questions 모두 200"
+else
+  # 어느 층에서 끊겼는지 남긴다 — 없으면 원인 추적이 처음부터 시작된다
+  echo "!!! 층별 결과:"
+  for p in /en /api/health /en/questions; do
+    if probe "$p"; then echo "!!!   $p  OK"; else echo "!!!   $p  실패"; fi
+  done
+fi
 
 if [ "$ok" -ne 1 ]; then
   echo "!!! 헬스체크 실패 — 롤백한다"
@@ -97,8 +126,20 @@ if [ "$ok" -ne 1 ]; then
     PREV_TAG="${PREV##*:}"
     export BE_IMAGE="ghcr.io/$OWNER/konnect-be:$PREV_TAG"
     export FE_IMAGE="ghcr.io/$OWNER/konnect-fe:$PREV_TAG"
-    $COMPOSE up -d --wait || true
-    echo "!!! $PREV_TAG 로 되돌렸다."
+    # ⚠️ 예전에는 `|| true` 뒤에 무조건 "되돌렸다" 를 찍었다. 롤백 자체가
+    # 실패해도 운영자는 SSH 로그의 그 줄을 읽고 사이트가 살아 있다고 믿는다 —
+    # 실패를 성공으로 보고하는 것이라, 롤백이 없는 것보다 나쁘다.
+    if $COMPOSE up -d --wait; then
+      if probe /en && probe /api/health && probe /en/questions; then
+        echo "!!! $PREV_TAG 로 되돌렸고 응답을 확인했다."
+      else
+        echo "!!! $PREV_TAG 로 컨테이너는 떴지만 응답이 없다. 사이트가 죽어 있다."
+        echo "!!! 즉시 사람이 확인해야 한다."
+      fi
+    else
+      echo "!!! 롤백 자체가 실패했다. 사이트가 죽어 있을 가능성이 높다."
+      echo "!!! 즉시 사람이 확인해야 한다."
+    fi
     echo "!!! 주의: 스키마 마이그레이션은 되돌아가지 않는다. 수동 확인이 필요하다."
   else
     echo "!!! 최초 배포라 되돌릴 지점이 없다. 컨테이너를 내린다."
