@@ -28,14 +28,29 @@ export function FreshnessIndicator({
   className,
 }: FreshnessIndicatorProps) {
   const hydrated = useHydrated();
-  // 서버·첫 렌더에서는 "지금"을 알 수 없다 → 중립으로 두고 하이드레이션 후 판정한다
-  const months = hydrated ? time.monthsBetween(lastVerifiedAt, new Date()) : 0;
-  const tone = freshnessToTone(months);
-  // 아이콘도 tone 매핑을 따른다 — 화면마다 다르면 학습된 의미가 깨진다
-  const Icon = TONE_ICON[tone];
+
+  /**
+   * ⚠️ 예전에는 하이드레이션 전 `months = 0` 으로 접었다. 주석은 "중립" 이라고
+   * 적었지만 `freshnessToTone(0)` 은 **`success`(초록 · 확인됨)** 다.
+   *
+   * 그 결과 **5년 된 문서가 서버 렌더와 첫 페인트에서 초록 "확인됨" 으로 보인다.**
+   * 그리고 JS 없는 사용자와 크롤러에게는 **그게 최종 상태다.**
+   * 이 제품의 R1 리스크가 정보가 오래되는 것인데, 모르는 것을 가장 안심시키는
+   * 값으로 채우고 있었다.
+   *
+   * 모를 때는 `neutral` 이다 — 초록도 빨강도 아닌, 판정 전이라는 뜻.
+   */
+  const months = hydrated ? time.monthsBetween(lastVerifiedAt, new Date()) : null;
+  // 아이콘도 tone 매핑을 따른다 — 화면마다 다르면 학습된 의미가 깨진다.
+  // 판정 전에는 **아이콘도 없다** — 상태 아이콘 셋은 전부 판정을 뜻하기 때문이다.
+  const Icon = months === null ? null : TONE_ICON[freshnessToTone(months)];
 
   return (
-    <Badge tone={tone} icon={<Icon className="size-3" />} className={className}>
+    <Badge
+      tone={months === null ? 'neutral' : freshnessToTone(months)}
+      icon={Icon ? <Icon className="size-3" /> : undefined}
+      className={className}
+    >
       Verified <RelativeTime value={lastVerifiedAt} />
     </Badge>
   );

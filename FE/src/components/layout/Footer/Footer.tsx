@@ -1,4 +1,10 @@
 import type { ReactNode } from 'react';
+
+/**
+ * 저작권 연도. **모듈 평가 시점**에 한 번 정해진다 — 서버 컴포넌트이므로
+ * 빌드(정적 판) 또는 서버 기동 시점이고, 렌더마다 시계를 읽지 않는다.
+ */
+const BUILD_YEAR = String(new Date().getFullYear());
 import { cn } from '@/lib/cn';
 import { Container } from '@/components/layout/Container';
 import { BrandMark } from '@/components/primitives/BrandMark';
@@ -26,7 +32,12 @@ export interface FooterProps {
  * → docs/10-domain/10-visa-immigration/03-content-and-risk-policy.md
  */
 export function Footer({ groups = [], disclaimer, className }: FooterProps) {
-  const year = '2026'; // 렌더 중 Date 를 읽지 않는다 — 빌드 시점 값으로 충분하다
+  // ⚠️ 예전에는 `const year = '2026'` 이었고 주석은 "빌드 시점 값" 이라고 적었다.
+  // 손으로 적은 리터럴이라 **2027년에도 2026 이라고 말한다.** 주석이 코드보다
+  // 앞서 있으면 다음 사람은 주석을 믿는다.
+  //
+  // 모듈 최상위에서 한 번 계산한다(아래 BUILD_YEAR) — 서버 컴포넌트라
+  // 정말로 빌드·서버 기동 시점 값이고, 렌더마다 `Date` 를 읽지 않는다.
 
   return (
     <footer className={cn('mt-16 border-t border-border py-10', className)}>
@@ -58,7 +69,7 @@ export function Footer({ groups = [], disclaimer, className }: FooterProps) {
           {disclaimer ? (
             <p className="max-w-[70ch] text-xs text-fg-subtle">{disclaimer}</p>
           ) : null}
-          <p className="text-xs text-fg-subtle">© {year} konnect</p>
+          <p className="text-xs text-fg-subtle">© {BUILD_YEAR} konnect</p>
         </div>
       </Container>
     </footer>
