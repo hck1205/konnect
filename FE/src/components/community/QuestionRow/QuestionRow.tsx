@@ -49,7 +49,7 @@ export function QuestionRow({ question, level = 2 }: QuestionRowProps) {
         {/* 링크 안에 제목만 둔다 — 메타 정보까지 감싸면 스크린리더가 링크 이름을 길게 읽는다 */}
         <Link
           href={href}
-          className="text-fg hover:text-accent-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-border"
+          className="text-fg hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring"
         >
           {question.title}
         </Link>

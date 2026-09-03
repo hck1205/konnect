@@ -88,8 +88,8 @@ export function SpineView({
                   'rounded-sm px-1.5 py-0.5 text-xs',
                   // 인용 등급이 다르다 — 법령은 전문 인용 가능, 공지·안내는 링크 + 최소 인용만
                   s.kind === 'statute'
-                    ? 'bg-accent-subtle text-accent-on-subtle'
-                    : 'bg-surface-sunk text-fg-subtle',
+                    ? 'bg-brand-subtle text-brand-on-subtle'
+                    : 'bg-surface-sunken text-fg-subtle',
                 )}
               >
                 {t(KIND_KEY[s.kind])}
@@ -98,7 +98,7 @@ export function SpineView({
                 href={s.url}
                 target="_blank"
                 rel="noreferrer"
-                className="ml-auto inline-flex items-center gap-1 text-xs text-accent-fg hover:underline"
+                className="ml-auto inline-flex items-center gap-1 text-xs text-brand hover:underline"
               >
                 {t('spine.viewOriginal')}
                 <ExternalLink aria-hidden className="size-3.5" />
