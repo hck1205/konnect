@@ -116,11 +116,56 @@ jobs:
       - run: npm ci
         working-directory: FE
 
+      # ── TLS 검증을 끄는 것은 **자동으로 해제된다** ──────────────────
+      #
+      # ⚠️ 예전에는 `NODE_TLS_REJECT_UNAUTHORIZED: '0'` 을 무조건 켜 뒀다.
+      # 지금은 self-signed 라 필요하지만, 정식 인증서로 바꾼 뒤에도 그대로 남으면
+      # **만료된 인증서까지 정상으로 보인다** — 감시하고 있다고 믿는데 실은
+      # 안 하는 상태다. 이 저장소는 uptime-kuma 에서 같은 함정을 이미 기록해 뒀다.
+      #
+      # 그래서 **주소 모양으로 판정한다**: 호스트가 IP 면 self-signed 이므로 끄고,
+      # 도메인이면 켠다. 도메인을 넣는 날 사람이 아무것도 안 해도 검증이 살아난다 —
+      # 체크리스트에 한 줄 적어 두는 것보다 낫다(체크리스트는 잊힌다).
+      - name: Decide TLS verification
+        id: tls
+        env:
+          BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
+        run: |
+          host="$(printf '%s' "$BASE_URL" | sed -E 's|^[a-z]+://||; s|[:/].*$||')"
+          if printf '%s' "$host" | grep -qE '^[0-9]+(\.[0-9]+){3}$'; then
+            echo "reject=0" >> "$GITHUB_OUTPUT"
+            echo "IP 주소($host) — self-signed 이므로 TLS 검증을 끈다"
+          else
+            echo "reject=1" >> "$GITHUB_OUTPUT"
+            echo "도메인($host) — TLS 검증을 켠다"
+          fi
+
       # 배포된 실물에 대고 확인한다. CI 에서는 데이터가 없어 못 하는 검사다.
-      # 인증서가 self-signed 인 동안에는 검증을 끈다(도메인 확정 전까지).
       - name: Locale routing on live server
         working-directory: FE
         env:
           BASE_URL: ${{ secrets.PUBLIC_BASE_URL }}
-          NODE_TLS_REJECT_UNAUTHORIZED: '0'
+          NODE_TLS_REJECT_UNAUTHORIZED: ${{ steps.tls.outputs.reject }}
         run: npm run check:routing
+
+      # ── 색인 표면이 실제로 색인 가능한지 ────────────────────────────
+      #
+      # ⚠️ `check:seo` 는 만들어 두고 **어느 워크플로도 부르지 않았다.**
+      # ci.yml 의 주석은 "deploy.yml 에서 돈다" 고 적었는데 그 job 에는
+      # 스텝이 하나뿐이었다 — 주석이 코드보다 앞서 있던 자리다.
+      #
+      # 검사가 필요한 이유: 빌드·타입체크가 전부 통과해도 **본문이 HTML 에 없을
+      # 수 있다.** 클라이언트에서 데이터를 받으면 첫 HTML 은 로딩 상태이고
+      # 크롤러는 그것만 본다 — 검색이 유일한 유입 채널인 이 서비스에서는 손실이다.
+      #
+      # 질문 데이터가 없어도 **척추 페이지는 0건에서도 성립한다** — 그래서
+      # 여기서 검사할 대상이 있다. 법령 인용이 HTML 에 실려 있는지를 본다.
+      - name: SEO surface on live server
+        working-directory: FE
+        env:
+          SEO_URL: ${{ secrets.PUBLIC_BASE_URL }}/en/visa/f-2
+          # 이 페이지에만 있는 문구를 요구한다 — 총량만 보면 네비·푸터·안전
+          # 고지만으로 통과해 **본문이 비어도 초록**이 된다(결함 주입으로 확인된 함정)
+          SEO_MUST_CONTAIN: 'Residence (F-2)|출입국관리법 시행령'
+          NODE_TLS_REJECT_UNAUTHORIZED: ${{ steps.tls.outputs.reject }}
+        run: npm run check:seo

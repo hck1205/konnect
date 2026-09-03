@@ -7,6 +7,8 @@ import type { Question, Topic } from '@/types';
  */
 export function QuestionListPage(props: {
   questions: Question[];
+  /** 데이터를 못 가져왔는지. `questions` 가 비어 있는 것과 **다른 상태**다 */
+  unavailable?: boolean;
   topic?: Topic;
   nextCursor: string | null;
   pathname: string;

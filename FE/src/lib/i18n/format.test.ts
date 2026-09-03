@@ -70,7 +70,23 @@ describe('formatRelative', () => {
     expect(formatRelative(NOW, NOW, 'en')).toBe('');
   });
 
-  it('잘못된 값은 빈 문자열', () => {
-    expect(formatRelative('nope', NOW, 'en')).toBe('');
+  /**
+   * ⚠️ 이 테스트는 예전에 `''` 를 기대했다. 그러면 **"1분 미만" 과 구분되지 않고**,
+   * 부르는 쪽의 `|| t('common.justNow')` 가 **깨진 timestamp 를 "방금" 으로
+   * 승격**시킨다 — 가능한 값 중 가장 신선한 것으로.
+   *
+   * R1 리스크의 실체가 "정보가 오래되는 것" 인 제품에서, 모르는 것을 가장
+   * 안심시키는 값으로 채우는 것은 위험을 정확히 반대 방향으로 접는 것이다.
+   */
+  it('파싱 실패는 null — "1분 미만"(빈 문자열)과 구분된다', () => {
+    expect(formatRelative('nope', NOW, 'en')).toBeNull();
+    expect(formatRelative('', NOW, 'en')).toBeNull();
+    expect(formatRelative(new Date(Number.NaN), NOW, 'en')).toBeNull();
+  });
+
+  it('두 경우가 서로 다른 값이다 — 이게 계약이다', () => {
+    expect(formatRelative('nope', NOW, 'en')).not.toBe(
+      formatRelative(NOW, NOW, 'en'),
+    );
   });
 });

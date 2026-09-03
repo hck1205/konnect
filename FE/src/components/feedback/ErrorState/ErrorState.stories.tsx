@@ -11,7 +11,13 @@ export default { title: 'Feedback / ErrorState' };
  */
 export const Default: Story = () => (
   <div className="max-w-xl">
-    <ErrorState onRetry={() => {}} detail="AxiosError: Request failed with status code 500" />
+    <ErrorState
+      title="Something went wrong"
+      description="This is on our side, not yours. Try again in a moment."
+      retryLabel="Try again"
+      onRetry={() => {}}
+      detail="AxiosError: Request failed with status code 500"
+    />
   </div>
 );
 

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { QuestionListPage } from '@/views/QuestionListPage';
-import { fetchQuestions } from '@/query/questions';
+import { fetchQuestionListSafely } from '@/query/questions';
 import { DEFAULT_LOCALE, t, toLocale } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
 import { localeAlternates, noindexAlternates } from '@/lib/seo';
@@ -76,15 +76,23 @@ export default async function Page({
   const sp = await searchParams;
   const topic = toTopic(sp.topic);
 
-  // 목록이 비어도 화면은 뜬다 — BE 가 죽었을 때 500 을 내는 대신 빈 상태를 보여준다.
-  // 유입의 입구라 여기서 죽으면 상세로 가는 길까지 함께 막힌다.
-  const page = await fetchQuestions({ topic }, { cursor: sp.cursor, limit: 20 });
+  // ⚠️ 예전 주석은 "BE 가 죽었을 때 500 을 내는 대신 빈 상태를 보여준다" 고
+  // 적어 놓고 **try/catch 가 없었다.** 실측하면 BE 를 못 만날 때 이 페이지는
+  // 500 이다 — 유입의 입구라 여기서 죽으면 상세로 가는 길까지 막힌다.
+  //
+  // 그리고 실패를 **빈 목록으로 접지 않는다.** 그러면 화면이 "아직 질문이
+  // 없습니다" 라고 사용자에게 거짓을 말하고, 다시 시도할 이유도 주지 않는다.
+  const result = await fetchQuestionListSafely(
+    { topic },
+    { cursor: sp.cursor, limit: 20 },
+  );
 
   return (
     <QuestionListPage
-      questions={page.items}
+      questions={result.ok ? result.items : []}
+      unavailable={!result.ok}
       topic={topic}
-      nextCursor={page.nextCursor}
+      nextCursor={result.ok ? result.nextCursor : null}
       pathname={routes.questions(locale)}
     />
   );

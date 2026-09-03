@@ -9,11 +9,19 @@ import { SiteShell } from '@/components/layout/SiteShell';
 import { PageTitle } from '@/components/layout/PageTitle';
 import { buttonVariants } from '@/components/primitives/Button/Button.utils';
 import { EmptyState } from '@/components/feedback/EmptyState';
+import { ErrorState } from '@/components/feedback/ErrorState';
 import { TOPICS, type Question, type Topic } from '@/types';
 import { QuestionRow } from '@/components/community/QuestionRow';
 
 export interface QuestionListViewProps {
   questions: Question[];
+  /**
+   * 데이터를 **못 가져왔는지.** `questions.length === 0` 과 구분한다.
+   *
+   * 둘을 같은 화면으로 접으면 BE 가 죽었을 때 "아직 질문이 없습니다" 를
+   * 보여준다 — 사실이 아니고, 사용자에게 다시 시도할 이유도 주지 않는다.
+   */
+  unavailable?: boolean;
   /** 지금 걸린 주제 필터. 없으면 전체다 */
   topic?: Topic;
   /** 다음 페이지 커서. `null` 이면 마지막 */
@@ -36,6 +44,7 @@ export interface QuestionListViewProps {
  */
 export function QuestionListView({
   questions,
+  unavailable,
   topic,
   nextCursor,
   pathname,
@@ -80,7 +89,14 @@ export function QuestionListView({
         ))}
       </nav>
 
-      {questions.length === 0 ? (
+      {unavailable ? (
+        // "비었다" 가 아니라 "못 가져왔다". 다른 아이콘·다른 문구·role="alert" 다.
+        <ErrorState
+          className="mt-8"
+          title={t('list.unavailable')}
+          description={t('list.unavailableHint')}
+        />
+      ) : questions.length === 0 ? (
         <EmptyState
           className="mt-8"
           icon={<MessageCircleQuestion aria-hidden className="size-6" />}

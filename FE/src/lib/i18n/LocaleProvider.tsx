@@ -65,7 +65,14 @@ export function useI18n(): I18n {
       formatCurrency: (value, currency) => formatCurrency(value, locale, currency),
       formatDate: (value, options) => formatDate(value, locale, options),
       formatList: (items, type) => formatList(items, locale, type),
-      formatRelative: (value, now) => formatRelative(value, now, locale) || t('common.justNow'),
+      formatRelative: (value, now) => {
+        const relative = formatRelative(value, now, locale);
+        // ⚠️ `|| t('common.justNow')` 하나로 두면 **파싱 실패가 "방금" 이 된다.**
+        // 모르는 것을 가장 신선한 값으로 채우는 셈이라, R1 영역에서 위험이
+        // 정확히 반대 방향으로 접힌다. 모르면 아무것도 말하지 않는다.
+        if (relative === null) return '';
+        return relative === '' ? t('common.justNow') : relative;
+      },
     };
   }, [locale]);
 }

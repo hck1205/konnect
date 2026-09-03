@@ -43,7 +43,6 @@ const NOT_ON_SCREEN_YET = [
   'components/data-display/Checklist/Checklist.tsx',
   'components/data-display/FreshnessIndicator/FreshnessIndicator.tsx',
   'components/data-display/Quote/Quote.tsx',
-  'components/feedback/ErrorState/ErrorState.tsx',
   'components/feedback/LoadingState/LoadingState.tsx',
   'components/forms/FileInput/FileDropzone/FileDropzone.tsx',
   'components/forms/FileInput/FileInput.tsx',

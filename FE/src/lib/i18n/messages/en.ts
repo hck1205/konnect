@@ -196,4 +196,10 @@ export const en = {
 
   'common.confirm': 'Confirm',
 
+  // ── 데이터를 못 가져왔을 때 ──────────────────────────────
+  // '비었다' 와 **다른 말**이어야 한다. 못 가져온 것을 "질문이 없습니다" 로
+  // 보여주면 사용자에게 거짓을 말하는 것이고, 다시 시도할 이유도 안 준다.
+  'list.unavailable': 'Could not load questions',
+  'list.unavailableHint': 'This is on our side, not yours. Reload in a moment.',
+
 } satisfies Messages;

@@ -170,4 +170,7 @@ export const ko = {
 
   'common.confirm': '확인',
 
+  'list.unavailable': '질문을 불러오지 못했습니다',
+  'list.unavailableHint': '저희 쪽 문제입니다. 잠시 후 새로고침해 주세요.',
+
 } satisfies Messages;
