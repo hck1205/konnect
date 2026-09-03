@@ -1,5 +1,6 @@
 import { parseTag } from '@/lib/text';
 import type { TagNamespace } from '@/types/tag';
+import type { MessageKey } from '@/lib/i18n';
 
 /**
  * 태그의 **표시 형태**. 규칙(`normalizeTag`·`parseTag`)은 `lib/text/tag.ts` 에 있다.
@@ -32,12 +33,21 @@ export function formatTagLabel(raw: string): string {
   return titleCase(value);
 }
 
-/** 네임스페이스의 사람이 읽는 이름 — 배지 접두사로 쓴다 */
-export const NAMESPACE_LABEL: Record<TagNamespace, string> = {
-  visa: 'Visa',
-  topic: 'Topic',
-  region: 'Region',
-  nationality: 'Nationality',
-  school: 'School',
-  lang: 'Language',
+/**
+ * 네임스페이스 → **사전 키**. 배지 접두사로 쓴다.
+ *
+ * ⚠️ 예전에는 영어 문자열을 직접 담았다. 그러면 목록·상세의 **모든 태그 칩**이
+ * 네 로케일 전부에서 `Visa`·`Region` 같은 영어 접두사를 달고 나간다.
+ *
+ * 이 파일이 `.utils.ts` 라는 것이 함정의 절반이었다 — 하드코딩 검사가
+ * `.tsx` 만 읽어서 **문구를 옆 파일로 옮기면 검사에서 사라지는** 우회로가
+ * 열려 있었다. 지금은 `.ts` 도 읽는다.
+ */
+export const NAMESPACE_LABEL_KEY: Record<TagNamespace, MessageKey> = {
+  visa: 'tag.namespace.visa',
+  topic: 'tag.namespace.topic',
+  region: 'tag.namespace.region',
+  nationality: 'tag.namespace.nationality',
+  school: 'tag.namespace.school',
+  lang: 'tag.namespace.lang',
 };

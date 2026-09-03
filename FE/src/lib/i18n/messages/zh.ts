@@ -127,4 +127,20 @@ export const zh = {
   'nav.main': '主导航',
   'nav.sidebar': '页面侧栏',
 
+  'tag.namespace.visa': '签证',
+  'tag.namespace.topic': '主题',
+  'tag.namespace.region': '地区',
+  'tag.namespace.nationality': '国籍',
+  'tag.namespace.school': '学校',
+  'tag.namespace.lang': '语言',
+  'tag.remove': '移除标签 {label}',
+  'a11y.skipToContent': '跳到正文',
+  'a11y.dismiss': '关闭',
+  'nav.openMenu': '打开菜单',
+  'theme.light': '主题：浅色',
+  'theme.dark': '主题：深色',
+  'theme.system': '主题：跟随系统',
+
+  'common.confirm': '确认',
+
 } satisfies Messages;

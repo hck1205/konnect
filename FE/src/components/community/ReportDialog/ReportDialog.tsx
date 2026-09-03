@@ -45,6 +45,7 @@ export function ReportDialog({ open, onClose, onSubmit, targetLabel }: ReportDia
     <Modal
       open={open}
       onClose={onClose}
+      closeLabel="Close"
       title={t('report.title')}
       description={targetLabel}
       closeOnBackdrop={false}

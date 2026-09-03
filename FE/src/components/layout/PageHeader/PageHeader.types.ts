@@ -24,6 +24,8 @@ export interface PageHeaderProps {
   homeLabel: string;
   /** `<nav>` 랜드마크의 이름. 랜드마크로 건너뛰는 사용자가 듣는 유일한 단서다 */
   navLabel: string;
+  /** 모바일 햄버거 버튼의 접근 이름. 아이콘뿐이라 이 문구가 유일한 단서다 */
+  menuLabel: string;
   /** 상단 네비게이션 항목. 데스크톱은 가로, 모바일은 시트로 접힌다. */
   nav?: readonly NavItem[];
   /** 현재 경로. `aria-current` 판정에 쓴다. */

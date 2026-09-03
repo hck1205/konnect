@@ -122,7 +122,7 @@ export const en = {
   'list.emptyFiltered': 'No questions match this filter.',
   'list.emptyFilteredHint': 'Try a different topic, or clear the filter.',
   'list.answers': { zero: 'No answers', one: '{count} answer', other: '{count} answers' },
-  'list.accepted': 'Answered',
+  'list.accepted': 'Accepted answer',
   'list.loadMore': 'Load more',
   'list.filterTopic': 'Topic',
   'list.allTopics': 'All',
@@ -172,5 +172,28 @@ export const en = {
   'nav.brandHome': 'konnect — home',
   'nav.main': 'Main navigation',
   'nav.sidebar': 'Page sidebar',
+
+  // ── 태그 네임스페이스 배지 ────────────────────────────────
+  // 목록·상세의 **모든 태그 칩**에 붙는 접두사다. 문구가 `Tag.utils.ts` 에 있어서
+  // 하드코딩 검사가 파일 자체를 안 읽었고, 네 로케일 모두 영어로 나가고 있었다.
+  'tag.namespace.visa': 'Visa',
+  'tag.namespace.topic': 'Topic',
+  'tag.namespace.region': 'Region',
+  'tag.namespace.nationality': 'Nationality',
+  'tag.namespace.school': 'School',
+  'tag.namespace.lang': 'Language',
+  'tag.remove': 'Remove tag {label}',
+
+  // ── 접근성·크롬 ─────────────────────────────────────────
+  // 아래 넷은 **모든 페이지에 렌더된다**. 화면에 글자로 보이지 않거나
+  // (aria-label) 첫 Tab 에서야 나타나서(SkipLink) 눈으로는 안 드러난다.
+  'a11y.skipToContent': 'Skip to content',
+  'a11y.dismiss': 'Dismiss',
+  'nav.openMenu': 'Open menu',
+  'theme.light': 'Theme: light',
+  'theme.dark': 'Theme: dark',
+  'theme.system': 'Theme: follow system',
+
+  'common.confirm': 'Confirm',
 
 } satisfies Messages;

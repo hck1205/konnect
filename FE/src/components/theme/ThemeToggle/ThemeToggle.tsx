@@ -4,6 +4,7 @@ import { Monitor, Moon, Sun } from 'lucide-react';
 import { useTheme, nextTheme, type Theme } from '@/lib/theme';
 import { IconButton } from '@/components/primitives/IconButton';
 import type { Size } from '@/types/ui';
+import { useI18n, type MessageKey } from '@/lib/i18n';
 
 const ICON: Record<Theme, typeof Sun> = {
   light: Sun,
@@ -11,10 +12,11 @@ const ICON: Record<Theme, typeof Sun> = {
   system: Monitor,
 };
 
-const LABEL: Record<Theme, string> = {
-  light: 'Theme: light',
-  dark: 'Theme: dark',
-  system: 'Theme: follow system',
+/** 테마 → 사전 키. 이 버튼은 아이콘뿐이라 **접근 이름이 유일한 단서**다 */
+const LABEL_KEY: Record<Theme, MessageKey> = {
+  light: 'theme.light',
+  dark: 'theme.dark',
+  system: 'theme.system',
 };
 
 export interface ThemeToggleProps {
@@ -32,13 +34,14 @@ export interface ThemeToggleProps {
  * 달 아이콘이 보이면 자기가 무엇을 골랐는지 알 수 없다.
  */
 export function ThemeToggle({ size = 'md', className }: ThemeToggleProps) {
+  const { t } = useI18n();
   const { theme, setTheme } = useTheme();
   const Icon = ICON[theme];
 
   return (
     <IconButton
       icon={<Icon className="size-4" />}
-      label={LABEL[theme]}
+      label={t(LABEL_KEY[theme])}
       size={size}
       className={className}
       onClick={() => setTheme(nextTheme(theme))}

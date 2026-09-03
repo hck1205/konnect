@@ -23,6 +23,7 @@ export function Banner({
   children,
   onDismiss,
   className,
+  dismissLabel,
 }: BannerProps) {
   const Icon = TONE_ICON[tone];
 
@@ -43,7 +44,7 @@ export function Banner({
       </div>
 
       {onDismiss ? (
-        <CloseButton label="Dismiss" onClick={onDismiss} className="-mr-1 shrink-0" />
+        <CloseButton label={dismissLabel ?? ''} onClick={onDismiss} className="-mr-1 shrink-0" />
       ) : null}
     </div>
   );

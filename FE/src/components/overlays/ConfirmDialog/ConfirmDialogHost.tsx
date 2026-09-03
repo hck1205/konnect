@@ -1,6 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+import { useI18n } from '@/lib/i18n';
 import { Modal } from '@/components/overlays/Modal';
 import { Button } from '@/components/primitives/Button';
 import {
@@ -17,6 +18,7 @@ import {
  * Esc 는 **취소**로 해석한다 — 확인이 아니라.
  */
 export function ConfirmDialogHost() {
+  const { t } = useI18n();
   const request = useSyncExternalStore(
     subscribeConfirm,
     getConfirm,
@@ -26,6 +28,7 @@ export function ConfirmDialogHost() {
   return (
     <Modal
       open={request !== null}
+      closeLabel={t('common.close')}
       onClose={() => resolveConfirm(false)}
       title={request?.title ?? ''}
       description={request?.description}
@@ -34,13 +37,13 @@ export function ConfirmDialogHost() {
       footer={
         <>
           <Button variant="ghost" tone="neutral" onClick={() => resolveConfirm(false)}>
-            {request?.cancelLabel ?? 'Cancel'}
+            {request?.cancelLabel ?? t('common.cancel')}
           </Button>
           <Button
             tone={request?.destructive ? 'danger' : 'brand'}
             onClick={() => resolveConfirm(true)}
           >
-            {request?.confirmLabel ?? 'Confirm'}
+            {request?.confirmLabel ?? t('common.confirm')}
           </Button>
         </>
       }

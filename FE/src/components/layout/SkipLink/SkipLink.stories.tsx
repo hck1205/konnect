@@ -10,7 +10,7 @@ export default { title: 'Layout / SkipLink' };
  */
 export const Default: Story = () => (
   <div className="relative">
-    <SkipLink />
+    <SkipLink>Skip to content</SkipLink>
     <p className="mt-2 text-sm text-fg-muted">
       이 스토리에 포커스를 두고 Tab 을 누르면 좌측 상단에 링크가 나타납니다.
     </p>

@@ -16,6 +16,11 @@ export interface AppShellProps {
    * 쓰는 모든 페이지가 함께 클라이언트로 끌려간다.
    */
   asideLabel?: string;
+  /**
+   * 본문 바로가기 링크의 문구. **번역된 문구를 받는다.**
+   * `asideLabel` 과 같은 이유로 prop 이다 — 이 컴포넌트는 서버에서도 그려진다.
+   */
+  skipLabel: string;
   children: ReactNode;
   width?: ContainerProps['width'];
   className?: string;
@@ -35,13 +40,14 @@ export function AppShell({
   footer,
   aside,
   asideLabel,
+  skipLabel,
   children,
   width = 'wide',
   className,
 }: AppShellProps) {
   return (
     <div className={cn('flex min-h-dvh flex-col', className)}>
-      <SkipLink />
+      <SkipLink>{skipLabel}</SkipLink>
       {header}
 
       <Container

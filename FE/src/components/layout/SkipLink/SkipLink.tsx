@@ -1,7 +1,15 @@
 export interface SkipLinkProps {
   /** 건너뛸 대상의 id. 그 요소에 `tabIndex={-1}` 을 둬야 포커스가 실제로 옮겨진다. */
   targetId?: string;
-  children?: string;
+  /**
+   * 링크 문구. **필수다.**
+   *
+   * ⚠️ 기본값(`'Skip to content'`)이 있던 동안 네 로케일 전부에서 영어였다.
+   * 그리고 기본값만 없애면 더 나빠진다 — 빈 링크가 렌더되어 접근 이름이
+   * 아예 사라진다(실제로 한 번 그렇게 만들었고 산출물을 보고 잡았다).
+   * 필수로 두면 타입체크가 부르는 쪽에 번역을 요구한다.
+   */
+  children: string;
 }
 
 /**
@@ -15,7 +23,7 @@ export interface SkipLinkProps {
  */
 export function SkipLink({
   targetId = 'main-content',
-  children = 'Skip to content',
+  children,
 }: SkipLinkProps) {
   return (
     <a

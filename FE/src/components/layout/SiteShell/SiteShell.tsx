@@ -6,7 +6,8 @@ import { PageHeader, type NavItem } from '@/components/layout/PageHeader';
 import { Footer } from '@/components/layout/Footer';
 import { LocaleSwitcher } from '@/components/i18n/LocaleSwitcher';
 import { Button } from '@/components/primitives/Button';
-import { useI18n } from '@/lib/i18n';
+import { Banner } from '@/components/feedback/Banner';
+import { useI18n, type Locale } from '@/lib/i18n';
 import { routes } from '@/lib/routes';
 
 export interface SiteShellProps {
@@ -30,6 +31,19 @@ export interface SiteShellProps {
  * 정확히 그렇게 한 화면에만 남는다. 안전 고지(`message.safety`)도 마찬가지로
  * 네 벌이었는데, 이건 **모든 페이지에 있어야 하는 법적 고지**다.
  */
+/**
+ * **원어민 검수를 아직 받지 않은 판.**
+ *
+ * 이 제품은 R1 영역(체류자격)이라 잘못된 안내가 생활 기반에 닿는다. 그래서
+ * 문서가 zh·vi 원어민 검수를 출시 차단 조건으로 정해 뒀는데, 그동안
+ * **경고 없이 나가고 있었다** — 고지 문구는 네 사전에 이미 번역돼 있었고
+ * 렌더하는 곳만 없었다.
+ *
+ * 목록을 코드에 두는 것이 요점이다: 검수가 끝나면 배열에서 빼는 것이
+ * **실제 커밋으로 남는다.** 문서에만 적으면 누가 언제 끝냈는지 알 수 없다.
+ */
+const UNREVIEWED: readonly Locale[] = ['zh', 'vi'];
+
 export function SiteShell({ pathname, nav, aside, width = 'prose', children }: SiteShellProps) {
   const { t, locale } = useI18n();
 
@@ -38,11 +52,13 @@ export function SiteShell({ pathname, nav, aside, width = 'prose', children }: S
       width={width}
       aside={aside}
       asideLabel={t('nav.sidebar')}
+      skipLabel={t('a11y.skipToContent')}
       header={
         <PageHeader
           homeHref={routes.home(locale)}
           homeLabel={t('nav.brandHome')}
           navLabel={t('nav.main')}
+          menuLabel={t('nav.openMenu')}
           nav={nav}
           currentPath={pathname}
           actions={
@@ -55,6 +71,11 @@ export function SiteShell({ pathname, nav, aside, width = 'prose', children }: S
       }
       footer={<Footer disclaimer={t('message.safety')} />}
     >
+      {UNREVIEWED.includes(locale) ? (
+        <Banner tone="info" className="mb-6">
+          {t('locale.machineTranslated')}
+        </Banner>
+      ) : null}
       {children}
     </AppShell>
   );

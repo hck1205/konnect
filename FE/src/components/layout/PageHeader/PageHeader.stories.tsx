@@ -20,7 +20,7 @@ export const SignedOut: Story = () => (
     <PageHeader
       homeHref="/en"
       homeLabel="konnect — home"
-      navLabel="Main navigation"
+      navLabel="Main navigation" menuLabel="Open menu"
       nav={NAV}
       currentPath="/questions"
       actions={<Button size="sm">Sign in</Button>}
@@ -39,7 +39,7 @@ export const SignedIn: Story = () => (
     <PageHeader
       homeHref="/en"
       homeLabel="konnect — home"
-      navLabel="Main navigation"
+      navLabel="Main navigation" menuLabel="Open menu"
       nav={NAV}
       currentPath="/guides/visa/d-2"
       actions={

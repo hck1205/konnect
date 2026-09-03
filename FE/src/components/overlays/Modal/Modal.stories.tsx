@@ -18,6 +18,7 @@ export const Default: Story = () => {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
+        closeLabel="Close"
         title="Report this post"
         description="Tell us what is wrong. We review urgent reports first."
         footer={
@@ -50,6 +51,7 @@ export const DestructiveConfirm: Story = () => {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
+        closeLabel="Close"
         closeOnBackdrop={false}
         title="Delete this question?"
         description="Answers written by other people will be removed too."

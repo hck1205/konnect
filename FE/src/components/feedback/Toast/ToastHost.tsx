@@ -4,6 +4,7 @@ import { useEffect, useSyncExternalStore } from 'react';
 import { cn } from '@/lib/cn';
 import { TONE_SUBTLE } from '@/lib/tone';
 import { CloseButton } from '@/components/primitives/CloseButton';
+import { useI18n } from '@/lib/i18n';
 import {
   dismissToast,
   getServerToasts,
@@ -13,6 +14,7 @@ import {
 } from './toast.store';
 
 function ToastRow({ toast }: { toast: Toast }) {
+  const { t } = useI18n();
   useEffect(() => {
     if (toast.durationMs <= 0) return;
     const timer = setTimeout(() => dismissToast(toast.id), toast.durationMs);
@@ -28,7 +30,7 @@ function ToastRow({ toast }: { toast: Toast }) {
     >
       <span className="flex-1">{toast.message}</span>
       <CloseButton
-        label="Dismiss notification"
+        label={t('a11y.dismiss')}
         onClick={() => dismissToast(toast.id)}
         className="-mr-1 shrink-0"
       />

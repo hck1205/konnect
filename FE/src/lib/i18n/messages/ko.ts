@@ -49,7 +49,7 @@ export const ko = {
   'reaction.insightful': '유익해요',
   'reaction.add': '공감 표시',
   'reaction.count': { other: '공감 {count}개' },
-  'reaction.byYou': '{name}으로 공감했습니다',
+  'reaction.byYou': '{name} 공감을 눌렀습니다',
 
   'report.title': '신고하기',
   'report.description': '사기나 개인정보 노출 신고는 먼저 검토합니다.',
@@ -86,8 +86,8 @@ export const ko = {
   'locale.machineTranslated': '이 페이지의 일부는 기계 번역이라 부정확할 수 있습니다.',
 
   // ── 질문 상세 ────────────────────────────────────────────
-  'question.writtenIn': '{language}로 작성됨',
-  'question.translate': '{language}로 번역',
+  'question.writtenIn': '작성 언어: {language}',
+  'question.translate': '{language} 번역',
   'question.freshness': '{when}에 갱신되었습니다.',
   'question.freshnessWarning': '출입국 규정은 자주 바뀝니다 — 아래 공식 페이지에서 반드시 확인하세요.',
   'question.officialSource': '공식 페이지',
@@ -153,5 +153,21 @@ export const ko = {
   'nav.brandHome': 'konnect — 홈',
   'nav.main': '주요 메뉴',
   'nav.sidebar': '페이지 사이드바',
+
+  'tag.namespace.visa': '체류자격',
+  'tag.namespace.topic': '주제',
+  'tag.namespace.region': '지역',
+  'tag.namespace.nationality': '국적',
+  'tag.namespace.school': '학교',
+  'tag.namespace.lang': '언어',
+  'tag.remove': '{label} 태그 제거',
+  'a11y.skipToContent': '본문으로 건너뛰기',
+  'a11y.dismiss': '닫기',
+  'nav.openMenu': '메뉴 열기',
+  'theme.light': '테마: 밝게',
+  'theme.dark': '테마: 어둡게',
+  'theme.system': '테마: 시스템 설정 따르기',
+
+  'common.confirm': '확인',
 
 } satisfies Messages;
