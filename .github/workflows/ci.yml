@@ -80,6 +80,12 @@ jobs:
       # 이름에 'in-memory driver only' 를 박는다 — 안 박으면 이 초록이
       # "두 드라이버 계약까지 지켜진다" 로 읽힌다. Prisma 저장소 경로는 여전히
       # CI 가 한 줄도 실행하지 않는다.
+      # 감시 스크립트는 jest 대상이 아니다(`.mjs` 이고 rootDir 밖이다).
+      # 별도 러너라 **부르지 않으면 안 돈다** — 이 저장소가 e2e 에서 이미 한 번
+      # 겪은 실수라 만들면서 바로 연결한다.
+      - name: Scripts (감시 가드)
+        run: npm run test:scripts
+
       - name: E2E (in-memory driver)
         run: npm run test:e2e
 

@@ -135,6 +135,52 @@ function assertRealPage(text, source) {
   if (hit) throw new Error(`에러 페이지로 보인다 ("${hit}")`);
 }
 
+/**
+ * 법제처 응답이 **정말 그 법령인지** 확인한다.
+ *
+ * ## 왜 JSON 파싱 성공만으로는 부족한가
+ *
+ * 법제처는 인증키(OC)·등록 IP·법령명이 어긋나면 **HTTP 200 과 함께 유효한 JSON
+ * 에러 본문**을 준다. 그래서 `JSON.parse` 는 성공하고, `json?.법령?.기본정보 ?? {}`
+ * 가 조용히 빈 객체로 떨어지고, **그 에러 본문이 기준선 해시로 저장된다.**
+ *
+ * 그 뒤로 벌어지는 일:
+ *
+ * - 첫 실행: "최초 기록" — 정상처럼 보인다
+ * - 그다음부터 영원히: "변동 없음" — 같은 에러 본문이니 해시가 안 바뀐다
+ * - **출입국관리법 시행령이 실제로 개정돼도 아무 일도 일어나지 않는다.**
+ *   종료코드는 0 이라 cron 도 조용하다
+ *
+ * `page` 분기는 `assertRealPage` 로 이 종류를 막고 있었는데(하이코리아가 없는
+ * 주소에 200 + 에러 페이지를 준다) **`statute` 분기에만 그 가드가 없었다.**
+ * 같은 실패, 같은 API 계열, 다른 분기 — 한쪽만 막혀 있었다.
+ *
+ * 검사하는 것은 셋이다:
+ * 1. `법령.기본정보` 가 실재하는가 — 없으면 본문이 아니다
+ * 2. 법령명이 우리가 요청한 것과 맞는가 — 엉뚱한 법령을 감시하지 않는다
+ * 3. 본문이 충분히 긴가 — `page` 쪽과 같은 기준
+ */
+function assertRealStatute(json, source, raw) {
+  const basic = json?.법령?.기본정보;
+  if (!basic) {
+    // 에러 본문의 앞부분을 남긴다 — 키/IP/법령명 중 무엇이 문제인지 여기서 갈린다
+    const head = raw.replace(/\s+/g, ' ').slice(0, 200);
+    throw new Error(
+      `법제처 응답에 법령.기본정보 가 없다 — 키·등록 IP·법령명 확인 필요. 응답: ${head}`,
+    );
+  }
+
+  const got = String(basic.법령명한글 ?? '').replace(/\s+/g, '');
+  const want = String(source.law_name ?? '').replace(/\s+/g, '');
+  if (want && got && !got.includes(want) && !want.includes(got)) {
+    throw new Error(`요청한 법령은 "${source.law_name}" 인데 응답은 "${basic.법령명한글}" 이다`);
+  }
+
+  if (raw.length < MIN_TEXT_LENGTH) {
+    throw new Error(`법령 응답이 ${raw.length}자뿐이다 — 본문으로 보기 어렵다`);
+  }
+}
+
 function contentHash(html) {
   const text = html
     .replace(/<(script|style|noscript)[\s\S]*?<\/\1>/gi, ' ')
@@ -172,7 +218,9 @@ async function fetchStatute(source) {
     throw new Error(`법제처 응답이 JSON 이 아니다(키 확인 필요, ${raw.length}자)`);
   }
 
-  const basic = json?.법령?.기본정보 ?? {};
+  assertRealStatute(json, source, raw);
+
+  const basic = json.법령.기본정보;
   return {
     revisedAt: basic.시행일자 ?? basic.공포일자 ?? null,
     ...contentHash(raw),
