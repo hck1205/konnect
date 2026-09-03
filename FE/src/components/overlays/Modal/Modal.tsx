@@ -24,6 +24,7 @@ export function Modal({
   footer,
   closeOnBackdrop = true,
   className,
+  closeLabel,
 }: ModalProps) {
   const ref = useDialogElement(open, onClose);
   const titleId = useId();
@@ -61,7 +62,7 @@ export function Modal({
             </p>
           ) : null}
         </div>
-        <CloseButton onClick={onClose} className="-mt-1 -mr-1" />
+        <CloseButton label={closeLabel} onClick={onClose} className="-mt-1 -mr-1" />
       </div>
 
       {children ? <div className="px-5 py-4 text-sm">{children}</div> : null}

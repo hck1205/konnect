@@ -37,19 +37,20 @@ export function LocaleSwitcher({ pathname, className }: LocaleSwitcherProps) {
       )}
     >
       {LOCALES.map((code: Locale) => (
-        <MenuItem key={code}>
-          <a
-            href={withLocale(pathname, code)}
-            hrefLang={code}
-            aria-current={code === locale ? 'true' : undefined}
-            className={cn('flex w-full items-center gap-2', code === locale && 'font-medium')}
-          >
+        // `MenuItem` 이 링크 자체다. 예전에는 버튼 안에 `<a>` 를 넣어서
+        // 탭 스톱이 로케일당 2개이고 **첫 Enter 가 아무 일도 안 했다.**
+        <MenuItem
+          key={code}
+          href={withLocale(pathname, code)}
+          hrefLang={code}
+          current={code === locale}
+          icon={
             <Check
               className={cn('size-4 shrink-0', code === locale ? 'opacity-100' : 'opacity-0')}
-              aria-hidden="true"
             />
-            {LOCALE_LABELS[code]}
-          </a>
+          }
+        >
+          {LOCALE_LABELS[code]}
         </MenuItem>
       ))}
     </Menu>

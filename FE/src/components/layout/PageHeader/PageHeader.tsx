@@ -28,6 +28,7 @@ export function PageHeader({
   homeHref,
   homeLabel,
   navLabel,
+  menuLabel,
   nav = [],
   currentPath,
   actions,
@@ -68,7 +69,7 @@ export function PageHeader({
                     {...p}
                     size="sm"
                     icon={<MenuIcon className="size-4" />}
-                    label="Open menu"
+                    label={menuLabel}
                   />
                 )}
               >

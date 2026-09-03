@@ -125,4 +125,20 @@ export const vi = {
   'nav.main': 'Điều hướng chính',
   'nav.sidebar': 'Thanh bên trang',
 
+  'tag.namespace.visa': 'Visa',
+  'tag.namespace.topic': 'Chủ đề',
+  'tag.namespace.region': 'Khu vực',
+  'tag.namespace.nationality': 'Quốc tịch',
+  'tag.namespace.school': 'Trường học',
+  'tag.namespace.lang': 'Ngôn ngữ',
+  'tag.remove': 'Xóa thẻ {label}',
+  'a11y.skipToContent': 'Chuyển đến nội dung',
+  'a11y.dismiss': 'Đóng',
+  'nav.openMenu': 'Mở menu',
+  'theme.light': 'Giao diện: sáng',
+  'theme.dark': 'Giao diện: tối',
+  'theme.system': 'Giao diện: theo hệ thống',
+
+  'common.confirm': 'Xác nhận',
+
 } satisfies Messages;

@@ -8,6 +8,8 @@ import { useDialogElement } from '@/components/overlays/Modal';
 export interface DrawerProps {
   open: boolean;
   onClose: () => void;
+  /** 닫기 버튼의 접근 이름. 아이콘뿐이라 이 문구가 유일한 단서다 */
+  closeLabel: string;
   title: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
@@ -34,6 +36,7 @@ export function Drawer({
   footer,
   side = 'end',
   className,
+  closeLabel,
 }: DrawerProps) {
   const ref = useDialogElement(open, onClose);
   const titleId = useId();
@@ -60,7 +63,7 @@ export function Drawer({
         <h2 id={titleId} className="text-base font-semibold text-fg">
           {title}
         </h2>
-        <CloseButton onClick={onClose} className="-mr-1" />
+        <CloseButton label={closeLabel} onClick={onClose} className="-mr-1" />
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 py-4 text-sm">{children}</div>

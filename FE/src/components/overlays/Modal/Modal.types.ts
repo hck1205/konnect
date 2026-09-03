@@ -3,6 +3,8 @@ import type { ReactNode } from 'react';
 export interface ModalProps {
   open: boolean;
   onClose: () => void;
+  /** 닫기 버튼의 접근 이름. 아이콘뿐이라 이 문구가 유일한 단서다 */
+  closeLabel: string;
   title: ReactNode;
   description?: ReactNode;
   children?: ReactNode;

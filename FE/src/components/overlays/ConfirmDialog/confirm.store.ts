@@ -12,8 +12,14 @@ export interface ConfirmRequest {
   id: string;
   title: string;
   description?: string;
-  confirmLabel: string;
-  cancelLabel: string;
+  /**
+   * 확인·취소 버튼 문구. **없어도 된다** — 없으면 렌더 쪽이 사전에서 채운다.
+   *
+   * 예전에는 스토어가 `?? 'Confirm'` / `?? 'Cancel'` 로 채웠다. 스토어는 사전을
+   * 모르는 자리라, 부르는 쪽이 문구를 생략하면 **모든 로케일에서 영어**가 됐다.
+   */
+  confirmLabel?: string;
+  cancelLabel?: string;
   /** 파괴적 행동이면 확인 버튼이 danger 가 되고 배경 클릭으로 닫히지 않는다 */
   destructive: boolean;
 }
@@ -66,8 +72,11 @@ export function confirm(options: {
     id: `confirm-${++seq}`,
     title: options.title,
     description: options.description,
-    confirmLabel: options.confirmLabel ?? 'Confirm',
-    cancelLabel: options.cancelLabel ?? 'Cancel',
+    // ⚠️ 영어 폴백을 두지 않는다. 스토어는 사전을 모르는 자리이고,
+    // 여기서 채우면 부르는 쪽이 문구를 생략했을 때 **모든 로케일에서 영어**가 된다.
+    // 렌더하는 ConfirmDialogHost 가 사전을 알고 있으므로 그쪽이 채운다.
+    confirmLabel: options.confirmLabel,
+    cancelLabel: options.cancelLabel,
     destructive: options.destructive ?? false,
   };
   emit();

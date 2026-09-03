@@ -9,7 +9,7 @@ export default { title: 'Primitives / CloseButton' };
  */
 export const Labels: Story = () => (
   <div className="flex items-center gap-4">
-    <CloseButton />
+    <CloseButton label="Close" />
     <CloseButton label="Close filters" />
     <CloseButton label="Dismiss notification" tone="danger" />
   </div>

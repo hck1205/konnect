@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import NextLink from 'next/link';
 import { cn } from '@/lib/cn';
 
 export interface NavLinkProps {
@@ -15,10 +16,15 @@ export interface NavLinkProps {
  *
  * 현재 위치를 **색 굵기만으로 표시하지 않는다** — `aria-current="page"` 를 함께 세팅해
  * 스크린리더에도 "현재 페이지"가 전달되게 한다.
+ *
+ * 내부 이동은 `next/link` 로 한다. 평범한 `<a>` 였을 때는 헤더의 "Questions" 를
+ * 누를 때마다 **문서 전체가 새로 로드**됐다 — 같은 헤더에서 브랜드 로고만
+ * 클라이언트 내비게이션이라 동작이 갈려 있었다.
+ * (Ladle 은 Next 런타임이 없어 vite alias 로 평범한 `<a>` 스텁을 물린다)
  */
 export function NavLink({ href, active, icon, children, className }: NavLinkProps) {
   return (
-    <a
+    <NextLink
       href={href}
       aria-current={active ? 'page' : undefined}
       className={cn(
@@ -35,6 +41,6 @@ export function NavLink({ href, active, icon, children, className }: NavLinkProp
         </span>
       ) : null}
       {children}
-    </a>
+    </NextLink>
   );
 }

@@ -23,6 +23,7 @@ export const FilterPanel: Story = () => {
       <Drawer
         open={open}
         onClose={() => setOpen(false)}
+        closeLabel="Close"
         title="Filter questions"
         footer={
           <>
@@ -59,7 +60,7 @@ export const FromStart: Story = () => {
       <Button variant="outline" tone="neutral" onClick={() => setOpen(true)}>
         Open from start side
       </Button>
-      <Drawer open={open} onClose={() => setOpen(false)} title="Navigation" side="start">
+      <Drawer open={open} onClose={() => setOpen(false)} closeLabel="Close" title="Navigation" side="start">
         <p className="text-fg-muted">모바일 네비게이션 등에 쓴다.</p>
       </Drawer>
     </>
